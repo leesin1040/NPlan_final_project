@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Kakao 지도 시작하기</title>
+  </head>
+  <body>
+    <div id="map" style="width: 700px; height: 700px"></div>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e892dc4fbde45212004f1d658cecdb6f"
+    ></script>
+    <!-- services 라이브러리 불러오기 -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=services"
+    ></script>
+    <script>
+      var container = document.getElementById('map');
+      var options = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 3,
+      };
+
+      var map = new kakao.maps.Map(container, options);
+
+      var newpath = [
+        new kakao.maps.LatLng(33.452344169439975, 126.56878163224233),
+      ];
+
+      polyline.setOptions({
+        strokeWeight: 2,
+        strokeColor: '#FF00FF',
+        strokeOpacity: 0.8,
+        strokeStyle: 'dashed',
+      });
+      polyline.setPath(newpath);
+      polyline.setMap(map);
+      polyline.getPath();
+    </script>
+  </body>
+</html>
