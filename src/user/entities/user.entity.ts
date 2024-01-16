@@ -1,64 +1,78 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
+  Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../types/user-role.type';
 
-@Entity('users')
+@Index('email', ['email'], { unique: true })
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   /**
-   * 이메일
-   * @example "example@example.com"
+   *이름
+   * @example "홍길동"
    */
-  @IsNotEmpty({ message: '이메일을 입력해 주세요.' })
-  @IsEmail({}, { message: '이메일 형식에 맞지 않습니다.' })
-  @Column({ unique: true })
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: '이름을 입력해주세요.' })
+  @Column()
+  name: string;
+
+  /**
+   *휴대전화 번호
+   * @example "01012345678"
+   */
+  @ApiProperty()
+  @IsNotEmpty({ message: '전화번호를 입력해주세요' })
+  @Column()
+  phone: string;
+
+  /**
+   *이메일
+   * @example "example@email.com"
+   */
+  @ApiProperty()
+  @IsEmail({}, { message: '이메일 형식이 아닙니다.' })
+  @IsNotEmpty({ message: '이메일을 입력해주세요.' })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
   /**
-   * 비밀번호
-   * @example "Ex@mp1e!!"
+   *비밀번호
+   * @example "123123"
    */
-  @IsNotEmpty({ message: '비밀번호을 입력해 주세요.' })
-  @IsStrongPassword(
-    {},
-    {
-      message:
-        '비밀번호는 영문 알파벳 대,소문자, 숫자, 특수문자(!@#$%^&*)를 포함해서 8자리 이상으로 입력해야 합니다.',
-    },
-  )
-  @Column({ select: false })
-  password: string;
-
-  /**
-   * 닉네임
-   * @example "고객"
-   */
-  @IsNotEmpty({ message: '닉네임을 입력해 주세요.' })
+  @ApiProperty()
   @IsString()
-  @Column()
-  nickname: string;
-
-  @IsEnum(UserRole)
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.Customer })
-  role: UserRole;
+  @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
+  // @IsStrongPassword(
+  //   {},
+  //   {
+  //     message:
+  //       '비밀번호는 영문 알파벳 대소문자, 숫자, 특수문자를 포함해야 합니다.',
+  //   },
+  // )
+  @Column({ type: 'varchar', select: false })
+  password: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshToken: RefreshToken[];
 }

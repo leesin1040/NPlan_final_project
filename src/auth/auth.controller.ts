@@ -1,17 +1,9 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dtos/sign-up.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RegisterDto } from './dtos/register.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { SignInDto } from './dtos/sign-in.dto';
+import { LoginDto } from './dtos/login.dto';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -20,34 +12,49 @@ export class AuthController {
 
   /**
    * 회원가입
-   * @param signUpDto
+   * @param registerDto
    * @returns
    */
-  @Post('/sign-up')
-  async signUp(@Body() signUpDto: SignUpDto) {
-    const data = await this.authService.signUp(signUpDto);
+  @Post('/register')
+  async register(@Body() registerDto: RegisterDto) {
+    const data = await this.authService.register(registerDto);
     return {
       statusCode: HttpStatus.CREATED,
       message: '회원가입에 성공했습니다.',
       data,
     };
   }
-
   /**
    * 로그인
    * @param req
-   * @param signInDto
+   * @param loginDto
    * @returns
    */
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('local'))
-  @Post('/sign-in')
-  signIn(@Request() req, @Body() signInDto: SignInDto) {
-    const data = this.authService.signIn(req.user.id);
+  @Post('/login')
+  async login(@Request() req, @Body() loginDto: LoginDto) {
+    const data = await this.authService.login(req.user.id);
 
     return {
       statusCode: HttpStatus.OK,
-      message: '로그인에 성공했습니다.',
+      message: '로그인 성공',
+      data,
+    };
+  }
+
+  /**
+   * Access 토큰 갱신
+   * @param req
+   * @returns
+   */
+  @HttpCode(HttpStatus.OK)
+  @Post('/refresh')
+  async refresh(@Request() req) {
+    const data = await this.authService.refresh(req.body.refreshToken);
+    return {
+      statusCode: HttpStatus.OK,
+      message: '토큰이 성공적으로 갱신되었습니다.',
       data,
     };
   }

@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('사용자')
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -20,11 +20,10 @@ export class UserController {
    * @returns
    */
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Get('/me')
-  async findMe(@Request() req) {
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/info')
+  async myInfo(@Request() req) {
     const userId = req.user.id;
-
     const data = await this.userService.findOneById(userId);
 
     return {

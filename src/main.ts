@@ -6,11 +6,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   const configService = app.get(ConfigService);
   const port = configService.get<number>('SERVER_PORT');
 
-  app.setGlobalPrefix('api', { exclude: ['/health-check'] });
+  app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -20,19 +19,19 @@ async function bootstrap() {
     }),
   );
 
+  /**스웨거 */
   const config = new DocumentBuilder()
-    .setTitle('Sparta Node.js TS')
-    .setDescription('Document for Sparta Node.js TS')
+    .setTitle('2024 내배캠 타임어택')
+    .setDescription('내배캠 타임어택 최이진')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }) // JWT 사용을 위한 설정
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
-      persistAuthorization: true, // 새로고침 시에도 JWT 유지하기
-      tagsSorter: 'alpha', // API 그룹 정렬을 알파벳 순으로
-      operationsSorter: 'alpha', // API 그룹 내 정렬을 알파벳 순으로
+      persistAuthorization: true,
+      tagSorter: 'alpha',
+      operationSorter: 'alpha',
     },
   });
 

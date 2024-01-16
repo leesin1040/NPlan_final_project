@@ -1,67 +1,82 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { SignUpDto } from './dtos/sign-up.dto';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { DEFAULT_CUSTOMER_POINT } from 'src/constants/point.constant';
-import { ConfigService } from '@nestjs/config';
+import { RegisterDto } from './dtos/register.dto';
 import bcrypt from 'bcrypt';
-import { SignInDto } from './dtos/sign-in.dto';
-import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dtos/login.dto';
+import { RefreshToken } from './entities/refreshToken.entity';
+
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(RefreshToken)
+    private readonly refreshTokenRepository: Repository<RefreshToken>,
   ) {}
 
-  async signUp({ email, password, passwordConfirm, nickname }: SignUpDto) {
-    const isPasswordMatched = password === passwordConfirm;
-    if (!isPasswordMatched) {
-      throw new BadRequestException(
-        '비밀번호와 비밀번호 확인이 서로 일치하지 않습니다.',
-      );
+  /**회원가입 */
+  async register({ name, email, phone, password, passwordConfirm }: RegisterDto) {
+    const passwordMatch = password === passwordConfirm;
+    if (!passwordMatch) {
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
     }
-
     const existedUser = await this.userRepository.findOneBy({ email });
     if (existedUser) {
-      throw new BadRequestException('이미 가입 된 이메일 입니다.');
+      throw new BadRequestException('이미 사용중인 이메일입니다.');
     }
 
     const hashRounds = this.configService.get<number>('PASSWORD_HASH_ROUNDS');
     const hashedPassword = bcrypt.hashSync(password, hashRounds);
-
     const user = await this.userRepository.save({
-      nickname,
+      name,
+      phone,
       email,
       password: hashedPassword,
     });
 
-    return this.signIn(user.id);
+    return this.login(user.id);
   }
-
-  signIn(userId: number) {
+  /**로그인 */
+  async login(userId: number) {
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);
+    const refreshToken = new RefreshToken();
 
-    return { accessToken };
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    refreshToken.user = user;
+    refreshToken.token = this.jwtService.sign(payload);
+    refreshToken.expiryDate = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+    await this.refreshTokenRepository.save(refreshToken);
+    return { accessToken: accessToken };
   }
 
-  async validateUser({ email, password }: SignInDto) {
+  /**유저 확인 */
+  async validateUser({ email, password }: LoginDto) {
     const user = await this.userRepository.findOne({
       where: { email },
       select: { id: true, password: true },
     });
-    const isPasswordMatched = bcrypt.compareSync(
-      password,
-      user?.password ?? '',
-    );
-
-    if (!user || !isPasswordMatched) {
+    const passwordMatch = bcrypt.compareSync(password, user?.password ?? '');
+    if (!user || !passwordMatch) {
       return null;
     }
-
     return { id: user.id };
+  }
+
+  async refresh(refreshToken: string) {
+    const savedToken = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken },
+    });
+    if (!savedToken || savedToken.expiryDate < new Date()) {
+      throw new BadRequestException('유효하지 않은 토큰입니다.');
+    }
+    const payload = { id: savedToken.user.id };
+    const accessToken = this.jwtService.sign(payload);
+    return { accessToken };
   }
 }
