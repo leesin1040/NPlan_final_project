@@ -21,3 +21,4 @@ export class ChangePasswordDto extends PickType(User, ['password']) {
   @IsString()
   passwordConfirm: string;
 }
+//====
