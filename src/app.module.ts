@@ -7,6 +7,7 @@ import { configModuleValidationSchema } from './configs/env-validation.config';
 import { typeOrmModuleAsyncOptions } from './configs/database.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { TravelModule } from './travel/travel.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
     AuthModule,
     UserModule,
+    TravelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

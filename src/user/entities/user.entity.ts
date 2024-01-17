@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
+import { Travel } from 'src/travel/entities/travel.entity';
 import {
   Column,
   CreateDateColumn,
@@ -75,4 +76,8 @@ export class User {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshToken: RefreshToken[];
+
+  // Travel 1:N
+  @OneToMany(() => Travel, (travel) => travel.user)
+  travel: Travel[];
 }
