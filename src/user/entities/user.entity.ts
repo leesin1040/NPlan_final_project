@@ -19,7 +19,7 @@ import {
 @Index('email', ['email'], { unique: true })
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn({ unsigned: true })
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
   /**
@@ -85,7 +85,7 @@ export class User {
   travel: Travel[];
 
   // Travel_member 1:N
-  @OneToMany(() => Member, (travel) => travel.user)
+  @OneToMany(() => Member, (member) => member.user)
   member: Travel[];
 
   // Like 1:N

@@ -1,10 +1,8 @@
-import { User } from 'src/user/entities/user.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateTravelDto } from './dto/create-travel.dto';
 import { UpdateTravelDto } from './dto/update-travel.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { Member } from 'src/member/entities/member.entity';
 
@@ -61,12 +59,15 @@ export class TravelService {
     await this.checkTravelMember(id, user_id);
     return { oneTravel };
   }
+
+  // --
   /**여행 수정 */
   async update(id: number, user_id: number, updateTravelDto: UpdateTravelDto) {
     await this.findOneTravel(id, user_id);
     const updateTravel = this.travelRepository.update({ id }, updateTravelDto);
     return { travel: updateTravel };
   }
+  // --
   /**여행 삭제(소프트삭제) */
   async remove(id: number, user_id: number) {
     const findThisTravel = await this.findOneTravel(id, user_id);

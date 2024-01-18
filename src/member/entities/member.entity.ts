@@ -19,6 +19,6 @@ export class Member {
   @ManyToOne(() => Travel, (travel) => travel.member, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
-  @Column({ type: 'int', name: 'user_id' })
+  @Column({ type: 'int', name: 'travel_id' })
   travel_id: number;
 }

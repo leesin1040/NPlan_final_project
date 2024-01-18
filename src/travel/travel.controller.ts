@@ -13,20 +13,22 @@ import {
 import { TravelService } from './travel.service';
 import { CreateTravelDto } from './dto/create-travel.dto';
 import { UpdateTravelDto } from './dto/update-travel.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('여행보드')
 @Controller('travel')
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
+
   /**
-   * 여행 생성
+   * 여행보드 생성
+   * @param req
    * @param createTravelDto
    * @returns
    */
   @UseGuards(AuthGuard('jwt'))
-  @Post()
+  @Post('new')
   createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
     const user_id = req.user.id;
     const data = this.travelService.create(user_id, createTravelDto);
@@ -37,23 +39,77 @@ export class TravelController {
     };
   }
 
+  /**
+   * 여행보드 전체 조회
+   * @param req
+   * @returns
+   */
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.travelService.findAll();
+  findAll(@Req() req) {
+    const user_id = req.user.id;
+    const data = this.travelService.findAll(user_id);
+    return {
+      statusCode: HttpStatus.FOUND,
+      message: '유저가 포함된 여행보드 조회에 성공했습니다.',
+      data,
+    };
   }
 
+  /**
+   * 여행보드 상세조회
+   * @param id
+   * @param req
+   * @returns
+   */
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.travelService.findOne(+id);
+  async findOne(@Param('id') id: number, @Req() req) {
+    const user_id = req.user.id;
+    const data = await this.travelService.findOneTravel(id, user_id);
+    return {
+      statusCode: HttpStatus.FOUND,
+      message: '여행보드 조회에 성공했습니다.',
+      data,
+    };
   }
 
+  /**
+   *여행보드 수정
+   * @param id
+   * @param req
+   * @param updateTravelDto
+   * @returns
+   */
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTravelDto: UpdateTravelDto) {
-    return this.travelService.update(+id, updateTravelDto);
+  update(@Param('id') id: number, @Req() req, @Body() updateTravelDto: UpdateTravelDto) {
+    const user_id = req.user.id;
+    const data = this.travelService.update(id, user_id, updateTravelDto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: '여행보드 수정에 성공했습니다.',
+      data,
+    };
   }
 
+  /**
+   * 여행보드 삭제
+   * @param id
+   * @param req
+   * @returns
+   */
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.travelService.remove(+id);
+  async remove(@Param('id') id: number, @Req() req) {
+    const user_id = req.user.id;
+    const deletedData = await this.travelService.remove(id, user_id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: '여행보드 삭제에 성공했습니다.',
+      deletedData,
+    };
   }
 }

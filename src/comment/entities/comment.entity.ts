@@ -10,7 +10,7 @@ export class Comment {
   @ManyToOne(() => Travel, (travel) => travel.comment, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
-  @Column({ type: 'int', name: 'user_id' })
+  @Column({ type: 'int', name: 'travel_id' })
   travel_id: number;
 
   @ManyToOne(() => User, (user) => user.comment, { onDelete: 'CASCADE' })

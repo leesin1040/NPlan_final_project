@@ -37,10 +37,10 @@ export class Travel {
   @Column({ type: 'int', name: 'user_id' })
   user_id: number;
 
-  @OneToMany(() => Like, (like) => like.travel)
+  @OneToMany(() => Like, (like) => like.travel, { nullable: true })
   like: Like[];
 
-  @OneToMany(() => Comment, (comment) => comment.travel)
+  @OneToMany(() => Comment, (comment) => comment.travel, { nullable: true })
   comment: Comment[];
 
   @OneToMany(() => Member, (member) => member.travel)
