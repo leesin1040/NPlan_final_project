@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { Like } from 'src/like/entities/like.entity';
+import { Member } from 'src/member/entities/member.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import {
   Column,
@@ -80,4 +83,16 @@ export class User {
   // Travel 1:N
   @OneToMany(() => Travel, (travel) => travel.user)
   travel: Travel[];
+
+  // Travel_member 1:N
+  @OneToMany(() => Member, (travel) => travel.user)
+  member: Travel[];
+
+  // Like 1:N
+  @OneToMany(() => Like, (like) => like.user)
+  like: Like[];
+
+  // Comment 1:N
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comment: Comment[];
 }

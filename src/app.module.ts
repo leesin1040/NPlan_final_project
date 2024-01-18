@@ -8,6 +8,9 @@ import { typeOrmModuleAsyncOptions } from './configs/database.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TravelModule } from './travel/travel.module';
+import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { TravelModule } from './travel/travel.module';
     AuthModule,
     UserModule,
     TravelModule,
+    LikeModule,
+    CommentModule,
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],
