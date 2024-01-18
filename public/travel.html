@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>travel</title>
+  </head>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module" defer src="./script/travel.js"></script>
+  <body>
+    <label for="name">여행제목:</label>
+    <input type="text" name="name" id="name" />
+    <label for="start_date">시작 날짜:</label>
+    <input type="date" name="start_date" id="startDate" onchange="updateEndDateMin()" />
+    <label for="end_date">종료 날짜:</label>
+    <input type="date" name="end_date" id="endDate" />
+    <button id="dates" type="button">클릭</button>
+    <script>
+      function updateEndDateMin() {
+        let startDateInput = document.getElementById('startDate');
+        let endDateInput = document.getElementById('endDate');
+
+        let startDateValue = startDateInput.value;
+        if (startDateValue) {
+          let nextDay = new Date(startDateValue);
+          nextDay.setDate(nextDay.getDate() + 1);
+
+          let nextDayString = nextDay.toISOString().split('T')[0];
+          endDateInput.min = nextDayString;
+        } else {
+          endDateInput.min = '';
+        }
+      }
+    </script>
+  </body>
+</html>
