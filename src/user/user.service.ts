@@ -72,4 +72,13 @@ export class UserService {
       console.log(err);
     }
   }
+
+  // // 유저 이미지 수정
+  // async updateUserImage(id: number, file: Express.Multer.File) {
+  //   const user = await this.userRepository.findOne(id);
+
+  //   if (!user) {
+  //     throw new NotFoundException('사용자를 찾을 수 없습니다.');
+  //   }
+  // }
 }

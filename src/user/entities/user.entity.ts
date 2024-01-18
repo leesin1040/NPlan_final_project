@@ -75,4 +75,7 @@ export class User {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshToken: RefreshToken[];
+
+  @Column({ type: 'text', nullable: true, name: 'image_url' })
+  imageUrl: string;
 }
