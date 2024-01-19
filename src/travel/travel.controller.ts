@@ -31,9 +31,9 @@ export class TravelController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
+  async createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
     const user_id = req.user.id;
-    const data = this.travelService.create(user_id, createTravelDto);
+    const data = await this.travelService.create(user_id, createTravelDto);
     return {
       statusCode: HttpStatus.CREATED,
       message: '여행보드 생성에 성공하였습니다.',
