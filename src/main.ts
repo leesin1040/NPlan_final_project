@@ -21,13 +21,13 @@ async function bootstrap() {
 
   /**스웨거 */
   const config = new DocumentBuilder()
-    .setTitle('2024 내배캠 타임어택')
-    .setDescription('내배캠 타임어택 최이진')
+    .setTitle('노드3기 NP조 파이널 프로젝트')
+    .setDescription('NP조 파이널 프로젝트 API')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('api-docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       tagSorter: 'alpha',
