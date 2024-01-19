@@ -13,7 +13,7 @@ import {
 import { TravelService } from './travel.service';
 import { CreateTravelDto } from './dto/create-travel.dto';
 import { UpdateTravelDto } from './dto/update-travel.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('여행보드')
@@ -27,6 +27,8 @@ export class TravelController {
    * @param createTravelDto
    * @returns
    */
+  @ApiOperation({ summary: '여행보드 생성' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post()
   createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
@@ -47,9 +49,9 @@ export class TravelController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll(@Req() req) {
+  async findAll(@Req() req) {
     const user_id = req.user.id;
-    const data = this.travelService.findAll(user_id);
+    const data = await this.travelService.findAll(user_id);
     return {
       statusCode: HttpStatus.FOUND,
       message: '유저가 포함된 여행보드 조회에 성공했습니다.',
@@ -63,6 +65,7 @@ export class TravelController {
    * @param req
    * @returns
    */
+  @ApiOperation({ summary: '여행보드 상세조회' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
@@ -77,12 +80,13 @@ export class TravelController {
   }
 
   /**
-   *여행보드 수정
+   * 여행보드 수정
    * @param id
    * @param req
    * @param updateTravelDto
    * @returns
    */
+  @ApiOperation({ summary: '여행보드 수정' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
@@ -102,6 +106,9 @@ export class TravelController {
    * @param req
    * @returns
    */
+  @ApiOperation({ summary: '여행보드 삭제' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: number, @Req() req) {
     const user_id = req.user.id;
