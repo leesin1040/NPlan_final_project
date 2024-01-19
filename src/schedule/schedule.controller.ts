@@ -15,31 +15,31 @@ export class ScheduleController {
   }
 
   // 리스트별 스케줄 전체 조회
-  @Get(':day_id')
+  @Get('allOfDay/:day_id')
   findAllByDayId(@Param('day_id') day_id: number) {
     return this.scheduleService.findAllByDayId(+day_id);
   }
 
   // 단일 스케줄 상세 조회
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: number) {
     return this.scheduleService.findOne(+id);
   }
 
   // 스케줄 수정
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: number, @Body() updateScheduleDto: UpdateScheduleDto) {
     return this.scheduleService.update(+id, updateScheduleDto);
   }
 
   // 스케줄 이동
-  @Patch(':id')
+  @Patch('move/:id')
   move(@Param('id') id: number, @Body() moveScheduleDto: MoveScheduleDto) {
     return this.scheduleService.move(+id, moveScheduleDto);
   }
 
   // 스케줄 삭제
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: number) {
     return this.scheduleService.remove(+id);
   }
