@@ -11,6 +11,7 @@ import { TravelModule } from './travel/travel.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
 import { MemberModule } from './member/member.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MemberModule } from './member/member.module';
     LikeModule,
     CommentModule,
     MemberModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
