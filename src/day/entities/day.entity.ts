@@ -1,5 +1,6 @@
+import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity('day')
 export class Day {
@@ -9,7 +10,7 @@ export class Day {
   @ManyToOne(() => Travel, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
-  // CHECK 랭스
-  // @Column({ length: 255, nullable: true })
-  // day: number;
+
+  @Column({ nullable: true })
+  day: number;
 }
