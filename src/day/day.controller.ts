@@ -11,12 +11,25 @@ import {
 } from '@nestjs/common';
 import { DayDto } from './dto/day.dto';
 import { DayService } from './day.service';
-// https://developers.kakao.com/docs/latest/ko/getting-started/quota#minute
-// https://developers.kakao.com/terms/latest/ko/site-policies
+
 @Controller('')
 export class DayController {
   constructor(private readonly dayService: DayService) {}
-  // day 생성
+  // day Create
+  // travel생성시 자동으로 Days 생성
+  @Post('/travel/:travelId/days')
+  async createDays(
+    @Body('days', ParseIntPipe) days: number,
+    @Param('travelId', ParseIntPipe) travelId: number,
+  ) {
+    const data = await this.dayService.createDays(days, travelId);
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: `${days}일 기간의 day 생성에 성공했습니다`,
+      data,
+    };
+  }
+
   // 일정 수정 도중에 일정이 늘어 날 수있음에 대비하여
   @Post('/travel/:travelId/day')
   async createDay(@Param('travelId', ParseIntPipe) travelId: number) {
@@ -27,16 +40,7 @@ export class DayController {
       data,
     };
   }
-  // travel생성시 자동으로 Days 생성
-  @Post('/travel/:travelId/days')
-  async createDays(@Body() days: number, @Param('travelId', ParseIntPipe) travelId: number) {
-    const data = await this.dayService.createDays(travelId, days);
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: `${days}일 기간의 day 생성에 성공했습니다`,
-      data,
-    };
-  }
+
   // day 목록 조회
   @Get('/travel/:travelId/day')
   async getDays(@Param('travelId', ParseIntPipe) travelId: number) {

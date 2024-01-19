@@ -1,0 +1,30 @@
+@domain = http://localhost:3000/api
+@accessToken = {{loginToken.response.body.data.accessToken}}
+
+###로그인 - 완료
+# @name loginToken
+POST {{domain}}/auth/login
+Content-Type: application/json
+
+{
+  "email":"expample@email.com",
+  "password":"123123"
+}
+
+
+### day 생성 
+Post {{domain}}/travel/1/days
+Content-Type: application/json
+
+{
+    "days":5
+}
+
+### day 조회
+GET {{domain}}/travel/1/day
+Content-Type: application/json
+
+
+### day 상세조회
+GET {{domain}}/travel/1/day/1
+Content-Type: application/json
