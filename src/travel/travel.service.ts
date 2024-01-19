@@ -5,14 +5,17 @@ import { UpdateTravelDto } from './dto/update-travel.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from 'src/member/entities/member.entity';
+import { Day } from 'src/day/entities/day.entity';
 
 @Injectable()
 export class TravelService {
   constructor(
     @InjectRepository(Travel)
     private readonly travelRepository: Repository<Travel>,
-    @InjectRepository(Travel)
+    @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
+    @InjectRepository(Day)
+    private readonly dayRepository: Repository<Day>,
   ) {}
   /**여행 생성 */
   async create(user_id: number, createTravelDto: CreateTravelDto) {

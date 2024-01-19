@@ -28,7 +28,7 @@ export class TravelController {
    * @returns
    */
   @UseGuards(AuthGuard('jwt'))
-  @Post('new')
+  @Post()
   createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
     const user_id = req.user.id;
     const data = this.travelService.create(user_id, createTravelDto);

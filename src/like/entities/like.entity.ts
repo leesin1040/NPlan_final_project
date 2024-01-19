@@ -10,12 +10,12 @@ export class Like {
   @ManyToOne(() => Travel, (travel) => travel.like, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
-  @Column({ type: 'int', name: 'travel_id' })
+  @Column({ type: 'int', unsigned: true })
   travel_id: number;
 
   @ManyToOne(() => User, (user) => user.like, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
-  @Column({ type: 'int', name: 'user_id' })
+  @Column({ type: 'int', unsigned: true })
   user_id: number;
 }
