@@ -12,6 +12,7 @@ import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
 import { MemberModule } from './member/member.module';
 import { ScheduleModule } from './schedule/schedule.module';
+import { DayModule } from './day/day.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ScheduleModule } from './schedule/schedule.module';
     CommentModule,
     MemberModule,
     ScheduleModule,
+    DayModule,
   ],
   controllers: [AppController],
   providers: [AppService],
