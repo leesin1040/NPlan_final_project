@@ -1,3 +1,66 @@
+// params에서 travelId와 days를 가져와 day생성
+// day생성하면서 dayId로 card생성
+
+// day는 dayList에 안에 추가하자
+
+const urlParams = new URLSearchParams(window.location.search);
+const travelId = urlParams.get('travelId');
+const days = urlParams.get('days');
+getDays(travelId, days);
+function getDays(travelId, days) {
+  // params값으로 Days 자동생성
+  axios
+    .get(`api/travel/${travelId}/day`)
+    .then((response) => {
+      const dayData = response.data;
+      const dayList = document.getElementById('dayList');
+      dayList.innerHTML = '';
+      dayData.data.forEach((day) => {
+        let dayHtml = `
+        <div class="day" data-day-id="${day.id}">
+          <div class="day-header">
+            <div class="left-content">${day.day}일차</div>
+            <div class="viewPathButton" id=viewDayPath${day.id}>경로보기</div>
+          </div>
+          <div class="scheduleList" id="scheduleList${day.id}"></div>
+          <div class="flex-container">
+            <div class="centered-content">
+              <div class="plus-sign" id="addScheduleBtnId${day.id}">+ Add Schedule</div>
+            </div>
+          </div>
+        </div>
+          `;
+        dayList.innerHTML += dayHtml;
+        const scheduleId = `scheduleId${day.id}`;
+      });
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+      // console.error('Error:', error);
+    });
+}
+// 동적으로 생산된 버튼에 이벤트리스트할당
+document.addEventListener('click', function (event) {
+  // 경로 보기 버튼
+  if (event.target.id.startsWith('viewDayPath')) {
+    const dayId = event.target.id.replace('viewDayPath', '');
+    viewDayPath(dayId);
+  }
+  // Add Schedule 버튼
+  else if (event.target.id.startsWith('addScheduleBtnId')) {
+    const dayId = event.target.id.replace('addScheduleBtnId', '');
+  }
+});
+// 경로보기 모달창 이벤트리스너 할당 및 Get Map
+function viewDayPath(dayId) {
+  const viewPathModal = document.getElementById('viewPathModal');
+  const closePathModal = document.getElementById('closePathModal');
+  viewPathModal.style.display = 'flex';
+  closePathModal.addEventListener('click', () => {
+    viewPathModal.style.display = 'none';
+  });
+}
+
 let draggedCard = null;
 let originColumn = null;
 // 드래그 앤 드롭 설정
