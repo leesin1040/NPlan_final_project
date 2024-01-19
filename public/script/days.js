@@ -4,11 +4,12 @@
 // day는 dayList에 안에 추가하자
 
 const urlParams = new URLSearchParams(window.location.search);
-const travelId = urlParams.get('travelId');
-const days = urlParams.get('days');
-getDays(travelId, days);
-function getDays(travelId, days) {
-  // params값으로 Days 자동생성
+const travelId = urlParams.get('id');
+const travelTitle = urlParams.get('title');
+document.title = travelTitle;
+document.getElementById('travelTitle').innerHTML += travelTitle;
+getDays(travelId);
+function getDays(travelId) {
   axios
     .get(`api/travel/${travelId}/day`)
     .then((response) => {
@@ -55,12 +56,17 @@ document.addEventListener('click', function (event) {
 function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');
   const closePathModal = document.getElementById('closePathModal');
-  viewPathModal.style.display = 'flex';
   closePathModal.addEventListener('click', () => {
     viewPathModal.style.display = 'none';
   });
+  viewPathModal.style.display = 'flex';
+  // 경로 표시
+  // viewPathModal에 카드 ForEach하면서  위도경도 로 목적지 찍고 선긋기
+  // 카카오는 한번에 5개경유지  if 5개가 넘어간다면 합쳐줘야한다
+  // 일단 5개까지만 해보자
 }
 
+// 드래그 앤 드롭
 let draggedCard = null;
 let originColumn = null;
 // 드래그 앤 드롭 설정
@@ -168,3 +174,4 @@ setupDragAndDrop();
 //       .catch((error) => console.error('Error updating card order', error));
 //   }
 // }
+// 드래그 앤 드롭

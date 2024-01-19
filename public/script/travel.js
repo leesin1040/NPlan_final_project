@@ -35,10 +35,9 @@ function date() {
     .then((response) => {
       axios.post(`api/travel/${response.data.data.newTravel.id}/days`, { days: days });
       alert(response.data.message);
-      window.location.href = `/days.html?travelId=${response.data.data.newTravel.id}&days=${days}`;
+      window.location.href = `/days.html?id=${response.data.data.newTravel.id}&title=${response.data.data.newTravel.title}`;
     })
     .catch((error) => {
-      // console.error(error);
       alert(error.response.data.message);
     });
 }
