@@ -34,7 +34,7 @@ export class TravelService {
       travel_id: newTravel.id,
       user_id,
     });
-    return newTravel;
+    return { newTravel };
   }
   // --
   /** 여행 목록(자신의 보드만 조회) */
