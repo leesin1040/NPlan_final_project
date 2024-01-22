@@ -15,9 +15,9 @@ export class ScheduleController {
   }
 
   // 리스트별 스케줄 전체 조회
-  @Get('allOfDay/:day_id')
-  findAllByDayId(@Param('day_id') day_id: number) {
-    return this.scheduleService.findAllByDayId(+day_id);
+  @Get('allOfDay/:dayId')
+  findAllByDayId(@Param('dayId') dayId: number) {
+    return this.scheduleService.findAllByDayId(+dayId);
   }
 
   // 단일 스케줄 상세 조회

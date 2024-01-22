@@ -6,8 +6,8 @@ export class Schedule {
   id: number;
 
   //Day JoinColumn
-  @Column({ type: 'int', nullable: false })
-  day_id: number;
+  @Column({ name: 'day_id', type: 'int', nullable: false })
+  dayId: number;
 
   // 주소(도로명 or 지번)
   @Column({ type: 'varchar', nullable: false })
@@ -23,19 +23,11 @@ export class Schedule {
 
   // 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점
   @Column({ type: 'int', nullable: false })
-  category_id: number;
+  contentId: number;
 
   // 순서 정렬 값 -> lexorank 사용
   @Column({ type: 'varchar' })
   order: string;
-
-  // 비용
-  @Column({ type: 'int', nullable: true })
-  cost: number;
-
-  // 체크리스트
-  @Column({ type: 'json', nullable: true })
-  check_list: JSON;
 
   // 교통수단
   @Column({ type: 'varchar', nullable: true })

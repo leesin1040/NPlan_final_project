@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateScheduleDto {
   @IsNotEmpty()
-  day_id: number;
+  dayId: number;
 
   @IsString()
   @IsNotEmpty()
@@ -15,13 +15,7 @@ export class CreateScheduleDto {
   longitude: number;
 
   @IsNotEmpty()
-  category_id: number;
-
-  @IsOptional()
-  cost: number;
-
-  @IsOptional()
-  check_list: JSON;
+  contentId: number;
 
   @IsOptional()
   transportation: string;
