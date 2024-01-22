@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Day } from 'src/day/entities/day.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'schedules' })
 export class Schedule {
@@ -36,4 +37,9 @@ export class Schedule {
   // 메모
   @Column({ type: 'text', nullable: true })
   memo: string;
+
+  //Day 1:N Schedule
+  @ManyToOne(() => Day, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'day_id' })
+  day: Day;
 }

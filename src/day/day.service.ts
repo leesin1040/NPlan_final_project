@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Day } from './entities/day.entity';
@@ -32,19 +32,30 @@ export class DayService {
   }
 
   // travel생성시 자동으로 Lists 생성
-  async createDays(travelId: number, days: number) {
+  async createDays(days: number, travelId: number) {
+    const existDay = await this.dayRepository.findOne({
+      where: { travel: { id: travelId } },
+    });
+    if (existDay) {
+      throw new ConflictException('이미 해당 treval에 day가 존재합니다');
+    }
     const createDays = [];
-    // 보드Id로 list전체가져옴
-    for (let i = 1; i <= days; i++) {
-      const createDay = this.dayRepository.create({
-        day: i,
-        travel: { id: travelId },
-      });
-      this.dayRepository.save(createDay);
-      createDays.push(createDay);
+    try {
+      for (let i = 1; i <= days; i++) {
+        const createDay = this.dayRepository.create({
+          day: i,
+          travel: { id: travelId },
+        });
+        console.log(createDay);
+        await this.dayRepository.save(createDay);
+        createDays.push(createDay);
+      }
+    } catch (error) {
+      console.error('Error in createDays:', error);
     }
     return createDays;
   }
+
   // Day 목록 조회
   async getDays(travelId: number) {
     const getDays = await this.dayRepository.find({
@@ -58,7 +69,9 @@ export class DayService {
     // 클릭한 리스트 안에 존재하는 카드들의 위치정보를  순서대로 반환해준다
     const getCards = this.dayRepository.find({
       where: { id: dayId },
+      relations: ['schedule'],
     });
+    return getCards;
   }
 
   //   리스트삭제

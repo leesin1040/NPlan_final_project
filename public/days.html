@@ -9,9 +9,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="module" defer src="./script/days.js"></script>
   <link href="./css/days.css" rel="stylesheet" type="text/css" />
-  <style></style>
+  <!-- 카카오 JAVASCRIPT key입력하시오 -->
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=여기여기"></script>
   <body>
-    <div><strong>travel Name</strong></div>
+    <div id="travelTitle"></div>
     <div id="body-second">
       <div id="dayList" class="dayList">
         <div class="day" data-column-id="${column.id}">
@@ -19,59 +20,7 @@
             <div class="left-content">1일차</div>
             <div class="viewPathButton">경로보기</div>
           </div>
-          <div class="scheduleList" id="scheduleId${column.id}">
-            <div
-              class="schedule"
-              draggable="true"
-              data-card-id="${card.id}"
-              style="border: 4px solid"
-            >
-              <strong>(관광지) 남산타워 </strong><br />
-              <strong>서울특별시 용산구 남산공원길 105</strong>
-              <button
-                class="delete-btn bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-                type="button"
-                data-delete-card-column-id="${column.id}"
-                id="deleteCardId${card.id}"
-              >
-                상세보기
-              </button>
-            </div>
-            <div
-              class="schedule"
-              draggable="true"
-              data-card-id="${card.id}"
-              style="border: 4px solid"
-            >
-              <strong>(관광지) 호수공원 </strong><br />
-              <strong>경기도 고양시 일산동구 호수로 595</strong>
-              <button
-                class="delete-btn bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-                type="button"
-                data-delete-card-column-id="${column.id}"
-                id="deleteCardId${card.id}"
-              >
-                상세보기
-              </button>
-            </div>
-            <div
-              class="schedule"
-              draggable="true"
-              data-card-id="${card.id}"
-              style="border: 4px solid"
-            >
-              <strong>(관광지) 건대호수 </strong><br />
-              <strong>서울 광진구 화양동</strong>
-              <button
-                class="delete-btn bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-                type="button"
-                data-delete-card-column-id="${column.id}"
-                id="deleteCardId${card.id}"
-              >
-                상세보기
-              </button>
-            </div>
-          </div>
+          <div class="scheduleList" id="scheduleId${column.id}"></div>
           <div class="flex-container">
             <div class="centered-content">
               <div class="plus-sign" id="addCardBtnId${column.id}">+ Add Schedule</div>
@@ -113,10 +62,8 @@
     <!-- 경로보기 모달 -->
     <section id="viewPathModal" class="modal">
       <div class="modal-content">
-        <!-- Add content for the 경로보기 모달 -->
-        <!-- You can customize this section as needed -->
         <h2>경로보기 모달</h2>
-        <p>map</p>
+        <div id="map" style="width: 100%; height: 350px"></div>
         <button type="button" id="closePathModal">닫기</button>
       </div>
     </section>
@@ -145,7 +92,6 @@
       viewPathModal.style.display = 'none';
     });
 
-    // Event listeners for button clicks
     viewPathButtons.forEach((viewPathButton) => {
       viewPathButton.addEventListener('click', () => {
         viewPathModal.style.display = 'flex';

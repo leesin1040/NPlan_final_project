@@ -14,19 +14,17 @@ function handleLogin(event) {
     alert('이메일과 비밀번호를 입력해주세요.');
     return;
   }
-  alert('로그인 성공');
-  window.location.href = '/public/travel.html';
-  //   axios
-  //     .post('/auth/login', { email, password })
-  //     .then((response) => {
-  //       const { access_token } = response.data;
-  //       localStorage.setItem('access_token', access_token);
-  //       // console.log(response.data);
-  //       alert(response.data.message);
-  //       window.location.href = '/user-my-page.html';
-  //     })
-  //     .catch((error) => {
-  //       // console.error(error);
-  //       alert(error.response.data.message);
-  //     });
+
+  axios
+    .post('api/auth/login', { email, password })
+    .then((response) => {
+      const { accessToken } = response.data.data;
+      localStorage.setItem('accessToken', accessToken);
+      alert(response.data.message);
+      window.location.href = '/travel.html';
+    })
+    .catch((error) => {
+      // console.error(error);
+      alert(error.response.data.message);
+    });
 }

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Day } from 'src/day/entities/day.entity';
@@ -16,7 +17,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('travels')
+@Entity('travel')
 export class Travel {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
   id: number;
@@ -34,7 +35,7 @@ export class Travel {
    * 배경 컬러
    * @example "#fffff"
    * */
-  @IsString()
+  @IsNotEmpty({ message: '여행 보드 컬러를 설정해주세요' })
   @Column({ type: 'varchar', nullable: false, default: '#ffffff' })
   color: string;
 
@@ -42,6 +43,7 @@ export class Travel {
    * 여행 지역
    * @example "서울"
    * */
+  @IsNotEmpty({ message: '여행지역을 설정해주세요.' })
   @Column({ type: 'varchar', nullable: false })
   region: string;
 
@@ -49,6 +51,7 @@ export class Travel {
    * 여행 테마
    * @example "역사"
    * */
+  @IsNotEmpty({ message: '여행테마를 설정해주세요.' })
   @Column({ type: 'varchar', nullable: false })
   theme: string;
 
@@ -56,13 +59,15 @@ export class Travel {
    * 여행 시작 날짜
    * @example "2024-01-30"
    * */
+  @IsNotEmpty({ message: '여행 시작일자를 설정해주세요.' })
   @Column({ type: 'date', nullable: false })
   start_date: Date;
 
   /**
    * 여행 종료 날짜
-   * @example "2024-01-30"
+   * @example "2024-02-03"
    * */
+  @IsNotEmpty({ message: '여행 종료일자를 설정해주세요.' })
   @Column({ type: 'date', nullable: false })
   end_date: Date;
 
@@ -71,7 +76,7 @@ export class Travel {
   @JoinColumn({ name: 'user_id' })
   user: User;
   @Column({ type: 'int', unsigned: true })
-  user_id: number;
+  userId: number;
 
   @OneToMany(() => Like, (like) => like.travel, { nullable: true })
   like: Like[];
@@ -82,6 +87,9 @@ export class Travel {
   @OneToMany(() => Member, (member) => member.travel)
   member: Member[];
 
+  @OneToMany(() => Day, (day) => day.travel, { nullable: true })
+  day: Day[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -90,7 +98,4 @@ export class Travel {
 
   @DeleteDateColumn()
   deletedAt: Date;
-
-  @OneToMany(() => Day, (day) => day.travel, { nullable: true })
-  day: Day[];
 }

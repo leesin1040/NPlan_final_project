@@ -95,4 +95,7 @@ export class User {
   // Comment 1:N
   @OneToMany(() => Comment, (comment) => comment.user)
   comment: Comment[];
+
+  @Column({ type: 'text', nullable: true, name: 'image_url' })
+  imageUrl: string;
 }
