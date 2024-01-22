@@ -15,4 +15,6 @@ export class RefreshToken {
   @ManyToOne(() => User, (user) => user.refreshToken)
   @JoinColumn({ name: 'user_id' })
   user: User;
+  @Column({ type: 'int', unsigned: true })
+  userId: number;
 }

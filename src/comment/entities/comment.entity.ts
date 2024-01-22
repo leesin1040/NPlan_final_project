@@ -17,12 +17,12 @@ export class Comment {
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
   @Column({ type: 'int', unsigned: true })
-  travel_id: number;
+  travelId: number;
 
   /**유저에서 닉네임 불러오기 */
   @ManyToOne(() => User, (user) => user.comment, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
   @Column({ type: 'int', unsigned: true })
-  user_id: number;
+  userId: number;
 }

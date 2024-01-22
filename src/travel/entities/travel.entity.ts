@@ -17,7 +17,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('travels')
+@Entity('travel')
 export class Travel {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
   id: number;
@@ -35,7 +35,6 @@ export class Travel {
    * 배경 컬러
    * @example "#fffff"
    * */
-  @IsString()
   @IsNotEmpty({ message: '여행 보드 컬러를 설정해주세요' })
   @Column({ type: 'varchar', nullable: false, default: '#ffffff' })
   color: string;
@@ -77,7 +76,7 @@ export class Travel {
   @JoinColumn({ name: 'user_id' })
   user: User;
   @Column({ type: 'int', unsigned: true })
-  user_id: number;
+  userId: number;
 
   @OneToMany(() => Like, (like) => like.travel, { nullable: true })
   like: Like[];
