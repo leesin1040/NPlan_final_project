@@ -7,12 +7,14 @@ export class Day {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Travel, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Travel, (travel) => travel.day, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
+  @Column({ type: 'int', unsigned: true })
+  travelId: number;
 
   @OneToMany(() => Schedule, (schedule) => schedule.day)
-  schedules: Schedule[];
+  schedule: Schedule[];
 
   @Column({ nullable: true })
   day: number;
