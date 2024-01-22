@@ -15,33 +15,31 @@ export class ScheduleService {
   ) {}
   // 스케줄 생성
   async create(createScheduleDto: CreateScheduleDto) {
-    // (day entity 연결 후) day_id가 존재하지 않으면 throw 에러
+    // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
 
     // order 생성
-    const newOrder = await this.getOrder(createScheduleDto.day_id);
+    const newOrder = await this.getOrder(createScheduleDto.dayId);
 
     return await this.scheduleRepository.save({
-      day_id: createScheduleDto.day_id,
+      dayId: createScheduleDto.dayId,
       place: createScheduleDto.place,
       latitude: createScheduleDto.latitude,
       longitude: createScheduleDto.longitude,
-      category_id: createScheduleDto.category_id,
+      contentId: createScheduleDto.contentId,
       order: newOrder,
-      cost: createScheduleDto.cost,
-      check_list: createScheduleDto.check_list,
       transportation: createScheduleDto.transportation,
       memo: createScheduleDto.memo,
     });
   }
 
   // 리스트별 스케줄 전체 조회
-  async findAllByDayId(day_id: number) {
-    // (day entity 연결 후) day_id가 존재하지 않으면 throw 에러
+  async findAllByDayId(dayId: number) {
+    // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
 
     return await this.scheduleRepository.find({
-      where: { day_id },
+      where: { dayId },
       order: { order: 'ASC' },
-      select: { place: true, category_id: true, order: true },
+      select: { place: true, contentId: true, order: true },
     });
   }
 
@@ -61,12 +59,12 @@ export class ScheduleService {
   async move(id: number, moveScheduleDto: MoveScheduleDto) {
     const movedSchedule = await this.findOne(id);
 
-    // 스케줄이 있는 day의 id와 입력받은 day_id가 일치하지 않는다면(스케줄을 다른 일차로 옮긴다면)
-    if (moveScheduleDto.day_id && movedSchedule.day_id !== moveScheduleDto.day_id) {
-      movedSchedule.day_id = moveScheduleDto.day_id;
+    // 스케줄이 있는 day의 id와 입력받은 dayId가 일치하지 않는다면(스케줄을 다른 일차로 옮긴다면)
+    if (moveScheduleDto.dayId && movedSchedule.dayId !== moveScheduleDto.dayId) {
+      movedSchedule.dayId = moveScheduleDto.dayId;
     }
 
-    let schedules = await this.findAllByDayId(movedSchedule.day_id);
+    let schedules = await this.findAllByDayId(movedSchedule.dayId);
 
     // 옮긴 day에 스케줄이 movedSchedule 하나라면 LexoRank 중앙값을 order에 저장 후 반환
     if (schedules.length === 1) {
@@ -87,7 +85,7 @@ export class ScheduleService {
         LexoRank.parse(schedules[moveScheduleDto.index].order),
       ) === LexoRank.parse(schedules[moveScheduleDto.index].order)
     ) {
-      schedules = await this.reOrdering(movedSchedule.day_id);
+      schedules = await this.reOrdering(movedSchedule.dayId);
     }
 
     // order값 수정
@@ -103,13 +101,13 @@ export class ScheduleService {
       movedSchedule.order = prevSchedule.between(nextSchedule).toString();
     }
 
-    // 수정된 order, day_id 변경하여 저장
+    // 수정된 order, dayId 변경하여 저장
     return await this.scheduleRepository.save(movedSchedule);
   }
 
   // order 재정렬
-  async reOrdering(day_id: number) {
-    const schedules = await this.findAllByDayId(day_id);
+  async reOrdering(dayId: number) {
+    const schedules = await this.findAllByDayId(dayId);
 
     let lexorank = LexoRank.middle();
     for (let i = 0; i < schedules.length; i++) {
@@ -126,8 +124,8 @@ export class ScheduleService {
   }
 
   // 스케줄 생성 시 정렬 순서를 저장할 수 있게 order 값 지정
-  async getOrder(day_id: number) {
-    const schedules = await this.findAllByDayId(day_id);
+  async getOrder(dayId: number) {
+    const schedules = await this.findAllByDayId(dayId);
 
     let order: string;
 
@@ -135,7 +133,7 @@ export class ScheduleService {
     if (!schedules.length) order = LexoRank.middle().toString();
     else {
       const lastOne = await this.scheduleRepository.findOne({
-        where: { day_id },
+        where: { dayId },
         order: { order: 'DESC' },
       });
 
