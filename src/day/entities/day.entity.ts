@@ -11,8 +11,8 @@ export class Day {
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
 
-  // @OneToMany(() => Schedule, (schedule) => schedule.day)
-  // schedules: Schedule[];
+  @OneToMany(() => Schedule, (schedule) => schedule.day)
+  schedules: Schedule[];
 
   @Column({ nullable: true })
   day: number;

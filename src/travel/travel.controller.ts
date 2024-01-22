@@ -32,8 +32,8 @@ export class TravelController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async createTravel(@Req() req, @Body() createTravelDto: CreateTravelDto) {
-    const user_id = req.user.id;
-    const data = await this.travelService.create(user_id, createTravelDto);
+    const userId = req.user.id;
+    const data = await this.travelService.create(userId, createTravelDto);
     return {
       statusCode: HttpStatus.CREATED,
       message: '여행보드 생성에 성공하였습니다.',
@@ -46,12 +46,13 @@ export class TravelController {
    * @param req
    * @returns
    */
+  @ApiOperation({ summary: '여행보드 전체조회' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Req() req) {
-    const user_id = req.user.id;
-    const data = await this.travelService.findAll(user_id);
+    const userId = req.user.id;
+    const data = await this.travelService.findAll(userId);
     return {
       statusCode: HttpStatus.FOUND,
       message: '유저가 포함된 여행보드 조회에 성공했습니다.',
@@ -70,8 +71,8 @@ export class TravelController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(@Param('id') id: number, @Req() req) {
-    const user_id = req.user.id;
-    const data = await this.travelService.findOneTravel(id, user_id);
+    const userId = req.user.id;
+    const data = await this.travelService.findOneTravel(id, userId);
     return {
       statusCode: HttpStatus.FOUND,
       message: '여행보드 조회에 성공했습니다.',
@@ -91,8 +92,8 @@ export class TravelController {
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   update(@Param('id') id: number, @Req() req, @Body() updateTravelDto: UpdateTravelDto) {
-    const user_id = req.user.id;
-    const data = this.travelService.update(id, user_id, updateTravelDto);
+    const userId = req.user.id;
+    const data = this.travelService.update(id, userId, updateTravelDto);
     return {
       statusCode: HttpStatus.OK,
       message: '여행보드 수정에 성공했습니다.',
@@ -111,8 +112,8 @@ export class TravelController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: number, @Req() req) {
-    const user_id = req.user.id;
-    const deletedData = await this.travelService.remove(id, user_id);
+    const userId = req.user.id;
+    const deletedData = await this.travelService.remove(id, userId);
     return {
       statusCode: HttpStatus.OK,
       message: '여행보드 삭제에 성공했습니다.',
