@@ -13,9 +13,11 @@ import { CommentModule } from './comment/comment.module';
 import { MemberModule } from './member/member.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { DayModule } from './day/day.module';
-
 import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { join } from 'path';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -35,8 +37,28 @@ import { join } from 'path';
     MemberModule,
     ScheduleModule,
     DayModule,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,
+        defaults: {
+          from: `"${process.env.YOUR_EMAIL}" <${process.env.EMAIL_AUTH_EMAIL}>`,
+        },
+      }),
+    }),
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  // imports: [
+  //   MailerModule.forRootAsync({
+  //     useFactory: () => ({
+  //       transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,
+  //       defaults: {
+  //         from: `"${process.env.EMAIL_FROM_USER_NAME}" <${process.env.EMAIL_AUTH_EMAIL}>`,
+  //       },
+  //     }),
+  //   }),
+  //   EmailModule,
+  // ],
 })
 export class AppModule {}
