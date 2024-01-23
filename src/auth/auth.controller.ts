@@ -6,7 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dtos/login.dto';
 
 @ApiTags('인증')
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

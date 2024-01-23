@@ -16,7 +16,7 @@ import { MoveScheduleDto } from './dto/move-schedule.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('스케쥴')
-@Controller('schedule')
+@Controller('api/schedule')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
