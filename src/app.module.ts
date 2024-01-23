@@ -16,6 +16,7 @@ import { DayModule } from './day/day.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PlaceModule } from './place/place.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { join } from 'path';
     MemberModule,
     ScheduleModule,
     DayModule,
+    PlaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
