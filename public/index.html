@@ -4,8 +4,107 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://kit.fontawesome.com/6316216c76.js" crossorigin="anonymous"></script>
   </head>
+  <style>
+    @font-face {
+      font-family: 'S-CoreDream-3Light';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff')
+        format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'S-CoreDream-3Light';
+    }
+  </style>
   <body>
+    <header class="p-3">
+      <div class="container">
+        <div
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <a
+            href="/"
+            class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"
+          >
+            <img
+              height="60"
+              src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fdab6964d-c77a-4560-af98-508dec805d81%2F%25E1%2584%2586%25E1%2585%25AE%25E1%2584%258C%25E1%2585%25A6_2.svg?table=block&id=0624fc60-0e89-496c-a965-260b9e1f8491&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&userId=1977d907-fe92-4b00-9967-9101a7709d4f&cache=v2"
+            />
+          </a>
+
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 me-3">
+            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="#" class="nav-link px-2 link-body-emphasis">내 여행</a></li>
+          </ul>
+
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
+            <input
+              type="search"
+              class="form-control"
+              placeholder="여행 포스팅 검색..."
+              aria-label="Search"
+            />
+            <input type="button" class="btn btn-outline-secondary ms-2" value="검색" />
+          </form>
+
+          <div class="dropdown text-end">
+            <a
+              href="#"
+              class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=170667a&w=0&k=20&c=m-F9Doa2ecNYEEjeplkFCmZBlc5tm1pl1F7cBCh9ZzM="
+                alt="mdo"
+                width="32"
+                height="32"
+                class="rounded-circle"
+              />
+            </a>
+            <ul class="dropdown-menu text-small">
+              <li><a class="dropdown-item" href="#">마이페이지</a></li>
+              <li><a class="dropdown-item" href="#">내 여행 목록</a></li>
+              <li><a class="dropdown-item" href="#">찜한 여행 목록</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">로그아웃</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div
+      style="
+        background: url(https://images.unsplash.com/photo-1609686767534-fc9092275c72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        background-position: center;
+        background-size: cover;
+        height: 330px;
+      "
+      class="jumbotron bg-cover text-white"
+    >
+      <div class="container py-5 text-center">
+        <h1 class="display-4 font-weight-bold">P를 위한 여행 가이드</h1>
+        <p class="font-italic mb-3">아래 버튼을 눌러 여행 계획을 짜보세요</p>
+        <a href="#" role="button" class="btn btn-dark px-4">여행보드 생성</a>
+      </div>
+    </div>
     메인페이지 여기가
   </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"
+  ></script>
 </html>
