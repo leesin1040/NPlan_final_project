@@ -25,7 +25,7 @@ export class ScheduleController {
   @Post()
   async create(@Body() createScheduleDto: CreateScheduleDto) {
     const data = await this.scheduleService.create(createScheduleDto);
-    // return this.scheduleService.create(createScheduleDto);
+
     return {
       statusCode: HttpStatus.CREATED,
       message: `스케줄 생성에 성공했습니다.`,

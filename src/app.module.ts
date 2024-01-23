@@ -16,6 +16,7 @@ import { DayModule } from './day/day.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { join } from 'path';
+import { PlaceModule } from './place/place.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
 
@@ -37,6 +38,7 @@ import { EmailModule } from './email/email.module';
     MemberModule,
     ScheduleModule,
     DayModule,
+    PlaceModule,
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,

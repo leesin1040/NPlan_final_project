@@ -6,25 +6,41 @@ export class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  //Day JoinColumn
-  @Column({ name: 'day_id', type: 'int', nullable: false })
+  //Day 1:N Schedule
+  @ManyToOne(() => Day, (day) => day.schedule, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'day_id' })
+  day: Day;
+  @Column({ type: 'int', nullable: false })
   dayId: number;
 
-  // 주소(도로명 or 지번)
-  @Column({ type: 'varchar', nullable: false })
-  place: string;
+  // //Place 1: N Schedule
+  // @ManyToOne(() => Place, (place) => place.schedule)
+  // @JoinColumn({ name: 'place_id' })
+  // place: Place;
+  // @Column({ type: 'int', nullable: false })
+  // placeId: number;
+  @Column({ name: 'place_id', type: 'int', nullable: false })
+  placeId: number;
 
-  // 위도
-  @Column({ type: 'int', nullable: false })
-  latitude: number;
+  // title
+  // @Column({ type: 'varchar', nullable: false })
+  // title: string;
 
-  // 경도
-  @Column({ type: 'int', nullable: false })
-  longitude: number;
+  // // 주소(도로명 or 지번)
+  // @Column({ type: 'varchar', nullable: false })
+  // place: string;
 
-  // 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점
-  @Column({ type: 'int', nullable: false })
-  contentId: number;
+  // // 위도
+  // @Column({ name: 'map_y', type: 'int', nullable: false })
+  // mapY: number;
+
+  // // 경도
+  // @Column({ name: 'map_x', type: 'int', nullable: false })
+  // mapX: number;
+
+  // // A01 자연, A02 인문(문화/예술/역사), A03 레포츠, A04 쇼핑, A05 음식, B02 숙박, C01 추천코스
+  // @Column({ type: 'varchar', nullable: false })
+  // category: string;
 
   // 순서 정렬 값 -> lexorank 사용
   @Column({ type: 'varchar' })
@@ -37,9 +53,4 @@ export class Schedule {
   // 메모
   @Column({ type: 'text', nullable: true })
   memo: string;
-
-  //Day 1:N Schedule
-  @ManyToOne(() => Day, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'day_id' })
-  day: Day;
 }
