@@ -1,4 +1,5 @@
 import { Day } from 'src/day/entities/day.entity';
+import { Place } from 'src/place/entities/place.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'schedule' })
@@ -13,13 +14,11 @@ export class Schedule {
   @Column({ type: 'int', nullable: false })
   dayId: number;
 
-  // //Place 1: N Schedule
-  // @ManyToOne(() => Place, (place) => place.schedule)
-  // @JoinColumn({ name: 'place_id' })
-  // place: Place;
-  // @Column({ type: 'int', nullable: false })
-  // placeId: number;
-  @Column({ name: 'place_id', type: 'int', nullable: false })
+  //Place 1: N Schedule
+  @ManyToOne(() => Place, (place) => place.schedule)
+  @JoinColumn({ name: 'place_id' })
+  place: Place;
+  @Column({ type: 'int', nullable: false })
   placeId: number;
 
   // title
