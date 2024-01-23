@@ -3,17 +3,14 @@
 
 ###
 # 스케줄 생성
-# body: dayId, place, latitude, longitude, contentId
+# body: dayId, placeId
 #       (optional) transportation, memo
 POST {{domain}}/schedule
 Content-Type: application/json
 
 {
     "dayId":,
-    "place":,
-    "latitude":,
-    "longitude":,
-    "contentId":,
+    "placeId":,
     "transportation":,
     "memo":
 }
@@ -35,15 +32,12 @@ Content-Type: application/json
 ###
 # 해당 스케줄 수정
 # parameter: id
-# body: place, latitude, longitude, contentId, transportation, memo
+# body: placeId, transportation, memo
 PATCH {{domain}}/schedule/update/1
 Content-Type: application/json
 
 {
-    "place":,
-    "latitude":,
-    "longitude":,
-    "contentId":,
+    "placeId":,
     "transportation":,
     "memo":
 }
