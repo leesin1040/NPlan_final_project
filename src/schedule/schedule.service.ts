@@ -22,10 +22,7 @@ export class ScheduleService {
 
     return await this.scheduleRepository.save({
       dayId: createScheduleDto.dayId,
-      place: createScheduleDto.place,
-      latitude: createScheduleDto.latitude,
-      longitude: createScheduleDto.longitude,
-      contentId: createScheduleDto.contentId,
+      placeId: createScheduleDto.placeId,
       order: newOrder,
       transportation: createScheduleDto.transportation,
       memo: createScheduleDto.memo,
@@ -39,13 +36,14 @@ export class ScheduleService {
     return await this.scheduleRepository.find({
       where: { dayId },
       order: { order: 'ASC' },
-      select: { place: true, contentId: true, order: true },
+      select: { placeId: true, order: true }, // place table 연결 후 place title, category 함께 출력
     });
   }
 
   // 단일 스케줄 상세 조회
   async findOne(id: number) {
     return await this.scheduleRepository.findOne({ where: { id } });
+    // place table 연결 후 place title, addr, mapX, mapY, category 함께 출력
   }
 
   // 스케줄 수정
