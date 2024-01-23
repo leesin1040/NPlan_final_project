@@ -17,7 +17,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('여행보드')
-@Controller('travel')
+@Controller('api/travel')
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
 
