@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;500;600&family=Noto+Sans+KR:wght@300;500;800&display=swap"
+      rel="stylesheet"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -14,97 +20,148 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
     <script src="https://kit.fontawesome.com/6316216c76.js" crossorigin="anonymous"></script>
   </head>
-  <style>
-    @font-face {
-      font-family: 'S-CoreDream-3Light';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff')
-        format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-    body {
-      font-family: 'S-CoreDream-3Light';
-    }
-  </style>
   <body>
-    <header class="p-3">
-      <div class="container">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
-        >
-          <a
-            href="/"
-            class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"
-          >
-            <img
-              height="60"
-              src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fdab6964d-c77a-4560-af98-508dec805d81%2F%25E1%2584%2586%25E1%2585%25AE%25E1%2584%258C%25E1%2585%25A6_2.svg?table=block&id=0624fc60-0e89-496c-a965-260b9e1f8491&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&userId=1977d907-fe92-4b00-9967-9101a7709d4f&cache=v2"
-            />
-          </a>
-
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 me-3">
-            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2 link-body-emphasis">내 여행</a></li>
-          </ul>
-
-          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
-            <input
-              type="search"
-              class="form-control"
-              placeholder="여행 포스팅 검색..."
-              aria-label="Search"
-            />
-            <input type="button" class="btn btn-outline-secondary ms-2" value="검색" />
-          </form>
-
-          <div class="dropdown text-end">
-            <a
-              href="#"
-              class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=170667a&w=0&k=20&c=m-F9Doa2ecNYEEjeplkFCmZBlc5tm1pl1F7cBCh9ZzM="
-                alt="mdo"
-                width="32"
-                height="32"
-                class="rounded-circle"
-              />
-            </a>
-            <ul class="dropdown-menu text-small">
-              <li><a class="dropdown-item" href="#">마이페이지</a></li>
-              <li><a class="dropdown-item" href="#">내 여행 목록</a></li>
-              <li><a class="dropdown-item" href="#">찜한 여행 목록</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">로그아웃</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="header"></div>
+    <!-- 메인 이미지 -->
     <div
       style="
-        background: url(https://images.unsplash.com/photo-1609686767534-fc9092275c72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        background: url(https://images.unsplash.com/photo-1532649097480-b67d52743b69?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
         background-position: center;
         background-size: cover;
-        height: 330px;
+        height: 320px;
       "
       class="jumbotron bg-cover text-white"
     >
       <div class="container py-5 text-center">
-        <h1 class="display-4 font-weight-bold">P를 위한 여행 가이드</h1>
+        <h1 class="display-4 h1Title">P를 위한 여행 가이드</h1>
         <p class="font-italic mb-3">아래 버튼을 눌러 여행 계획을 짜보세요</p>
-        <a href="#" role="button" class="btn btn-dark px-4">여행보드 생성</a>
+        <button
+          href="#"
+          type="button"
+          class="btn px-4"
+          style="background-color: #ffffff"
+          data-bs-toggle="modal"
+          data-bs-target="#boardModal"
+        >
+          여행보드 생성
+        </button>
       </div>
     </div>
-    메인페이지 여기가
+    <div class="my-4"></div>
+    <div class="container">
+      <p><a href="">인기순</a> / <a href="">최신순</a></p>
+      <div class="row row-cols-1 row-cols-md-6 g-4">
+        <!-- 여행 포스트 카드-->
+        <div class="col">
+          <div class="card h-100">
+            <img
+              src="https://images.unsplash.com/photo-1618297358013-d3cb3e23ce25?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              class="card-img-top"
+            />
+            <div class="card-body">
+              <h5 class="card-title">경주여행</h5>
+              <div class="my-1 mb-2">
+                <button type="button" class="btn btn-info btn-sm me-1" disabled>지역</button
+                ><button type="button" class="btn btn-success btn-sm" disabled>테마</button>
+              </div>
+              <div class="card-text">
+                <p>
+                  경주 여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요. 경주
+                  여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행
+                  좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행 좋아요.
+                  볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.
+                </p>
+              </div>
+              <div>
+                <i class="fa-regular fa-comment cardIcons me-2"> 20</i
+                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons"> 50</span></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 여행 포스트 카드 끝 -->
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <div
+      class="modal fade"
+      id="boardModal"
+      tabindex="-1"
+      aria-labelledby="boardModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 boardModalTitle" id="boardModalLabel">여행 보드 생성</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <p for="boardTitle" class="form-label">여행 보드 이름</p>
+              <input
+                type="text"
+                class="form-control"
+                id="boardTitle"
+                placeholder="여행 이름을 입력해주세요"
+              />
+            </div>
+            <p for="startDate" class="form-label">시작 일정</p>
+            <div class="datePickerContainer">
+              <input
+                class="input-group-text"
+                type="text"
+                name="start_date"
+                id="startDate"
+                placeholder="날짜를 선택하세요"
+              />
+            </div>
+            <p for="endDate" class="form-label">종료 일정</p>
+            <div class="datePickerContainer">
+              <input
+                class="input-group-text"
+                type="text"
+                name="end_date"
+                id="endDate"
+                placeholder="날짜를 선택하세요"
+              />
+            </div>
+            <p for="theme">테마</p>
+            <input type="text" class="input-group-text" name="theme" id="theme" />
+            <p for="region">지역</p>
+            <input type="text" class="input-group-text" name="region" id="region" />
+            <p for="color" class="form-label">색상</p>
+            <input type="color" name="color" id="color" />
+          </div>
+          <div class="modal-footer text-center row">
+            <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">
+              취소
+            </button>
+            <button type="button" id="boardCreateBtn" class="btn col btn-dark">생성</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 모달끝 -->
   </body>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"
   ></script>
+  <script defer src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+  <script defer src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Js 연결 -->
+  <script src="./script/main.js"></script>
 </html>

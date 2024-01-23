@@ -18,7 +18,7 @@ import { Query } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('사용자')
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

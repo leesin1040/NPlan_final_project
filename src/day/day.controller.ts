@@ -14,7 +14,7 @@ import { DayService } from './day.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Day')
-@Controller('')
+@Controller('api')
 export class DayController {
   constructor(private readonly dayService: DayService) {}
   // day Create
