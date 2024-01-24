@@ -1,27 +1,58 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // Header 로드
   fetch('/header.html')
     .then((response) => response.text())
     .then((data) => {
       document.getElementById('header').innerHTML = data;
-    });
-});
 
-// 날짜 선택기
-const startDateInput = document.getElementById('startDate');
-const endDateInput = document.getElementById('endDate');
-document.addEventListener('DOMContentLoaded', function () {
-  flatpickr(startDateInput, {
-    position: 'above',
-    minDate: 'today',
-    dateFormat: 'Y-m-d',
-    locale: 'ko',
-  });
-  flatpickr(endDateInput, {
-    position: 'above',
-    minDate: 'today',
-    dateFormat: 'Y-m-d',
-    locale: 'ko',
-  });
+      const accessToken = localStorage.getItem('accessToken');
+      const loginButton = document.getElementById('loginButton');
+      const userExist = document.getElementById('userExist');
+
+      if (loginButton && userExist) {
+        if (accessToken) {
+          loginButton.style.display = 'none';
+          userExist.style.display = 'block';
+        } else {
+          loginButton.style.display = 'block';
+          userExist.style.display = 'none';
+        }
+      }
+    });
+
+  // 날짜 선택기 초기화
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
+  if (startDateInput && endDateInput) {
+    flatpickr(startDateInput, {
+      position: 'above',
+      minDate: 'today',
+      dateFormat: 'Y-m-d',
+      locale: 'ko',
+    });
+    flatpickr(endDateInput, {
+      position: 'above',
+      minDate: 'today',
+      dateFormat: 'Y-m-d',
+      locale: 'ko',
+    });
+  }
+
+  // 모달 이벤트 리스너
+  var exampleModal = document.getElementById('exampleModal');
+  if (exampleModal) {
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var recipient = button.getAttribute('data-bs-whatever');
+
+      var modalTitle = exampleModal.querySelector('.modal-title');
+      var modalBodyInput = exampleModal.querySelector('.modal-body input');
+
+      modalTitle.textContent = 'New message to ' + recipient;
+      modalBodyInput.value = recipient;
+    });
+  }
+  // 상단 모두 DOMContentLoaded 요소들입니다.
 });
 
 // 여행보드 생성 엑시오스
@@ -41,14 +72,7 @@ async function createTravel() {
   let timeDifferenceInMilliseconds = endDate - startDate;
   let days = timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24);
   let accessToken = localStorage.getItem('accessToken');
-
-  console.log(startDateString);
-  console.log(endDateString);
-  console.log(travelTitle);
-  console.log(travelColor);
-  console.log(travelTheme);
-  console.log(travelRegion);
-
+  console.log(accessToken);
   await axios({
     method: 'POST',
     url: 'api/travel',
@@ -59,8 +83,8 @@ async function createTravel() {
       theme: travelTheme,
       start_date: startDateString,
       end_date: endDateString,
-      headers: { Authorization: `Bearer ${accessToken}` },
     },
+    headers: { Authorization: `Bearer ${accessToken}` },
   })
     .then((response) => {
       axios.post(`api/travel/${response.data.data.newTravel.id}/days`, { days: days });
