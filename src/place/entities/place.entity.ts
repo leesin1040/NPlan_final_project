@@ -22,7 +22,7 @@ export class Place {
   mapY: string;
 
   @Column({ nullable: true })
-  raiting: string;
+  raiting: number;
 
   @Column({ name: 'category', nullable: true })
   category: string;

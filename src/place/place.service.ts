@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class PlaceService {
@@ -14,5 +14,15 @@ export class PlaceService {
       order: { id: 'ASC' },
     });
     return getAddress;
+  }
+  async getMainRegion(region: string) {
+    const getMainRegion = await this.placeRepository.find({
+      where: {
+        address: Like(`${region}%`),
+      },
+      order: { raiting: 'DESC' },
+      take: 10,
+    });
+    return getMainRegion;
   }
 }
