@@ -28,7 +28,16 @@
         <input type="button" class="btn btn-outline-secondary ms-2" value="검색" />
       </form>
 
-      <div class="dropdown text-end">
+      <button
+        type="button"
+        class="btn"
+        id="loginButton"
+        style="background-color: #6892d5; color: white"
+        onclick="location.href='/login'"
+      >
+        login
+      </button>
+      <div class="dropdown text-end" id="userExist">
         <a
           href="#"
           class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
