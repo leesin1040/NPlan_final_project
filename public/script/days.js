@@ -8,7 +8,7 @@ const travelId = urlParams.get('id');
 const travelTitle = urlParams.get('title');
 document.title = travelTitle;
 document.getElementById('travelTitle').innerHTML += travelTitle;
-getDays(travelId);
+
 function getDays(travelId) {
   axios
     .get(`api/travel/${travelId}/day`)
@@ -32,7 +32,21 @@ function getDays(travelId) {
         </div>
           `;
         dayList.innerHTML += dayHtml;
-        const scheduleId = `scheduleId${day.id}`;
+        const scheduleList = document.getElementById(`scheduleList${day.id}`);
+        console.log(scheduleList);
+        axios.get(`api/schedule/allOfDay/${day.id}`).then((response) => {
+          const scheduleData = response.data;
+
+          scheduleData.data.forEach((schedule) => {
+            console.log(schedule);
+
+            let scheduleHtml = `
+              <div>안녕
+            </div>
+              `;
+            scheduleList.innerHTML += scheduleHtml;
+          });
+        });
       });
     })
     .catch((error) => {
@@ -40,18 +54,21 @@ function getDays(travelId) {
       // console.error('Error:', error);
     });
 }
-// 동적으로 생산된 버튼에 이벤트리스트할당
-document.addEventListener('click', function (event) {
-  // 경로 보기 버튼
-  if (event.target.id.startsWith('viewDayPath')) {
-    const dayId = event.target.id.replace('viewDayPath', '');
-    viewDayPath(dayId);
-  }
-  // Add Schedule 버튼
-  else if (event.target.id.startsWith('addScheduleBtnId')) {
-    const dayId = event.target.id.replace('addScheduleBtnId', '');
-  }
-});
+window.onload = function () {
+  getDays(travelId);
+  // 동적으로 생산된 버튼에 이벤트리스트할당
+  document.addEventListener('click', function (event) {
+    // 경로 보기 버튼
+    if (event.target.id.startsWith('viewDayPath')) {
+      const dayId = event.target.id.replace('viewDayPath', '');
+      viewDayPath(dayId);
+    }
+    // Add Schedule 버튼
+    else if (event.target.id.startsWith('addScheduleBtnId')) {
+      const dayId = event.target.id.replace('addScheduleBtnId', '');
+    }
+  });
+};
 // 경로보기 모달창 이벤트리스너 할당 및 Get Map
 function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');
@@ -67,7 +84,7 @@ function viewDayPath(dayId) {
 
   // 1.카카오 모빌리티에서 동선가져오기
 
-  const REST_API_KEY = ''; // 여기에 카카오디벨로퍼스에서 발급 받은 REST API 키 값을 넣어주세요
+  const REST_API_KEY = 'asas'; // 여기에 카카오디벨로퍼스에서 발급 받은 REST API 키 값을 넣어주세요
 
   const data = {
     // 출발지
@@ -117,17 +134,17 @@ function viewDayPath(dayId) {
               );
             }
           });
+          var polyline = new kakao.maps.Polyline({
+            path: linePath,
+            strokeWeight: 5,
+            strokeColor: '#000000',
+            strokeOpacity: 0.7,
+            strokeStyle: 'solid',
+            endArrow: true,
+          });
+          polyline.setMap(map);
         });
       });
-
-      var polyline = new kakao.maps.Polyline({
-        path: linePath,
-        strokeWeight: 5,
-        strokeColor: '#000000',
-        strokeOpacity: 0.7,
-        strokeStyle: 'solid',
-      });
-      polyline.setMap(map);
     })
     .catch((error) => {
       console.error(error);
@@ -177,71 +194,92 @@ function viewDayPath(dayId) {
       position: positions[i].latlng, // 마커를 표시할 위치
       title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       image: markerImage, // 마커 이미지
+      clickable: true,
     });
+
+    // 마커에 클릭이벤트를 등록합니다
+    kakao.maps.event.addListener(
+      marker,
+      'click',
+      (function (marker) {
+        var iwContent = `<div style = "width:100%; height:100%;"><div">제목: ${positions[i].title}</div>
+        <div>이미지들어가고</div>
+        <div>주소들어가고</div>
+        </div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+          iwRemoveable = true;
+        var infowindow = new kakao.maps.InfoWindow({
+          content: iwContent,
+          removable: iwRemoveable,
+        });
+        return function () {
+          infowindow.open(map, marker);
+        };
+      })(marker),
+    );
   }
 }
 
-// 드래그 앤 드롭
-let draggedCard = null;
-let originColumn = null;
-// 드래그 앤 드롭 설정
-function setupDragAndDrop() {
-  const cards = document.querySelectorAll('.schedule');
-  const columns = document.querySelectorAll('.day');
+// // 드래그 앤 드롭
+// let draggedCard = null;
+// let originColumn = null;
+// // 드래그 앤 드롭 설정
+// function setupDragAndDrop() {
+//   const cards = document.querySelectorAll('.schedule');
+//   const columns = document.querySelectorAll('.day');
 
-  // 카드에 대한 이벤트 리스너 설정
-  cards.forEach((card) => {
-    card.setAttribute('draggable', true);
-    card.addEventListener('dragstart', handleDragStart);
-    card.addEventListener('dragend', handleDragEnd);
-  });
+//   // 카드에 대한 이벤트 리스너 설정
+//   cards.forEach((card) => {
+//     card.setAttribute('draggable', true);
+//     card.addEventListener('dragstart', handleDragStart);
+//     card.addEventListener('dragend', handleDragEnd);
+//   });
 
-  // 컬럼에 대한 이벤트 리스너 설정
-  columns.forEach((column) => {
-    column.addEventListener('dragover', handleDragOver);
-    column.addEventListener('drop', handleDrop);
-  });
-  // console.log('너 동작은 하니?');
-}
+//   // 컬럼에 대한 이벤트 리스너 설정
+//   columns.forEach((column) => {
+//     column.addEventListener('dragover', handleDragOver);
+//     column.addEventListener('drop', handleDrop);
+//   });
+//   // console.log('너 동작은 하니?');
+// }
 
-// 드래그 시작 시 호출
-function handleDragStart(event) {
-  draggedCard = event.target;
-  originColumn = draggedCard.closest('.day');
-  // console.log('Drag Start:', draggedCard);
-}
+// // 드래그 시작 시 호출
+// function handleDragStart(event) {
+//   draggedCard = event.target;
+//   originColumn = draggedCard.closest('.day');
+//   // console.log('Drag Start:', draggedCard);
+// }
 
-// 드래그 종료 시 호출
-function handleDragEnd() {
-  // console.log('Drag End');
-  draggedCard = null;
-  originColumn = null;
-}
+// // 드래그 종료 시 호출
+// function handleDragEnd() {
+//   // console.log('Drag End');
+//   draggedCard = null;
+//   originColumn = null;
+// }
 
-// 드래그 오버 시 호출
-function handleDragOver(event) {
-  event.preventDefault();
-  // console.log('Drag Over');
-}
-// 드롭 시 호출
-function handleDrop(event) {
-  event.preventDefault();
-  const targetColumn = event.target.closest('.day');
-  const targetCardList = targetColumn.querySelector('.scheduleList');
+// // 드래그 오버 시 호출
+// function handleDragOver(event) {
+//   event.preventDefault();
+//   // console.log('Drag Over');
+// }
+// // 드롭 시 호출
+// function handleDrop(event) {
+//   event.preventDefault();
+//   const targetColumn = event.target.closest('.day');
+//   const targetCardList = targetColumn.querySelector('.scheduleList');
 
-  if (targetCardList && draggedCard) {
-    const cards = Array.from(targetCardList.children);
-    const droppedIndex = cards.indexOf(event.target.closest('.schedule'));
+//   if (targetCardList && draggedCard) {
+//     const cards = Array.from(targetCardList.children);
+//     const droppedIndex = cards.indexOf(event.target.closest('.schedule'));
 
-    targetCardList.insertBefore(draggedCard, cards[droppedIndex]);
-    const cardElements = Array.from(targetCardList.children);
-    const numberOfCards = cardElements.length;
-    console.log(`카드의 개수: ${numberOfCards}`);
-    // updateCardPosition(draggedCard, originColumn, targetColumn, droppedIndex);
-  }
-}
+//     targetCardList.insertBefore(draggedCard, cards[droppedIndex]);
+//     const cardElements = Array.from(targetCardList.children);
+//     const numberOfCards = cardElements.length;
+//     console.log(`카드의 개수: ${numberOfCards}`);
+//     // updateCardPosition(draggedCard, originColumn, targetColumn, droppedIndex);
+//   }
+// }
 
-setupDragAndDrop();
+// setupDragAndDrop();
 // function updateCardPosition(card, originColumn, newColumn, newIndex) {
 //   const cardId = card.getAttribute('data-card-id');
 //   const originColumnId = originColumn.getAttribute('data-column-id');
