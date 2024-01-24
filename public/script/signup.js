@@ -2,20 +2,21 @@
 document.getElementById('gohome').addEventListener('click', function () {
   window.location.href = 'index.html';
 });
+
 document.getElementById('submit').addEventListener('click', async function (event) {
   event.preventDefault();
   try {
     const email = document.getElementById('email').value;
-    const nickname = document.getElementById('nickname').value;
+    const name = document.getElementById('name').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
 
-    await axios.post('/api/auth/register', {
+    await axios.post('api/auth/register', {
       email: email,
-      nickname: nickname,
+      name: name,
       password: password,
       passwordConfirm: passwordConfirm,
-      role: false,
+      // role: false,
     });
     alert('등록완료!');
     //홈으로 이동
@@ -25,11 +26,13 @@ document.getElementById('submit').addEventListener('click', async function (even
   }
 });
 
-document.getElementById('auth-submit').addEventListener('click', async function () {
+const authSubmit = document.getElementById('auth-submit');
+
+authSubmit.addEventListener('click', async function () {
   try {
     const email = document.getElementById('email').value;
 
-    const result = await axios.post('/api/email-check', {
+    const result = await axios.post('api/auth/email-check', {
       email,
     });
 

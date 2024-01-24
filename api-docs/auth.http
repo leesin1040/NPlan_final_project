@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "name":"홍길동",
-  "email":"expample@email.com",
+  "email":"gksmfsf131@gmail.com",
   "phone":"01012341234",
   "password":"123123",
   "passwordConfirm":"123123"
@@ -55,3 +55,12 @@ Authorization: Bearer {{accessToken}}
 GET http://localhost:3000/api/user?id=19
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+### 이메일 인증 테스트
+
+POST http://localhost:3000/api/auth/email-check 
+Content-Type: application/json
+
+{
+  "email":"gksmfsf131@gmail.com"
+}
