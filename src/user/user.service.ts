@@ -15,6 +15,8 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  // async createUser()
+
   /**유저 조회 */
   async findOneById(id: number) {
     const user = await this.userRepository.findOneBy({ id });
