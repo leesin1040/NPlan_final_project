@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Patch } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
 
@@ -17,9 +17,8 @@ export class PlaceController {
     };
   }
   // place 지역별 ex)서울,경기,경남,경북
-  @Get('/asd')
-  async getMainRegion() {
-    const region = '경기';
+  @Get('/region')
+  async getMainRegion(@Body('region') region: string) {
     const data = await this.placeService.getMainRegion(region);
     return {
       statusCode: HttpStatus.CREATED,
@@ -27,4 +26,6 @@ export class PlaceController {
       data,
     };
   }
+
+  // place 대분류별 A04 A
 }
