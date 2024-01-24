@@ -5,6 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
     .then((data) => {
       document.getElementById('header').innerHTML = data;
 
+      // header.html 로드 후 로그아웃 버튼 설정
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+          localStorage.removeItem('accessToken'); // JWT 토큰 제거
+          window.location.href = '/home'; // 메인 페이지로 리디렉션
+        });
+      }
+
       const accessToken = localStorage.getItem('accessToken');
       const loginButton = document.getElementById('loginButton');
       const userExist = document.getElementById('userExist');
@@ -20,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-  // 날짜 선택기 초기화
+  // 날짜 선택기 라이브러리
   const startDateInput = document.getElementById('startDate');
   const endDateInput = document.getElementById('endDate');
   if (startDateInput && endDateInput) {
@@ -38,20 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 모달 이벤트 리스너
-  var exampleModal = document.getElementById('exampleModal');
-  if (exampleModal) {
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      var recipient = button.getAttribute('data-bs-whatever');
-
-      var modalTitle = exampleModal.querySelector('.modal-title');
-      var modalBodyInput = exampleModal.querySelector('.modal-body input');
-
-      modalTitle.textContent = 'New message to ' + recipient;
-      modalBodyInput.value = recipient;
-    });
-  }
   // 상단 모두 DOMContentLoaded 요소들입니다.
 });
 
@@ -72,7 +67,6 @@ async function createTravel() {
   let timeDifferenceInMilliseconds = endDate - startDate;
   let days = timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24);
   let accessToken = localStorage.getItem('accessToken');
-  console.log(accessToken);
   await axios({
     method: 'POST',
     url: 'api/travel',
