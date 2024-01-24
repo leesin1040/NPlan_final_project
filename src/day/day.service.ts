@@ -1,8 +1,10 @@
+import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Day } from './entities/day.entity';
 import { DayDto } from './dto/day.dto';
+import { Place } from 'src/place/entities/place.entity';
 
 @Injectable()
 export class DayService {
@@ -67,10 +69,22 @@ export class DayService {
   //   리스트 상세조회
   async getDay(travelId: number, dayId: number) {
     // 클릭한 리스트 안에 존재하는 카드들의 위치정보를  순서대로 반환해준다
-    const getCards = this.dayRepository.find({
+    const getCards = await this.dayRepository.find({
       where: { id: dayId },
-      relations: ['schedule'],
+      relations: ['schedule.place'],
     });
+
+    const getXY = [];
+    getCards[0].schedule.forEach((a) => {
+      getXY.push({
+        X: a.place.mapX,
+        Y: a.place.mapY,
+        name: a.place.name,
+        category: a.place.category,
+        contentId: a.place.contentId,
+      });
+    });
+    console.log(getXY);
     return getCards;
   }
 
