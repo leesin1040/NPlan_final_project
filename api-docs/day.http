@@ -29,7 +29,3 @@ Content-Type: application/json
 GET {{domain}}/travel/1/day/2
 Content-Type: application/json
 
-
-###place 시,도,군
-GET {{domain}}/place/asd
-Content-Type: application/json

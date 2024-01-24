@@ -29,4 +29,7 @@ export class Place {
 
   @Column({ name: 'content_id', nullable: true })
   contentId: string;
+
+  @Column({ name: 'img_url', nullable: true })
+  imgUrl: string;
 }
