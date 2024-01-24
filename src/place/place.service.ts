@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
-import { DataSource, Like, Repository } from 'typeorm';
+import { DataSource, In, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class PlaceService {
@@ -24,5 +24,56 @@ export class PlaceService {
       take: 10,
     });
     return getMainRegion;
+  }
+
+  // place 지역 선택 후 대분류
+  // 관광지 > A01,A02,A03
+  // 쇼핑 > A04
+  // 음식점 > A05
+  // 숙박 > B02
+  async getContent(region: string, content: string) {
+    if (content === '관광지') {
+      const getContent = await this.placeRepository.find({
+        where: {
+          address: Like(`${region}%`),
+          contentId: In(['A01', 'A02', 'A03']),
+        },
+        order: { raiting: 'DESC' },
+        take: 10,
+      });
+      return getContent;
+    } else if (content === '쇼핑') {
+      const getContent = await this.placeRepository.find({
+        where: {
+          address: Like(`${region}%`),
+          contentId: 'A04',
+        },
+        order: { raiting: 'DESC' },
+        take: 10,
+      });
+      return getContent;
+    } else if (content === '음식점') {
+      const getContent = await this.placeRepository.find({
+        where: {
+          address: Like(`${region}%`),
+          contentId: 'A05',
+        },
+        order: { raiting: 'DESC' },
+        take: 10,
+      });
+      return getContent;
+    } else if (content === '숙박') {
+      const getContent = await this.placeRepository.find({
+        where: {
+          address: Like(`${region}%`),
+          contentId: 'B02',
+        },
+        order: { raiting: 'DESC' },
+        take: 10,
+      });
+      return getContent;
+    } else {
+      throw new BadRequestException('잘못된 요청입니다 쇼핑,음식점,숙박,관광지 중 택하시오');
+    }
   }
 }
