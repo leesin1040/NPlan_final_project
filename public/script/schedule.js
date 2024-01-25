@@ -18,7 +18,11 @@ document.querySelectorAll('.place').forEach((element) => {
     const id = event.currentTarget.id;
     console.log(id);
 
-    // alert(`movie id: ${id}`);
+    // dayId 받아오는 로직 짜기
+    const dayId = 1;
+    await getPlaceInfo(id, dayId);
+
+    // alert(`place id: ${id}`);
   });
 });
 
@@ -136,4 +140,18 @@ async function getPlaceListByCategory(areaCode, category) {
 }
 
 // place 선택 시 해당 place schedule에 추가
-async function getPlaceInfo() {}
+async function getPlaceInfo(placeId, dayId) {
+  await axios
+    .post('api/schedule', {
+      placeId,
+      dayId,
+    })
+    .then((response) => {
+      const data = response.data;
+      console.log(data);
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
+}
