@@ -1,3 +1,4 @@
+const TOUR_API_KEY = '{{TOUR_API_KEY}}';
 // 지역 및 카테고리 선택
 const submit = document.getElementById('submit');
 submit.addEventListener('click', async (event) => {
@@ -10,6 +11,20 @@ submit.addEventListener('click', async (event) => {
   if (category === 'O00') {
     await getPlaceListAll(areaCode);
   } else await getPlaceListByCategory(areaCode, category);
+});
+
+// 더 많은 장소를 가져오기(Tour api 연결)
+const connectApi = document.getElementById('connectApi');
+connectApi.addEventListener('click', async (event) => {
+  event.preventDefault();
+
+  const areaCode = document.getElementById('areaCode').value;
+  const category = document.getElementById('category').value;
+  console.log(areaCode, category);
+
+  if (category === 'O00') {
+    await getPlacesFromApiWithoutCategory(areaCode);
+  } else await getPlacesFromApi(areaCode, category);
 });
 
 // 장소 선택
@@ -149,6 +164,83 @@ async function getPlaceInfo(placeId, dayId) {
     .then((response) => {
       const data = response.data;
       console.log(data);
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
+}
+
+// tour api key 받아오기
+async function getTourApiKey() {
+  await axios
+    .get('api/place/api-key')
+    .then((response) => {
+      const TOUR_API_KEY = response.data;
+      return TOUR_API_KEY;
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
+}
+
+//Tour api로부터 place 정보 받아오기
+async function getPlacesFromApi(areaCode, category) {
+  const TOUR_API_KEY = getTourApiKey();
+  const operation = `areaBasedList1`; // 지역기반관광정보조회
+  const baseUrl = `https://apis.data.go.kr/B551011/KorService1/${operation}?serviceKey=${TOUR_API_KEY}`;
+  await axios
+    .get(baseUrl, {
+      params: {
+        numOfRows: 20, // 한페이지 결과 수
+        pageNo: 1, // 페이지 번호
+        MobileOS: 'ETC', // OS 구분
+        MobileApp: 'AppTest', // 서비스 명
+        _type: 'json', // response type
+        areaCode: areaCode, // 지역코드
+        cat1: category, // 대분류코드
+        arrange: 'A', // 정렬구분: A(제목순), C(수정일순), D(생성일순), E(거리순)/ (대표이미지가 있는 것만) O(제목순), Q(수정일순), R(생성일순), S(거리순)
+      },
+    })
+    .then((response) => {
+      const data = response.data.response.body.items.item;
+      console.log(data);
+
+      // for (let item of data) {
+      //   console.log(item['code'], item['name']);
+      // }
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
+}
+
+//Tour api로부터 place 정보 받아오기(카테고리 없이 전체)
+async function getPlacesFromApiWithoutCategory(areaCode) {
+  const TOUR_API_KEY = getTourApiKey();
+  const operation = `areaBasedList1`; // 지역기반관광정보조회
+  const baseUrl = `https://apis.data.go.kr/B551011/KorService1/${operation}?serviceKey=${TOUR_API_KEY}`;
+  await axios
+    .get(baseUrl, {
+      params: {
+        numOfRows: 20, // 한페이지 결과 수
+        pageNo: 1, // 페이지 번호
+        MobileOS: 'ETC', // OS 구분
+        MobileApp: 'AppTest', // 서비스 명
+        _type: 'json', // response type
+        areaCode: areaCode, // 지역코드
+        arrange: 'A', // 정렬구분: A(제목순), C(수정일순), D(생성일순), E(거리순)/ (대표이미지가 있는 것만) O(제목순), Q(수정일순), R(생성일순), S(거리순)
+      },
+    })
+    .then((response) => {
+      const data = response.data.response.body.items.item;
+      console.log(data);
+
+      // for (let item of data) {
+      //   console.log(item['code'], item['name']);
+      // }
     })
     .catch((error) => {
       // alert(error.response.data.message);

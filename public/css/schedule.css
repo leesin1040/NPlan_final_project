@@ -50,9 +50,13 @@ header h2 {
 
 .selectOption {
   border: solid 0.1rem;
-  padding-top: 0.5rem;
-  padding-left: 0.5rem;
-  height: 2rem;
+  padding: 0.5rem 0.7rem 0 0.7rem;
+  height: 4rem;
+}
+
+.selectOption #connectApi {
+  margin: 0.5rem auto;
+  width: 98%;
 }
 
 .placeList {
