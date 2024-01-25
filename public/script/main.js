@@ -13,22 +13,24 @@ document.addEventListener('DOMContentLoaded', function () {
           window.location.href = '/home'; // 메인 페이지로 리디렉션
         });
       }
-
+      // 로그인 여부에 따른 버튼 표기
       const accessToken = localStorage.getItem('accessToken');
-      const loginButton = document.getElementById('loginButton');
+      const BeforeLoginButton = document.getElementById('BeforeLoginButton');
       const userExist = document.getElementById('userExist');
-
-      if (loginButton && userExist) {
+      if (BeforeLoginButton && userExist) {
         if (accessToken) {
-          loginButton.style.display = 'none';
+          BeforeLoginButton.style.display = 'none';
           userExist.style.display = 'block';
         } else {
-          loginButton.style.display = 'block';
+          BeforeLoginButton.style.display = 'block';
           userExist.style.display = 'none';
         }
       }
+      // 로그인 엑시오스 불러오기
+      const realLoginBtn = document.getElementById('realLoginBtn');
+      console.log(realLoginBtn);
+      realLoginBtn.addEventListener('click', handleLogin);
     });
-
   // 날짜 선택기 라이브러리
   const startDateInput = document.getElementById('startDate');
   const endDateInput = document.getElementById('endDate');
@@ -46,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
       locale: 'ko',
     });
   }
-
   // 상단 모두 DOMContentLoaded 요소들입니다.
 });
 
@@ -84,6 +85,29 @@ async function createTravel() {
       axios.post(`api/travel/${response.data.data.newTravel.id}/days`, { days: days });
       alert(response.data.message);
       window.location.href = `/days.html?id=${response.data.data.newTravel.id}&title=${response.data.data.newTravel.title}`;
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+    });
+}
+
+// 로그인 엑시오스
+function handleLogin(event) {
+  event.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  if (!email || !password) {
+    alert('이메일과 비밀번호를 입력해주세요.');
+    return;
+  }
+  axios
+    .post('api/auth/login', { email, password })
+    .then((response) => {
+      const { accessToken } = response.data.data;
+      localStorage.setItem('accessToken', accessToken);
+      alert(response.data.message);
+      window.location.href = '/main';
     })
     .catch((error) => {
       alert(error.response.data.message);
