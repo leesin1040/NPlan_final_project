@@ -24,8 +24,6 @@ export class ScheduleService {
       dayId: createScheduleDto.dayId,
       placeId: createScheduleDto.placeId,
       order: newOrder,
-      transportation: createScheduleDto.transportation,
-      memo: createScheduleDto.memo,
     });
   }
 
@@ -139,5 +137,18 @@ export class ScheduleService {
     }
 
     return order;
+  }
+
+  // 스케줄 복사
+  async copy(id: number) {
+    const schedule = await this.findOne(id);
+
+    const newOrder = await this.getOrder(schedule.dayId);
+
+    return this.scheduleRepository.create({
+      dayId: schedule.dayId,
+      placeId: schedule.placeId,
+      order: newOrder,
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateScheduleDto {
   @IsNotEmpty()
@@ -6,10 +6,4 @@ export class CreateScheduleDto {
 
   @IsNotEmpty()
   placeId: number;
-
-  @IsOptional()
-  transportation: string;
-
-  @IsOptional()
-  memo: string;
 }

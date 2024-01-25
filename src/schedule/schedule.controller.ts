@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -94,6 +84,19 @@ export class ScheduleController {
     return {
       statusCode: HttpStatus.CREATED,
       message: `스케줄 삭제에 성공했습니다.`,
+    };
+  }
+
+  // 스케줄 복사
+  @ApiOperation({ summary: '스케줄 복사' })
+  @Post('copy/:id')
+  async copy(@Body() id: number) {
+    const data = await this.scheduleService.copy(+id);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: `스케줄 복사에 성공했습니다.`,
+      data,
     };
   }
 }
