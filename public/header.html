@@ -14,8 +14,8 @@
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 me-3">
-        <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-        <li><a href="#" class="nav-link px-2 link-body-emphasis">내 여행</a></li>
+        <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+        <!-- <li><a href="/my-travel" class="nav-link px-2 link-body-emphasis">내 여행</a></li> -->
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
@@ -30,13 +30,22 @@
 
       <button
         type="button"
-        class="btn"
+        class="btn me-2"
         id="BeforeLoginButton"
         style="background-color: #6892d5; color: white"
         data-bs-toggle="modal"
         data-bs-target="#loginModal"
       >
         login
+      </button>
+      <button
+        type="button"
+        class="btn"
+        id="beforeLoginSignupBtn"
+        style="border-color: #6892d5; border-width: 2px; color: #6892d5"
+        onclick="location.href='/sign-up'"
+      >
+        sign up
       </button>
       <div class="dropdown text-end" id="userExist">
         <a
@@ -55,7 +64,7 @@
         </a>
         <ul class="dropdown-menu text-small">
           <li><a class="dropdown-item" href="#">마이페이지</a></li>
-          <li><a class="dropdown-item" href="#">내 여행 목록</a></li>
+          <li><a class="dropdown-item" href="/my-travel">내 여행 목록</a></li>
           <li><a class="dropdown-item" href="#">찜한 여행 목록</a></li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item" id="logoutButton">로그아웃</a></li>
@@ -64,3 +73,42 @@
     </div>
   </div>
 </header>
+<!-- 로그인 모달 -->
+<div
+  class="modal mpdal-backdrop fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  style="z-index: 1051"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container p-4">
+        <p class="form-label">이메일</p>
+        <input type="text" id="email" class="form-control" value="expample@email.com" />
+        <p class="form-label">비밀번호</p>
+        <input type="password" id="password" class="form-control" value="123123" />
+        <div class="my-2">
+          <p class="text-center">
+            아직 회원이 아니신가요?
+            <a href="./signup.html" style="color: rgb(20, 116, 206)">여기를 눌러서</a>
+            회원가입을 진행해 주세요!
+          </p>
+        </div>
+        <button
+          type="button"
+          class="btn"
+          style="background-color: #6892d5; color: white; width: 100%"
+          id="realLoginBtn"
+        >
+          여행가기
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

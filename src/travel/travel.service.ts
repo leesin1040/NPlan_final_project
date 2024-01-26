@@ -44,14 +44,15 @@ export class TravelService {
       where: {
         userId: userId,
       },
-      select: ['id', 'title', 'color', 'region', 'theme'],
+      relations: ['member'],
+      select: ['id', 'title', 'color', 'region', 'theme', 'member'],
     });
     /**초대된 여행 목록 - 수락/거절 컬럼을 넣을 것인가? */
     const invitedTravelsRaw = await this.memberRepository.find({
       where: {
         userId: userId,
       },
-      relations: ['travel'],
+      relations: ['travel', 'travel.member'],
     });
     /**초대된 여행 목록을 map으로 원하는 정보만 전달, filter로 내가 만든 목록과 중복시 제외 */
     const invitedTravels = invitedTravelsRaw
@@ -62,6 +63,7 @@ export class TravelService {
           color: item.travel.color,
           region: item.travel.region,
           theme: item.travel.theme,
+          members: item.travel.member,
         };
       })
       .filter((invitedTravel) => !myTravels.some((myTravel) => myTravel.id === invitedTravel.id));

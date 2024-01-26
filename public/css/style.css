@@ -1,3 +1,38 @@
 body {
   font-family: 'IBM Plex Sans KR', 'Noto Sans KR';
 }
+.myTravelTitle {
+  font-weight: 600;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.643);
+}
+.img-stack {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.memberImg {
+  align-items: end;
+  margin-left: -20px; /* 이미지 겹치기 */
+  z-index: 1; /* 쌓임 순서 조정 */
+}
+.myTravelsRow,
+.invitedTravelsRow {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
+
+.cardsRow .col {
+  display: inline-block;
+  width: calc(50% - 10px);
+}
+
+.myTravelsRow .col,
+.invitedTravelsRow .col {
+  flex: 0 0 calc(15% - 10px);
+  margin: 10px;
+}
+
+.travelCategory {
+  margin-top: 3rem;
+}

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>N-Plan</title>
-    <link rel="icon" href="/img/icons8-suitcase-48.png" type="image/x-icon" />
+    <title>Document</title>
+    <link rel="icon" href="./img/icons8-suitcase-48.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,7 +32,7 @@
     <div
       style="
         background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
-          url(https://images.unsplash.com/photo-1532649097480-b67d52743b69?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+          url(https://images.unsplash.com/photo-1551249506-d8e2c5536f8a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
         background-position: center;
         background-size: cover;
         height: 320px;
@@ -40,7 +40,7 @@
       class="jumbotron bg-cover text-white"
     >
       <div class="container py-5 text-center">
-        <h1 class="display-4 h1Title">P를 위한 여행 가이드</h1>
+        <h1 class="display-4 myTravelTitle">나의 여행</h1>
         <p class="font-italic mb-3">아래 버튼을 눌러 여행 계획을 짜보세요</p>
         <button
           href="#"
@@ -55,41 +55,19 @@
       </div>
     </div>
     <div class="my-4"></div>
+    <!-- 본문 -->
     <div class="container">
-      <p><a href="">인기순</a> / <a href="">최신순</a></p>
-      <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
-        <!-- 여행 포스트 카드-->
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://images.unsplash.com/photo-1618297358013-d3cb3e23ce25?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              class="card-img-top"
-            />
-            <div class="card-body">
-              <h5 class="card-title">경주여행</h5>
-              <div class="my-1 mb-2">
-                <button type="button" class="btn btn-info btn-sm me-1" disabled>지역</button
-                ><button type="button" class="btn btn-success btn-sm" disabled>테마</button>
-              </div>
-              <div class="card-text">
-                <p>
-                  경주 여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요. 경주
-                  여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행
-                  좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행 좋아요.
-                  볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.
-                </p>
-              </div>
-              <div class="text-end mt-2">
-                <i class="fa-regular fa-comment cardIcons me-2">&ensp;20</i
-                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&ensp;50</span></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 여행 포스트 카드 끝 -->
+      <h3 class="travelCategory">나의 여행보드</h3>
+      <div class="row myTravelsRow g-5">
+        <div id="myTravelBoardContainer" class="d-flex flex-wrap"></div>
+      </div>
+      <h3 class="travelCategory">초대받은 여행보드</h3>
+      <div class="row invitedTravelsRow g-5">
+        <div id="invitedTravelBoardContainer" class="d-flex flex-wrap"></div>
       </div>
     </div>
 
+    <!-- 본문 끝 -->
     <!-- 여행보드 모달 -->
     <div
       class="modal fade"
@@ -166,5 +144,5 @@
   <script defer src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- Js 연결 -->
-  <script src="./script/main.js"></script>
+  <script src="./script/myTravels.js"></script>
 </html>
