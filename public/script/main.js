@@ -5,22 +5,33 @@ document.addEventListener('DOMContentLoaded', function () {
     .then((data) => {
       document.getElementById('header').innerHTML = data;
 
+      // header.html 로드 후 로그아웃 버튼 설정
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+          localStorage.removeItem('accessToken'); // JWT 토큰 제거
+          window.location.href = '/home'; // 메인 페이지로 리디렉션
+        });
+      }
+      // 로그인 여부에 따른 버튼 표기
       const accessToken = localStorage.getItem('accessToken');
-      const loginButton = document.getElementById('loginButton');
+      const BeforeLoginButton = document.getElementById('BeforeLoginButton');
       const userExist = document.getElementById('userExist');
-
-      if (loginButton && userExist) {
+      if (BeforeLoginButton && userExist) {
         if (accessToken) {
-          loginButton.style.display = 'none';
+          BeforeLoginButton.style.display = 'none';
           userExist.style.display = 'block';
         } else {
-          loginButton.style.display = 'block';
+          BeforeLoginButton.style.display = 'block';
           userExist.style.display = 'none';
         }
       }
+      // 로그인 엑시오스 불러오기
+      const realLoginBtn = document.getElementById('realLoginBtn');
+      console.log(realLoginBtn);
+      realLoginBtn.addEventListener('click', handleLogin);
     });
-
-  // 날짜 선택기 초기화
+  // 날짜 선택기 라이브러리
   const startDateInput = document.getElementById('startDate');
   const endDateInput = document.getElementById('endDate');
   if (startDateInput && endDateInput) {
@@ -35,21 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
       minDate: 'today',
       dateFormat: 'Y-m-d',
       locale: 'ko',
-    });
-  }
-
-  // 모달 이벤트 리스너
-  var exampleModal = document.getElementById('exampleModal');
-  if (exampleModal) {
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      var recipient = button.getAttribute('data-bs-whatever');
-
-      var modalTitle = exampleModal.querySelector('.modal-title');
-      var modalBodyInput = exampleModal.querySelector('.modal-body input');
-
-      modalTitle.textContent = 'New message to ' + recipient;
-      modalBodyInput.value = recipient;
     });
   }
   // 상단 모두 DOMContentLoaded 요소들입니다.
@@ -72,7 +68,6 @@ async function createTravel() {
   let timeDifferenceInMilliseconds = endDate - startDate;
   let days = timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24);
   let accessToken = localStorage.getItem('accessToken');
-  console.log(accessToken);
   await axios({
     method: 'POST',
     url: 'api/travel',
@@ -90,6 +85,29 @@ async function createTravel() {
       axios.post(`api/travel/${response.data.data.newTravel.id}/days`, { days: days });
       alert(response.data.message);
       window.location.href = `/days.html?id=${response.data.data.newTravel.id}&title=${response.data.data.newTravel.title}`;
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+    });
+}
+
+// 로그인 엑시오스
+function handleLogin(event) {
+  event.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  if (!email || !password) {
+    alert('이메일과 비밀번호를 입력해주세요.');
+    return;
+  }
+  axios
+    .post('api/auth/login', { email, password })
+    .then((response) => {
+      const { accessToken } = response.data.data;
+      localStorage.setItem('accessToken', accessToken);
+      alert(response.data.message);
+      window.location.href = '/main';
     })
     .catch((error) => {
       alert(error.response.data.message);

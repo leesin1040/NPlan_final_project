@@ -31,9 +31,10 @@
       <button
         type="button"
         class="btn"
-        id="loginButton"
+        id="BeforeLoginButton"
         style="background-color: #6892d5; color: white"
-        onclick="location.href='/login'"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
       >
         login
       </button>
@@ -53,11 +54,11 @@
           />
         </a>
         <ul class="dropdown-menu text-small">
-          <li><a class="dropdown-item" href="#">마이페이지</a></li>
+          <li><a class="dropdown-item" href="./userinfo.html">마이페이지</a></li>
           <li><a class="dropdown-item" href="#">내 여행 목록</a></li>
           <li><a class="dropdown-item" href="#">찜한 여행 목록</a></li>
           <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="#">로그아웃</a></li>
+          <li><a class="dropdown-item" id="logoutButton">로그아웃</a></li>
         </ul>
       </div>
     </div>

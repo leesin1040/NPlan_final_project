@@ -19,7 +19,20 @@ GET {{domain}}/place/region
 Content-Type: application/json
 
 {
-    "region":"경기"
+    "region":"경남"
 }
 
+
+
+
+### place 지역+대분류 조회
+## region 서울,경기,경남,인천,경북...
+## content 숙박,관광지,음식점,쇼핑
+GET {{domain}}/place/region/content
+Content-Type: application/json
+
+{
+  "region":"서울",
+  "content":"관광지"
+}
 

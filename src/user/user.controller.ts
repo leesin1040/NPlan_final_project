@@ -97,15 +97,15 @@ export class UserController {
     };
   }
 
-  /**
-   * 유저 이미지 수정
-   */
-  @ApiOperation({ summary: '이미지 업로드' })
-  @UseInterceptors(FilesInterceptor('file'))
-  @UseGuards(AuthGuard('jwt'))
-  @Post('upload')
-  uploadImg(@UploadedFiles() files: Array<Express.Multer.File>) {
-    console.log(files);
-    return files;
-  }
+  // /**
+  //  * 유저 이미지 수정
+  //  */
+  // @ApiOperation({ summary: '이미지 업로드' })
+  // @UseInterceptors(FilesInterceptor('file'))
+  // @UseGuards(AuthGuard('jwt'))
+  // @Post('upload')
+  // uploadImg(@UploadedFiles() files: Array<Express.Multer.File>) {
+  //   console.log(files);
+  //   return files;
+  // }
 }
