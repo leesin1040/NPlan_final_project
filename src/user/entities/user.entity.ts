@@ -37,7 +37,7 @@ export class User {
    * @example "01012345678"
    */
   @ApiProperty()
-  @IsNotEmpty({ message: '전화번호를 입력해주세요' })
+  // @IsNotEmpty({ message: '전화번호를 입력해주세요' })
   @Column()
   phone: string;
 
