@@ -53,3 +53,12 @@ Authorization: Bearer {{accessToken}}
 GET http://localhost:3000/api/user?id=19
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+### 이메일 인증 테스트
+
+POST http://localhost:3000/api/auth/email-check 
+Content-Type: application/json
+
+{
+  "email":"gksmfsf131@gmail.com"
+}

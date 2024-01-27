@@ -36,6 +36,7 @@ import { EmailModule } from './email/email.module';
     ScheduleModule,
     DayModule,
     PlaceModule,
+    EmailModule,
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,
@@ -44,20 +45,8 @@ import { EmailModule } from './email/email.module';
         },
       }),
     }),
-    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
-  // imports: [
-  //   MailerModule.forRootAsync({
-  //     useFactory: () => ({
-  //       transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,
-  //       defaults: {
-  //         from: `"${process.env.EMAIL_FROM_USER_NAME}" <${process.env.EMAIL_AUTH_EMAIL}>`,
-  //       },
-  //     }),
-  //   }),
-  //   EmailModule,
-  // ],
 })
 export class AppModule {}
