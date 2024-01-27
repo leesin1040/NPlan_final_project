@@ -67,6 +67,10 @@ export class AuthService {
     }
     return { id: user.id };
   }
+  //jwt.strategy.ts 파일에 유저 정보 넘겨주기 위한 함수
+  async findByUserId(id: number): Promise<User> {
+    return await this.userRepository.findOne({ where: { id } });
+  }
 
   async refresh(refreshToken: string) {
     const savedToken = await this.refreshTokenRepository.findOne({

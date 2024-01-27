@@ -1,0 +1,59 @@
+<!-- 여행보드 모달 -->
+<div
+  class="modal fade"
+  id="boardModal"
+  tabindex="-1"
+  aria-labelledby="boardModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 boardModalTitle" id="boardModalLabel">여행 보드 생성</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p for="boardTitle" class="form-label">여행 보드 이름</p>
+          <input
+            type="text"
+            class="form-control"
+            id="boardTitle"
+            placeholder="여행 이름을 입력해주세요."
+          />
+        </div>
+        <p for="startDate" class="form-label">시작 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="start_date"
+            id="startDate"
+            placeholder="날짜를 선택하세요."
+          />
+        </div>
+        <p for="endDate" class="form-label">종료 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="end_date"
+            id="endDate"
+            placeholder="날짜를 선택하세요"
+          />
+        </div>
+        <p for="theme">테마</p>
+        <input type="text" class="input-group-text" name="theme" id="theme" />
+        <p for="region">지역</p>
+        <input type="text" class="input-group-text" name="region" id="region" />
+        <p for="color" class="form-label">색상</p>
+        <input type="color" name="color" id="color" />
+      </div>
+      <div class="modal-footer text-center row">
+        <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="boardCreateBtn" class="btn col btn-dark">생성</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 모달끝 -->

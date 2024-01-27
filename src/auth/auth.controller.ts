@@ -1,9 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Request,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dtos/login.dto';
+import { Response } from 'express';
 
 @ApiTags('인증')
 @Controller('api/auth')
@@ -16,8 +26,9 @@ export class AuthController {
    * @returns
    */
   @Post('/register')
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
     const data = await this.authService.register(registerDto);
+    res.cookie('Authorization', data.accessToken);
     return {
       statusCode: HttpStatus.CREATED,
       message: '회원가입에 성공했습니다.',
@@ -33,14 +44,21 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('local'))
   @Post('/login')
-  async login(@Request() req, @Body() loginDto: LoginDto) {
+  async login(@Request() req, @Body() loginDto: LoginDto, @Res() res: Response) {
     const data = await this.authService.login(req.user.id);
-
-    return {
+    res.cookie('Authorization', data.accessToken);
+    res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       message: '로그인 성공',
       data,
-    };
+    });
+
+    // return {
+    //   statusCode: HttpStatus.OK,
+    //   message: '로그인 성공',
+    //   data,
+    // };
+    // // return res.status(HttpStatus.OK).json({ data });
   }
 
   /**
