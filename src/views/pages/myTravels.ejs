@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %> <%-include('../partials/boardCreateHeadImg.ejs') %>
+    <div class="container">
+      <!-- 본문 -->
+      <div class="container">
+        <h3 class="travelCategory">나의 여행보드</h3>
+        <div class="row myTravelsRow g-5">
+          <div id="myTravelBoardContainer" class="d-flex flex-wrap">
+            <% myTravels.forEach(Travel=>{ %>
+              <div class="col">
+                <a href="/travel/<%= Travel.id %>">
+                  <div class="card h-100 rounded-3" data-id="<%= Travel.id %>">
+                    <div class="card-body rounded-3" style="background-color: <%= Travel.color %>">
+                      <div class="my-1 mb-2 text-center">
+                        <button type="button" class="btn btn-info btn-sm me-1" disabled><%= Travel.region %></button
+                        ><button type="button" class="btn btn-success btn-sm" disabled><%= Travel.theme %></button>
+                        <h5 class="card-title mt-3"><%= Travel.title %></h5>
+                      </div>
+                      <!-- 맴버 프사들 -->
+                      <div class="img-stack"></div>
+                      <!-- 맴버프사 끝 -->
+                    </div>
+                  </div>
+                </a>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+        <h3 class="travelCategory">초대받은 여행보드</h3>
+        <div class="row invitedTravelsRow g-5">
+          <div id="invitedTravelBoardContainer" class="d-flex flex-wrap">
+            <% invitedTravels.forEach(Travel=>{ %>
+              <div class="col">
+                <a href="/travel/<%= Travel.id %>">
+                  <div class="card h-100 rounded-3">
+                    <div class="card-body rounded-3" style="background-color: <%= Travel.color %>">
+                      <div class="my-1 mb-2 text-center">
+                        <button type="button" class="btn btn-info btn-sm me-1" disabled><%= Travel.region %></button
+                        ><button type="button" class="btn btn-success btn-sm" disabled><%= Travel.theme %></button>
+                        <h5 class="card-title mt-3"><%= Travel.title %></h5>
+                      </div>
+                      <!-- 맴버 프사들 -->
+                      <div class="img-stack"></div>
+                      <!-- 맴버프사 끝 -->
+                    </div>
+                  </div>
+              </a>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <!-- 본문 -->
+    </div>
+    <script>
+  const imgStack = div.querySelector('.img-stack');
+  travel.member.forEach((member) => {
+    const img = document.createElement('img');
+    img.src = member.user.img; // 멤버의 이미지 URL 사용
+    img.alt = 'Member Image';
+    img.width = 32;
+    img.height = 32;
+    img.classList.add('rounded-circle', 'memberImg');
+    imgStack.appendChild(img);
+  });
+    </script>
+    <%-include('../partials/travelCreateModal.ejs') %> <%-include('../partials/script.ejs') %>
+  </body>
+</html>

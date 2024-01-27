@@ -10,5 +10,6 @@ import { Like } from './entities/like.entity';
   imports: [TypeOrmModule.forFeature([Travel, User, Like])],
   controllers: [LikeController],
   providers: [LikeService],
+  exports: [LikeService],
 })
 export class LikeModule {}

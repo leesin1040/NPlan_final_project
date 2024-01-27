@@ -22,9 +22,6 @@ import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'), // 'public' 디렉토리 지정
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: configModuleValidationSchema,

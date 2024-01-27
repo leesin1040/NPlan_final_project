@@ -13,5 +13,6 @@ import { Day } from 'src/day/entities/day.entity';
   imports: [TypeOrmModule.forFeature([Travel, Day, User, Like, Comment, Member])],
   controllers: [TravelController],
   providers: [TravelService],
+  exports: [TravelService],
 })
 export class TravelModule {}

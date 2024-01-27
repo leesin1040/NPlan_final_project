@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %>
+    <div class="container">
+      <!-- 본문 -->
+      <div class="row">
+        <h1><%= oneTravel.title %></h1>
+        <h4><%= oneTravel.theme %> / <%= oneTravel.region %></h4>
+      </div>
+      <div class="row">
+        <% days.forEach(Day=>{ %>
+            <div class="oneDayList" style="background-color: <%= oneTravel.color %>">
+              <h4> <%= Day.day %> 일차</h4>
+              <!-- 카드들 넣어유 -->
+              <p>아아아ㅏ</p>
+              <!-- 카드들 넣어유 -->
+            </div>
+        <% }) %>
+      </div>
+      
+      <!-- 본문 -->
+    </div>
+    <script></script>
+    <%-include('../partials/travelCreateModal.ejs') %> <%-include('../partials/script.ejs') %>
+  </body>
+</html>
