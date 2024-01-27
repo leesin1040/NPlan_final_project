@@ -44,13 +44,11 @@ export class AppController {
   }
 
   //회원가입
-  @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
-  @Page('main')
-  getSignUp(@UserInfo() user: User) {
+  @Page('signup')
+  getSignUp() {
     const pageTitle = '회원가입';
     return {
-      user,
       pageTitle,
     };
   }
@@ -72,6 +70,8 @@ export class AppController {
   async getMyTravel(@UserInfo() user: User) {
     const pageTitle = '내 여행 보드';
     const userId = user.id;
+    console.log(user);
+
     const data = await this.travelService.findAll(userId);
     return { user, myTravels: data.myTravels, invitedTravels: data.invitedTravels, pageTitle };
   }
@@ -81,8 +81,8 @@ export class AppController {
   @Get('travel/:travelId')
   @Page('travelDetail')
   async getOneTravel(@UserInfo() user: User, @Param('travelId') travelId: number) {
-    const userId = user.id;
-    const oneTravel = await this.travelService.findOneTravel(travelId, userId);
+    // const userId = user.id;
+    // const oneTravel = await this.travelService.findOneTravel(travelId, userId);
     const days = await this.dayService.getDays(travelId);
     // 츄라이
     const schedulesPromises = days.map(async (day) => {
@@ -94,9 +94,10 @@ export class AppController {
     const schedulesResults = await Promise.all(schedulesPromises);
     console.log({ schedulesResults });
 
-    const pageTitle = oneTravel.oneTravel.title;
-    return { user, oneTravel: oneTravel.oneTravel, days, schedules: schedulesResults, pageTitle };
+    // const pageTitle = oneTravel.oneTravel.title;
+    return { user };
   }
+  // oneTravel: oneTravel.oneTravel, days, schedules: schedulesResults, pageTitle
 
   //포스트 작성 페이지
   @Get('/post')
