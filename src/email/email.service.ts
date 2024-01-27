@@ -9,7 +9,7 @@ export class EmailService {
     private readonly configService: ConfigService,
   ) {}
   sendAuthCode(email: string, authNumber: number): Promise<void> {
-    console.log(email);
+    console.log('브라우저에서 들어온 이메일', email);
     return this.mailerService.sendMail({
       to: email,
       subject: '[NPlan] 이메일 확인 인증번호 안내',

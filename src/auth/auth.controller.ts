@@ -29,11 +29,11 @@ export class AuthController {
   async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
     const data = await this.authService.register(registerDto);
     res.cookie('Authorization', data.accessToken);
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: '회원가입에 성공했습니다.',
+    res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: '회원가입 완료!',
       data,
-    };
+    });
   }
   /**
    * 로그인
@@ -52,7 +52,6 @@ export class AuthController {
       message: '로그인 성공',
       data,
     });
-
     // return {
     //   statusCode: HttpStatus.OK,
     //   message: '로그인 성공',

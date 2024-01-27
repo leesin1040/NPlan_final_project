@@ -10,7 +10,7 @@
       <form id="users" class="d-flex flex-column justify-content-center align-items-center p-5">
         <div class="mb-6">
           <h2 class="title">회원등록</h2>
-          <input id="email" class="input-group-text" type="text" placeholder="이메일" />
+          <input id="signupEmail" class="input-group-text" type="text" placeholder="이메일" />
           <button type="button" class="btn btn-secondary" id="auth-submit">인증번호전송</button>
           <input
             id="authNumber"
@@ -19,52 +19,57 @@
             placeholder="이메일 인증번호"
           />
           <button type="button" class="btn btn-secondary" id="auth-check">인증확인</button>
-          <input id="nickname" class="input-group-text" type="text" placeholder="이름" />
-          <input id="password" class="input-group-text" type="password" placeholder="비밀번호" />
+          <input id="name" class="input-group-text" type="text" placeholder="이름" />
+          <input
+            id="signupPassword"
+            class="input-group-text"
+            type="password"
+            placeholder="비밀번호"
+          />
           <input
             id="passwordConfirm"
             class="input-group-text"
             type="password"
             placeholder="비밀번호 확인"
           />
-          <button type="button" id="submit" class="btn btn-secondary">회원가입</button>
+          <button type="button" id="signup" class="btn btn-secondary">회원가입</button>
         </div>
       </form>
       <!-- 본문 -->
     </div>
 
     <script>
-      document.getElementById('gohome').addEventListener('click', function () {
-        window.location.href = 'index.html';
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('하이');
       });
-      document.getElementById('submit').addEventListener('click', async function (event) {
+      document.getElementById('signup').addEventListener('click', async function (event) {
         event.preventDefault();
         try {
-          const email = document.getElementById('email').value;
-          const nickname = document.getElementById('nickname').value;
-          const password = document.getElementById('password').value;
+          const email = document.getElementById('signupEmail').value;
+          const name = document.getElementById('name').value;
+          const signupPassword = document.getElementById('signupPassword').value;
           const passwordConfirm = document.getElementById('passwordConfirm').value;
 
           await axios.post('/api/auth/register', {
             email: email,
-            nickname: nickname,
-            password: password,
+            name: name,
+            password: signupPassword,
             passwordConfirm: passwordConfirm,
-            role: false,
           });
           alert('등록완료!');
           //홈으로 이동
-          window.location.href = 'index.html';
+          window.location.href = '/home';
         } catch (error) {
           console.error(error);
         }
       });
 
       document.getElementById('auth-submit').addEventListener('click', async function () {
+        console.log('이메일 인증 들어옴 - 브라우저');
         try {
-          const email = document.getElementById('email').value;
+          const email = document.getElementById('signupEmail').value;
 
-          const result = await axios.post('/api/email-check', {
+          const result = await axios.post('/api/auth/email-check', {
             email,
           });
 
@@ -94,6 +99,6 @@
         }
       });
     </script>
-    <%-include('../partials/travelCreateModal.ejs') %> <%-include('../partials/script.ejs') %>
+    <%-include('../partials/script.ejs') %>
   </body>
 </html>
