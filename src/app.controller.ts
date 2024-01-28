@@ -1,6 +1,4 @@
-import { Travel } from './travel/entities/travel.entity';
-import { LocalStrategy } from './auth/strategies/local.strategy';
-import { Controller, Get, Param, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { sendToHTML } from './utils/file-utils';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
@@ -70,8 +68,6 @@ export class AppController {
   async getMyTravel(@UserInfo() user: User) {
     const pageTitle = '내 여행 보드';
     const userId = user.id;
-    console.log(user);
-
     const data = await this.travelService.findAll(userId);
     return { user, myTravels: data.myTravels, invitedTravels: data.invitedTravels, pageTitle };
   }
@@ -81,23 +77,25 @@ export class AppController {
   @Get('travel/:travelId')
   @Page('travelDetail')
   async getOneTravel(@UserInfo() user: User, @Param('travelId') travelId: number) {
-    // const userId = user.id;
-    // const oneTravel = await this.travelService.findOneTravel(travelId, userId);
+    const userId = user.id;
+    const { oneTravel } = await this.travelService.findOneTravel(travelId, userId);
     const days = await this.dayService.getDays(travelId);
-    // 츄라이
+    //day에 따른 스케쥴 불러오기
     const schedulesPromises = days.map(async (day) => {
       const dayId = day.id;
       const schedules = await this.scheduleService.findAllByDayId(dayId);
       return { dayId, schedules };
     });
-    // 츄라이2
     const schedulesResults = await Promise.all(schedulesPromises);
-    console.log({ schedulesResults });
-
-    // const pageTitle = oneTravel.oneTravel.title;
-    return { user };
+    const pageTitle = oneTravel.title;
+    return {
+      user,
+      oneTravel: oneTravel,
+      days,
+      schedulesResults: schedulesResults,
+      pageTitle,
+    };
   }
-  // oneTravel: oneTravel.oneTravel, days, schedules: schedulesResults, pageTitle
 
   //포스트 작성 페이지
   @Get('/post')
@@ -111,7 +109,7 @@ export class AppController {
     return sendToHTML(res, 'PostDetail.html');
   }
 
-  //트레블 수정
+  //포스트 수정
   @Get('update/:postId')
   updateOneTravel(@Res() res: Response) {
     return sendToHTML(res, 'postUpdate.html');

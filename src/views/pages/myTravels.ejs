@@ -58,17 +58,7 @@
       <!-- 본문 -->
     </div>
     <script>
-  const imgStack = div.querySelector('.img-stack');
-  travel.member.forEach((member) => {
-    const img = document.createElement('img');
-    img.src = member.user.img; // 멤버의 이미지 URL 사용
-    img.alt = 'Member Image';
-    img.width = 32;
-    img.height = 32;
-    img.classList.add('rounded-circle', 'memberImg');
-    imgStack.appendChild(img);
-  });
     </script>
-    <%-include('../partials/travelCreateModal.ejs') %> <%-include('../partials/script.ejs') %>
+<%-include('../partials/script.ejs') %>
   </body>
 </html>

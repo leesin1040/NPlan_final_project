@@ -24,3 +24,87 @@
   </div>
 </div>
 <div class="mb-4"></div>
+<!-- 여행보드 모달 -->
+<div
+  class="modal fade"
+  id="boardModal"
+  tabindex="-1"
+  aria-labelledby="boardModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 boardModalTitle" id="boardModalLabel">여행 보드 생성</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p for="boardTitle" class="form-label">여행 보드 이름</p>
+          <input
+            type="text"
+            class="form-control"
+            id="boardTitle"
+            placeholder="여행 이름을 입력해주세요."
+          />
+        </div>
+        <p for="startDate" class="form-label">시작 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="start_date"
+            id="startDate"
+            placeholder="날짜를 선택하세요."
+          />
+        </div>
+        <p for="endDate" class="form-label">종료 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="end_date"
+            id="endDate"
+            placeholder="날짜를 선택하세요"
+          />
+        </div>
+        <p for="region">지역</p>
+        <input type="text" class="input-group-text" name="region" id="region" />
+        <p for="theme">테마</p>
+        <div class="theme-selection" id="themeSelection">
+          <div class="theme-box" data-theme="문화">문화</div>
+          <div class="theme-box" data-theme="자연">자연</div>
+          <div class="theme-box" data-theme="도시">도시</div>
+          <div class="theme-box" data-theme="휴양지">휴양지</div>
+          <div class="theme-box" data-theme="음식">음식</div>
+          <!-- 추가 테마 박스 -->
+        </div>
+        <!-- 숨겨진 테마 인풋 -->
+        <input type="hidden" name="theme" id="selectedTheme">
+        <p for="color" class="form-label">색상</p>
+        <div class="color-selection" id="colorSelection">
+          <div class="color-box" style="background-color: #ADD8E6;" data-color="#ADD8E6"></div>
+          <div class="color-box" style="background-color: #98EECC;" data-color="#98EECC"></div>
+          <div class="color-box" style="background-color: #9FB4FF;" data-color="#9FB4FF"></div>
+          <div class="color-box" style="background-color: #FFDAB9;" data-color="#FFDAB9"></div>
+          <div class="color-box" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
+          <div class="color-box" style="background-color: #DDA0DD;" data-color="#DDA0DD"></div>
+          <div class="color-box" style="background-color: #87CEFA;" data-color="#87CEFA"></div>
+          <div class="color-box" style="background-color: #AFEEEE;" data-color="#AFEEEE"></div>
+          <div class="color-box" style="background-color: #FFB6C1;" data-color="#FFB6C1"></div>
+          <div class="color-box" style="background-color: #E6E6FA;" data-color="#E6E6FA"></div>
+          <div class="color-box" style="background-color: #D3D3D3;" data-color="#D3D3D3"></div>
+          <div class="color-box" style="background-color: #FFEBAD;" data-color="#FFEBAD"></div>
+        </div>
+        <!-- 숨겨진 컬러 인풋 -->
+        <input type="hidden" name="color" id="selectedColor">
+        </div>
+        <div class="modal-footer text-center row">
+          <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" id="boardCreateBtn" class="btn col btn-dark">생성</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 모달끝 -->
+</div>
