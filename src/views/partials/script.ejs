@@ -12,31 +12,39 @@
     // header.html 로드 후 로그아웃 버튼 설정
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-      logoutButton.addEventListener('click', function () {
-        localStorage.removeItem('accessToken'); // JWT 토큰 제거
+      logoutButton.addEventListener('click', () => {
+        const cookieName = 'Authorization';
+        const deleteCookie = (name) => {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        };
+        localStorage.removeItem('Authorization'); // 로컬 스토리지에서 엑세스 토큰 제거
+        deleteCookie(cookieName); // 쿠키에서 엑세스 토큰 삭제
         window.location.href = '/home'; // 메인 페이지로 리디렉션
       });
-    }
-    // 로그인 여부에 따른 버튼 표기
-    const accessToken = localStorage.getItem('accessToken');
-    const BeforeLoginButton = document.getElementById('BeforeLoginButton');
-    const beforeLoginSignupBtn = document.getElementById('beforeLoginSignupBtn');
-    const userExist = document.getElementById('userExist');
-    if ((beforeLoginSignupBtn, BeforeLoginButton && userExist)) {
-      if (accessToken) {
-        BeforeLoginButton.style.display = 'none';
-        beforeLoginSignupBtn.style.display = 'none';
-        userExist.style.display = 'block';
-      } else {
-        BeforeLoginButton.style.display = 'block';
-        beforeLoginSignupBtn.style.display = 'block';
-        userExist.style.display = 'none';
-      }
     }
     // 로그인 엑시오스 불러오기
     const realLoginBtn = document.getElementById('realLoginBtn');
     realLoginBtn.addEventListener('click', handleLogin);
+    // 테마 선택
+    const themeBoxes = document.querySelectorAll('.theme-box');
+    themeBoxes.forEach((box) => {
+      box.addEventListener('click', function () {
+        const selectedTheme = this.getAttribute('data-theme');
+        document.getElementById('selectedTheme').value = selectedTheme;
+        themeBoxes.forEach((box) => box.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
 
+    // 컬러 박스 선택
+    document.querySelectorAll('.color-box').forEach((box) => {
+      box.addEventListener('click', function () {
+        document.querySelectorAll('.color-box').forEach((b) => b.classList.remove('selected'));
+        this.classList.add('selected');
+        document.getElementById('selectedColor').value = this.getAttribute('data-color');
+      });
+    });
+    //날짜
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
     if (startDateInput && endDateInput) {
@@ -58,16 +66,16 @@
   // 로그인 엑시오스
   function handleLogin(event) {
     event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    if (!email || !password) {
+    const loginEmail = document.getElementById('loginEmail').value;
+    const loginPassword = document.getElementById('loginPassword').value;
+    if (!loginEmail || !loginPassword) {
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
     console.log('로그인 엑시오스');
     try {
       let response = axios
-        .post('api/auth/login', { email, password })
+        .post('api/auth/login', { email: loginEmail, password: loginPassword })
         .then((response) => {
           console.log(response.data.accessToken);
           console.log(response.data.data);

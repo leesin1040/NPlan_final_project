@@ -7,24 +7,49 @@
     <%-include('../partials/header.ejs') %>
     <div class="container">
       <!-- 본문 -->
-      <div class="row">
+      <div class="row" style="overflow-x: auto; white-space: nowrap;">
         <h1><%= oneTravel.title %></h1>
         <h4><%= oneTravel.theme %> / <%= oneTravel.region %></h4>
       </div>
-      <div class="row">
-        <% days.forEach(Day=>{ %>
-            <div class="oneDayList" style="background-color: <%= oneTravel.color %>">
-              <h4> <%= Day.day %> 일차</h4>
-              <!-- 카드들 넣어유 -->
-              <p>아아아ㅏ</p>
-              <!-- 카드들 넣어유 -->
+      <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
+        <% days.forEach(day => { %>
+          <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
+            <h4><%= day.day %> 일차</h4>
+            <!-- 해당 일자의 스케줄 목록 렌더링 -->
+            <% 
+            const daySchedules = schedulesResults.find(s => s.dayId === day.id);
+            if (daySchedules && daySchedules.schedules.length > 0) {
+              daySchedules.schedules.forEach(schedule => {
+            %>
+            <div class="scheduleBox">
+                <!-- 스케줄 내용 렌더링 -->
+                <div
+                class="schedule"
+                draggable="true"
+              >
+                <p><button type="button" class="btn btn-info btn-sm me-1" disabled><%= schedule.place.category %>카테고리</button><span>장소이름 : <%= schedule.place.name %></span></p>
+                <p>주소:<%= schedule.place.address %></p>
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  type="button"
+                  id="scheduleDetail<%= schedule.id %>"
+                >
+                  상세보기
+                </button>
+              </div>
             </div>
+            <% }); } else { %>
+              <p>스케줄이 없습니다.</p>
+            <% } %>
+          </div>
         <% }) %>
+        
+        
       </div>
       
       <!-- 본문 -->
     </div>
     <script></script>
-    <%-include('../partials/travelCreateModal.ejs') %> <%-include('../partials/script.ejs') %>
+ <%-include('../partials/script.ejs') %>
   </body>
 </html>
