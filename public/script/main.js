@@ -7,8 +7,8 @@ async function createTravel() {
   let endDateString = document.getElementById('endDate').value;
   let travelTitle = document.getElementById('boardTitle').value;
   let travelColor = document.getElementById('selectedColor').value;
-  let travelTheme = document.getElementById('theme').value;
-  let travelRegion = document.getElementById('region').value;
+  let travelTheme = document.getElementById('selectedTheme').value;
+  let travelRegion = document.getElementById('selectedRegion').value;
 
   let startDate = new Date(startDateString);
   let endDate = new Date(endDateString);
