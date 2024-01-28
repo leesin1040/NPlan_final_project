@@ -9,12 +9,15 @@
       <!-- 본문 -->
       <div class="row" style="overflow-x: auto; white-space: nowrap;">
         <h1><%= oneTravel.title %></h1>
-        <h4><%= oneTravel.theme %> / <%= oneTravel.region %></h4>
+        <h4><%= oneTravel.theme %> / <%= oneTravel.region %> <button type="button" class="btn btn-secondary updateModalBtn" data-bs-toggle="modal" data-bs-target="#boardModal">수정하기</button></h4>
       </div>
       <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
         <% days.forEach(day => { %>
           <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
-            <h4><%= day.day %> 일차</h4>
+            <div class="oneDatListTitle justify-content-between align-items-center">
+              <h4><%= day.day %> 일차</h4>
+              <button type="button" class="btn btn-outline-dark btn-sm text-end">경로보기</button>
+            </div>
             <!-- 해당 일자의 스케줄 목록 렌더링 -->
             <% 
             const daySchedules = schedulesResults.find(s => s.dayId === day.id);
@@ -39,17 +42,151 @@
               </div>
             </div>
             <% }); } else { %>
-              <p>스케줄이 없습니다.</p>
+              <p>스케줄을 추가하세요!</p>
             <% } %>
+            <div class="scheduleAddButton">
+              <button type="button" class="btn btn-secondary btn-sm">+ 스케쥴 추가</button>
+            </div>
           </div>
         <% }) %>
-        
-        
       </div>
-      
       <!-- 본문 -->
     </div>
-    <script></script>
+    <!-- 수정 모달 -->
+<div
+class="modal fade"
+id="boardModal"
+tabindex="-1"
+aria-labelledby="boardModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5 boardModalTitle" id="boardModalLabel">여행 보드 생성</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <input type="hidden" name="theme" id="travelId" value="<%= oneTravel.id %>">
+        <p for="boardTitle" class="form-label mt-3">여행 보드 이름</p>
+        <input
+          type="text"
+          class="form-control"
+          id="boardTitle"
+          value="<%= oneTravel.title %>"
+          placeholder="여행 이름을 입력해주세요."
+        />
+      </div>
+      <p for="startDate" class="form-label mt-3">시작 일정</p>
+      <div class="datePickerContainer">
+        <input
+          class="input-group-text"
+          type="text"
+          name="start_date"
+          id="startDate"
+          value="<%= oneTravel.start_date %>"
+          placeholder="날짜를 선택하세요."
+        />
+      </div>
+      <p for="endDate" class="form-label mt-3">종료 일정</p>
+      <div class="datePickerContainer">
+        <input
+          class="input-group-text"
+          type="text"
+          name="end_date"
+          id="endDate"
+          value="<%= oneTravel.end_date %>"
+          placeholder="날짜를 선택하세요"
+        />
+      </div>
+      <p for="regionSelection" class="mt-3">대표 지역<span class="themeSideText ms-2"> 하나의 지역만 선택할 수 있습니다.</span></p>
+      <div class="region-selection" id="regionSelection">
+        <div class="region-box selectBox" data-region="서울">서울</div>
+        <div class="region-box selectBox" data-region="인천">인천</div>
+        <div class="region-box selectBox" data-region="경기도">경기도</div>
+        <div class="region-box selectBox" data-region="부산">부산</div>
+        <div class="region-box selectBox" data-region="대구">대구</div>
+        <div class="region-box selectBox" data-region="대전">대전</div>
+        <div class="region-box selectBox" data-region="광주">광주</div>
+        <div class="region-box selectBox" data-region="울산">울산</div>
+        <div class="region-box selectBox" data-region="세종">세종</div>
+        <div class="region-box selectBox" data-region="강원">강원</div>
+        <div class="region-box selectBox" data-region="충북">충북</div>
+        <div class="region-box selectBox" data-region="충남">충남</div>
+        <div class="region-box selectBox" data-region="전북">전북</div>
+        <div class="region-box selectBox" data-region="전남">전남</div>
+        <div class="region-box selectBox" data-region="경북">경북</div>
+        <div class="region-box selectBox" data-region="경남">경남</div>
+        <div class="region-box selectBox" data-region="제주">제주</div>
+      </div>
+      <!-- 숨겨진 지역 인풋 -->
+      <input type="hidden" name="region" id="selectedRegion" value="<%= oneTravel.region %>">
+      
+      <p for="theme" class="mt-3">테마 <span class="themeSideText ms-">하나의 테마만 선택할 수 있습니다.</span> </p>
+      <div class="theme-selection" id="themeSelection">
+        <div class="theme-box selectBox" data-theme="문화">문화</div>
+        <div class="theme-box selectBox" data-theme="자연">자연</div>
+        <div class="theme-box selectBox" data-theme="도시">도시</div>
+        <div class="theme-box selectBox" data-theme="휴양">휴양</div>
+        <div class="theme-box selectBox" data-theme="음식">음식</div>
+      </div>
+      <!-- 숨겨진 테마 인풋 -->
+      <input type="hidden" name="theme" id="selectedTheme" value="<%= oneTravel.theme %>">
+      <p for="color" class="form-label mt-3">색상</p>
+      <div class="color-selection" id="colorSelection">
+        <div class="color-box" style="background-color: #ADD8E6;" data-color="#ADD8E6"></div>
+        <div class="color-box" style="background-color: #98EECC;" data-color="#98EECC"></div>
+        <div class="color-box" style="background-color: #9FB4FF;" data-color="#9FB4FF"></div>
+        <div class="color-box" style="background-color: #FFDAB9;" data-color="#FFDAB9"></div>
+        <div class="color-box" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
+        <div class="color-box" style="background-color: #DDA0DD;" data-color="#DDA0DD"></div>
+        <div class="color-box" style="background-color: #87CEFA;" data-color="#87CEFA"></div>
+        <div class="color-box" style="background-color: #AFEEEE;" data-color="#AFEEEE"></div>
+        <div class="color-box" style="background-color: #FFB6C1;" data-color="#FFB6C1"></div>
+        <div class="color-box" style="background-color: #E6E6FA;" data-color="#E6E6FA"></div>
+        <div class="color-box" style="background-color: #D3D3D3;" data-color="#D3D3D3"></div>
+        <div class="color-box" style="background-color: #FFEBAD;" data-color="#FFEBAD"></div>
+      </div>
+      <!-- 숨겨진 컬러 인풋 -->
+      <input type="hidden" name="color" id="selectedColor" value="<%= oneTravel.color %>">
+      </div>
+      <div class="modal-footer text-center row">
+        <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="boardUpdateBtn" class="btn col btn-dark">수정</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 모달끝 -->
  <%-include('../partials/script.ejs') %>
+ <script>
+  // 여행보드 수정 엑시오스
+const boardUpdateBtn = document.getElementById('boardUpdateBtn');
+boardUpdateBtn.addEventListener('click', updateTravel);
+async function updateTravel() {
+  let travelId = document.getElementById('travelId').value;
+  let startDateString = document.getElementById('startDate').value;
+  let endDateString = document.getElementById('endDate').value;
+  let travelTitle = document.getElementById('boardTitle').value;
+  let travelColor = document.getElementById('selectedColor').value;
+  let travelTheme = document.getElementById('selectedTheme').value;
+  let travelRegion = document.getElementById('selectedRegion').value;
+  try {
+    const updateTravelResponse = await axios.patch(`/api/travel/${travelId}`, {
+      title: travelTitle,
+      color: travelColor,
+      region: travelRegion,
+      theme: travelTheme,
+      start_date: startDateString,
+      end_date: endDateString,
+    });
+    alert('변경되었습니다.')
+    // days 생성 후 이동
+    window.location.reload();
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+}
+ </script>
   </body>
-</html>

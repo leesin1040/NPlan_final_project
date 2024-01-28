@@ -4,6 +4,7 @@ body {
 p {
   margin-bottom: 7px;
 }
+/* 내 여행 보드 목록 */
 .myTravelTitle {
   font-weight: 600;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.643);
@@ -24,7 +25,6 @@ p {
   flex-wrap: wrap;
   overflow-x: auto;
 }
-
 .cardsRow .col {
   display: inline-block;
   width: calc(50% - 10px);
@@ -35,16 +35,33 @@ p {
   flex: 0 0 calc(15% - 10px);
   margin: 10px;
 }
-
 .travelCategory {
   margin-top: 3rem;
+}
+/* 트레블 상세보기 */
+.updateModalBtn {
+  margin-left: 10px;
+  padding: 2px 7px;
 }
 .oneDayList {
   width: 300px;
   height: 75vh;
-  padding: 20px;
-  border-radius: 30px;
+  padding: 15px 15px;
+  border-radius: 15px;
   margin: 10px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.oneDatListTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.scheduleAddButton {
+  align-self: flex-start;
+  margin-top: auto;
 }
 .scheduleBox {
   background-color: white;
@@ -52,6 +69,8 @@ p {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+/* 트레블 보드 생성 모달 */
 .color-box {
   width: 30px;
   height: 30px;
@@ -60,11 +79,10 @@ p {
   margin: 2px;
   border: 2px solid transparent;
 }
-
 .color-box.selected {
   border: 2px solid black;
 }
-.theme-box {
+.selectBox {
   cursor: pointer;
   padding: 5px 10px;
   margin: 5px;
@@ -72,9 +90,11 @@ p {
   border: 1px solid #ccc;
   display: inline-block;
 }
-
-/* 선택된 테마 스타일 */
-.theme-box.selected {
+.selectBox.selected {
   background-color: #79d1c3;
   color: white;
+}
+.themeSideText {
+  font-size: 13px;
+  color: #6892d5;
 }

@@ -6,7 +6,7 @@
 <script defer src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
 <script defer src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="./script/main.js"></script>
+<script src="/script/main.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // header.html 로드 후 로그아웃 버튼 설정
@@ -35,7 +35,16 @@
         this.classList.add('selected');
       });
     });
-
+    // 지역 선택
+    const regionBoxes = document.querySelectorAll('.region-box');
+    regionBoxes.forEach((box) => {
+      box.addEventListener('click', function () {
+        const selectedRegion = this.getAttribute('data-region');
+        document.getElementById('selectedRegion').value = selectedRegion;
+        regionBoxes.forEach((box) => box.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
     // 컬러 박스 선택
     document.querySelectorAll('.color-box').forEach((box) => {
       box.addEventListener('click', function () {
