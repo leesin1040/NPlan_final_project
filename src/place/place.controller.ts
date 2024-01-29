@@ -1,7 +1,8 @@
-import { Body, Controller, Get, HttpStatus, Patch } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
 import { ConfigService } from '@nestjs/config';
+import { CreatePlaceDto } from './dto/create-place.dto';
 
 @ApiTags('place')
 @Controller('api/place')
@@ -10,6 +11,20 @@ export class PlaceController {
     private readonly placeService: PlaceService,
     private configService: ConfigService,
   ) {}
+
+  // place 생성
+  @ApiOperation({ summary: '스케줄 생성' })
+  @Post('')
+  async createPlace(@Body() createPlaceDto: CreatePlaceDto) {
+    const data = await this.placeService.createPlace(createPlaceDto);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: `플레이스 생성에 성공했습니다.`,
+      data,
+    };
+  }
+
   // place 전체조회
   @Get('')
   async getAddress() {
@@ -20,6 +35,7 @@ export class PlaceController {
       data,
     };
   }
+
   // place 지역별 ex)서울,경기,경남,경북
   @Get('/region')
   async getMainRegion(@Body('region') region: string) {
@@ -64,7 +80,7 @@ export class PlaceController {
   // # 38	전남
   // # 39	제주
 
-  // place 전체조회
+  // api key 환경변수 보내기
   @Get('api-key')
   getApiKey() {
     const TOUR_API_KEY = this.configService.get<string>('TOUR_API_KEY');
