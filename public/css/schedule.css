@@ -51,21 +51,22 @@ header h2 {
 .selectOption {
   border: solid 0.1rem;
   padding: 0.5rem 0.7rem 0 0.7rem;
-  height: 4rem;
-}
-
-.selectOption #connectApi {
-  margin: 0.5rem auto;
-  width: 98%;
+  height: 2rem;
 }
 
 .placeList {
   border: solid 0.1rem;
-  padding: 1rem;
+  height: 64.5rem;
+  overflow-y: scroll;
+}
+
+.placeList::-webkit-scrollbar {
+  display: none;
 }
 
 .place {
   border: solid 0.1rem;
+  margin: 1rem;
   padding: 1rem;
   width: 26rem;
   height: 6rem;
@@ -91,6 +92,11 @@ header h2 {
 .placeContent p {
   border: solid 0.1rem;
   margin: 0.2rem;
+}
+
+#connectApi {
+  margin: 0.5rem;
+  width: 97%;
 }
 
 .mapView {
