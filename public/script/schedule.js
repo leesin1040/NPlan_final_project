@@ -159,37 +159,37 @@ function showPlaceList(datas) {
     place.dataset.mapy = data.mapy;
     place = document.appendChild(placeList);
 
-    const imgUrl = document.createElement('div');
-    imgUrl.className = 'imgUrl';
-    imgUrl = document.appendChild(place);
+    const placeImgUrl = document.createElement('div');
+    placeImgUrl.className = 'placeImgUrl';
+    placeImgUrl = document.appendChild(place);
 
-    const img = document.createElement('img');
-    img.className - 'img';
+    const placeImg = document.createElement('placeImg');
+    placeImg.className = 'placeImg';
     data.imgUrl === null
-      ? (img.src =
+      ? (placeImg.src =
           'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg')
-      : (img.src = data.imgUrl);
-    img = document.appendChild(imgUrl);
+      : (placeImg.src = data.imgUrl);
+    placeImg = document.appendChild(placeImgUrl);
 
     const placeContent = document.createElement('div');
     placeContent.className = 'placeContent';
     placeContent = document.appendChild(place);
 
-    const name = document.createElement('p');
-    name.className = 'name';
-    name.innerText = data.name;
-    name = document.appendChild(placeContent);
+    const placeName = document.createElement('p');
+    placeName.className = 'placeName';
+    placeName.innerText = data.name;
+    placeName = document.appendChild(placeContent);
 
-    const address = document.createElement('p');
-    address.className = 'address';
-    address.innerText = data.address;
-    address = document.appendChild(placeContent);
+    const placeAddress = document.createElement('p');
+    placeAddress.className = 'placeAddress';
+    placeAddress.innerText = data.address;
+    placeAddress = document.appendChild(placeContent);
 
-    const category = document.createElement('p');
-    category.className = 'category';
-    category.dataset.cat1 = data.cat1;
-    category.innerText = data.category;
-    category = document.appendChild(placeContent);
+    const placeCategory = document.createElement('p');
+    placeCategory.className = 'placeCategory';
+    placeCategory.dataset.cat1 = data.cat1;
+    placeCategory.innerText = data.category;
+    placeCategory = document.appendChild(placeContent);
   });
 }
 
@@ -204,64 +204,64 @@ function showPlaceListFromApi(datas) {
     place.dataset.mapy = data.mapy;
     place = document.appendChild(placeList);
 
-    const imgUrl = document.createElement('div');
-    imgUrl.className = 'imgUrl';
-    imgUrl = document.appendChild(place);
+    const placeImgUrl = document.createElement('div');
+    placeImgUrl.className = 'placeImgUrl';
+    placeImgUrl = document.appendChild(place);
 
-    const img = document.createElement('img');
-    img.className = 'img';
+    const placeImg = document.createElement('placeImg');
+    placeImg.className = 'placeImg';
     data.imgUrl === null
-      ? (img.src =
+      ? (placeImg.src =
           'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg')
-      : (img.src = data.firstimage2);
-    img = document.appendChild(imgUrl);
+      : (placeImg.src = data.firstimage2);
+    placeImg = document.appendChild(placeImgUrl);
 
     const placeContent = document.createElement('div');
     placeContent.className = 'placeContent';
     placeContent = document.appendChild(place);
 
-    const name = document.createElement('p');
-    name.className = 'name';
-    name.innerText = data.title;
-    name = document.appendChild(placeContent);
+    const placeName = document.createElement('p');
+    placeName.className = 'placeName';
+    placeName.innerText = data.title;
+    placeName = document.appendChild(placeContent);
 
-    const address = document.createElement('p');
-    address.className = 'address';
-    address.innerText = data.addr1;
-    address = document.appendChild(placeContent);
+    const placeAddress = document.createElement('p');
+    placeAddress.className = 'placeAddress';
+    placeAddress.innerText = data.addr1;
+    placeAddress = document.appendChild(placeContent);
 
-    const category = document.createElement('p');
-    category.className = 'category';
-    category.dataset.cat1 = data.cat1;
-    category.innerText = getCategory(data.cat2);
-    category = document.appendChild(placeContent);
+    const placeCategory = document.createElement('p');
+    placeCategory.className = 'placeCategory';
+    placeCategory.dataset.cat1 = data.cat1;
+    placeCategory.innerText = getCategory(data.cat2);
+    placeCategory = document.appendChild(placeContent);
   });
 }
 
 // cat1에 따른 카테고리 분류
 function getCategory(cat2) {
-  const category = '';
+  const placeCategory = '';
 
-  if (cat2 === 'A0101') category = '자연관광지';
-  else if (cat2 === 'A0102') category = '관광자원';
-  else if (cat2 === 'A0205') category = '건축/조형물';
-  else if (cat2 === 'A0206') category = '문화시설';
-  else if (cat2 === 'A0207') category = '축제';
-  else if (cat2 === 'A0302') category = '육상 레포츠';
-  else if (cat2 === 'A0303') category = '수상 레포츠';
-  else if (cat2 === 'A0304') category = '항공 레포츠';
-  else if (cat2 === 'A0305') category = '복합 레포츠';
-  else if (cat2 === 'A0401') category = '쇼핑';
-  else if (cat2 === 'A0502') category = '음식점';
-  else if (cat2 === 'B0201') category = '숙박시설';
-  else if (cat2 === 'C0112') category = '가족코스';
-  else if (cat2 === 'C0113') category = '나홀로코스';
-  else if (cat2 === 'C0114') category = '힐링코스';
-  else if (cat2 === 'C0115') category = '도보코스';
-  else if (cat2 === 'C0116') category = '캠핑코스';
-  else if (cat2 === 'C0117') category = '맛코스';
+  if (cat2 === 'A0101') placeCategory = '자연관광지';
+  else if (cat2 === 'A0102') placeCategory = '관광자원';
+  else if (cat2 === 'A0205') placeCategory = '건축/조형물';
+  else if (cat2 === 'A0206') placeCategory = '문화시설';
+  else if (cat2 === 'A0207') placeCategory = '축제';
+  else if (cat2 === 'A0302') placeCategory = '육상 레포츠';
+  else if (cat2 === 'A0303') placeCategory = '수상 레포츠';
+  else if (cat2 === 'A0304') placeCategory = '항공 레포츠';
+  else if (cat2 === 'A0305') placeCategory = '복합 레포츠';
+  else if (cat2 === 'A0401') placeCategory = '쇼핑';
+  else if (cat2 === 'A0502') placeCategory = '음식점';
+  else if (cat2 === 'B0201') placeCategory = '숙박시설';
+  else if (cat2 === 'C0112') placeCategory = '가족코스';
+  else if (cat2 === 'C0113') placeCategory = '나홀로코스';
+  else if (cat2 === 'C0114') placeCategory = '힐링코스';
+  else if (cat2 === 'C0115') placeCategory = '도보코스';
+  else if (cat2 === 'C0116') placeCategory = '캠핑코스';
+  else if (cat2 === 'C0117') placeCategory = '맛코스';
 
-  return category;
+  return placeCategory;
 }
 
 // 장소 선택하면 해당 장소를 schedule에 등록
@@ -274,14 +274,15 @@ document.querySelectorAll('.place').forEach((element) => {
     if (!placeId) {
       const mapx = event.currentTarget.dataset.mapx;
       const mapy = event.currentTarget.dataset.mapy;
-      const name = event.currentTarget.getElementsByClassName('name')[0].innerText;
-      const address = event.currentTarget.getElementsByClassName('address')[0].innerText;
-      const category = event.currentTarget.getElementsByClassName('category')[0].innerText;
-      const cat1 = event.currentTarget.getElementsByClassName('category')[0].dataset.cat1;
-      const img = event.currentTarget.getElementsByClassName('img')[0].src;
+      const placeName = event.currentTarget.getElementsByClassName('placeName')[0].innerText;
+      const placeAddress = event.currentTarget.getElementsByClassName('placeAddress')[0].innerText;
+      const placeCategory =
+        event.currentTarget.getElementsByClassName('placeCategory')[0].innerText;
+      const cat1 = event.currentTarget.getElementsByClassName('placeCategory')[0].dataset.cat1;
+      const placeImg = event.currentTarget.getElementsByClassName('placeImg')[0].src;
 
-      // console.log(mapx, mapy, name, address, category, cat1, img);
-      placeId = createNewPlace(name, address, mapx, mapy, category, cat1, img);
+      // console.log(mapx, mapy, placeName, placeAddress, placeCategory, cat1, placeImg);
+      placeId = createNewPlace(placeName, placeAddress, mapx, mapy, placeCategory, cat1, placeImg);
     }
 
     // schedule 생성
@@ -304,16 +305,16 @@ document.querySelectorAll('.place').forEach((element) => {
 });
 
 // tour api에서 가져온 place 선택 시 place table에 등록
-async function createNewPlace(name, address, mapx, mapy, category, cat1, img) {
+async function createNewPlace(placeName, placeAddress, mapx, mapy, placeCategory, cat1, placeImg) {
   await axios
     .post('api/place', {
-      name,
-      address,
+      name: placeName,
+      address: placeAddress,
       mapX: mapx,
       mapY: mapy,
-      category,
+      category: placeCategory,
       cat1,
-      imgUrl: img,
+      imgUrl: placeImg,
     })
     .then((response) => {
       const data = response.data.data;
