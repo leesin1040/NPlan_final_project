@@ -109,13 +109,18 @@ function viewScheduleDetail(scheduleId) {
 function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');
   const closePathModal = document.getElementById('closePathModal');
+  let path = window.location.pathname;
+  let pathParts = path.split('/');
+  let travelId = pathParts[pathParts.indexOf('travel') + 1];
+  console.log(travelId);
   closePathModal.addEventListener('click', () => {
     viewPathModal.style.display = 'none';
   });
   viewPathModal.style.display = 'flex';
+
   // day에 속한 좌표들 가져오기
   axios
-    .get(`/api/travel/1/day/${dayId}`)
+    .get(`/api/travel/${travelId}/day/${dayId}`)
     .then((response) => {
       const locationData = response.data.data;
 
@@ -213,7 +218,7 @@ function viewDayPath(dayId) {
         );
       }
 
-      const REST_API_KEY = '';
+      const REST_API_KEY = '553ceec33cc4d1eec0b87f1834680033';
       axios
         .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', newData, {
           headers: {
