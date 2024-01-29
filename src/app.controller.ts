@@ -52,9 +52,12 @@ export class AppController {
   }
 
   //마이페이지
+  @UseGuards(LoginOrNotGuard)
   @Get('userinfo')
+  @Page('userinfo')
   getMyPage(@UserInfo() user: User) {
     const pageTitle = '마이페이지';
+    console.log(user);
     return {
       user,
       pageTitle,
