@@ -96,7 +96,20 @@ export class UserController {
       data,
     };
   }
-
+  /**
+   * 탈퇴유저 살리기
+   * @param id
+   * @returns
+   */
+  @Put('cancel')
+  async cancelUserDelete(@Body('id') id: number) {
+    const data = await this.userService.cancelUserDelete(id);
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      message: '회원삭제취소되었습니다.',
+      data,
+    };
+  }
   // /**
   //  * 유저 이미지 수정
   //  */

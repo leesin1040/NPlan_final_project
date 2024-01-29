@@ -34,6 +34,11 @@ p {
 .invitedTravelsRow .col {
   flex: 0 0 calc(15% - 10px);
   margin: 10px;
+  border: 0;
+}
+.myTravelsRow .card,
+.invitedTravelsRow .card {
+  border: 0;
 }
 .travelCategory {
   margin-top: 3rem;

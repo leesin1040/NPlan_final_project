@@ -43,6 +43,14 @@ PUT  http://localhost:3000/api/user/delete
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
+### 회원탈퇴취소
+PUT  http://localhost:3000/api/user/cancel
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "id":1
+}
 
 ### 회원이름으로 아이디
 GET http://localhost:3000/api/user?name=사용자

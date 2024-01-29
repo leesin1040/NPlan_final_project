@@ -44,7 +44,7 @@ function getDays(travelId) {
             <div
             class="schedule"
             draggable="true"
-            
+
             style="border: 4px solid"
           >
             <strong>(${schedule.place.category})${schedule.place.name}</strong><br />
@@ -68,8 +68,10 @@ function getDays(travelId) {
       // console.error('Error:', error);
     });
 }
+
 window.onload = function () {
-  getDays(travelId);
+  alert('하이');
+  // getDays(travelId);
   // 버튼에 이벤트리스트할당
   document.addEventListener('click', function (event) {
     // 경로 보기 버튼
