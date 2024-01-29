@@ -80,67 +80,69 @@
       <div class="modal-content">
         <header>
           <h1 id="tavelTitle">여행 이름</h1>
-          <h2 id="dayTitle">n일차</h1>
-      </header>
-      <div class="container">
+          <h2 id="dayTitle">n일차</h2>
+        </header>
+        <div class="container">
           <!-- placeInfo, mapView 가로배열로 보여지게 -->
           <div class="placeInfo">
-              <div class="selectOption">
-                  <form action="#">
-                      <label for="areaCode">지역 선택</label>
-                      <select name="지역" id="areaCode">
-                          <option value="1">서울</option>
-                          <option value="2">인천</option>
-                          <option value="3">대전</option>
-                          <option value="4">대구</option>
-                          <option value="5">광주</option>
-                          <option value="6">부산</option>
-                          <option value="7">울산</option>
-                          <option value="8">세종</option>
-                          <option value="31">경기</option>
-                          <option value="32">강원</option>
-                          <option value="33">충북</option>
-                          <option value="34">충남</option>
-                          <option value="35">경북</option>
-                          <option value="36">경남</option>
-                          <option value="37">전북</option>
-                          <option value="38">전남</option>
-                          <option value="39">제주</option>
-                      </select>
-                      <label for="category">카테고리 선택</label>
-                      <select name="카테고리" id="category">
-                          <option value="O00">전체</option>
-                          <option value="A01">자연</option>
-                          <option value="A02">인문(문화/예술/역사)</option>
-                          <option value="A03">레포츠</option>
-                          <option value="A04">쇼핑</option>
-                          <option value="A05">음식</option>
-                          <option value="B02">숙박</option>
-                          <option value="C01">추천코스</option>
-                      </select>
-                      <!-- <input type="submit" value="Submit" id="submit" /> -->
-                      <button id="submit">submit</button>
-                  </form>
-                  <button id="connectApi">더 많은 장소 보기</button>
+            <div class="selectOption">
+              <form action="#">
+                <label for="areaCode">지역 선택</label>
+                <select name="지역" id="areaCode">
+                  <option value="1">서울</option>
+                  <option value="2">인천</option>
+                  <option value="3">대전</option>
+                  <option value="4">대구</option>
+                  <option value="5">광주</option>
+                  <option value="6">부산</option>
+                  <option value="7">울산</option>
+                  <option value="8">세종</option>
+                  <option value="31">경기</option>
+                  <option value="32">강원</option>
+                  <option value="33">충북</option>
+                  <option value="34">충남</option>
+                  <option value="35">경북</option>
+                  <option value="36">경남</option>
+                  <option value="37">전북</option>
+                  <option value="38">전남</option>
+                  <option value="39">제주</option>
+                </select>
+                <label for="category">카테고리 선택</label>
+                <select name="카테고리" id="category">
+                  <option value="O00">전체</option>
+                  <option value="A01">자연</option>
+                  <option value="A02">인문(문화/예술/역사)</option>
+                  <option value="A03">레포츠</option>
+                  <option value="A04">쇼핑</option>
+                  <option value="A05">음식</option>
+                  <option value="B02">숙박</option>
+                  <option value="C01">추천코스</option>
+                </select>
+                <!-- <input type="submit" value="Submit" id="submit" /> -->
+                <button id="submit">submit</button>
+              </form>
+              <button id="connectApi">더 많은 장소 보기</button>
+            </div>
+            <div class="placeList">
+              <div class="place" id="134">
+                <div class="imgUrl">
+                  <img
+                    src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg"
+                  />
+                </div>
+                <div class="placeContent">
+                  <p class="name">장소 이름</p>
+                  <p class="address">장소 주소</p>
+                  <p class="category">카테고리</p>
+                </div>
+                <button class="select">선택</button>
               </div>
-              <div class="placeList">
-                  <div class="place" id="134">
-                      <div class="imgUrl"><img
-                              src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg">
-                      </div>
-                      <div class="placeContent">
-                          <p class="name">장소 이름</p>
-                          <p class="address">장소 주소</p>
-                          <p class="category">카테고리</p>
-                      </div>
-                      <button class="select">선택</button>
-                  </div>
-              </div>
+            </div>
           </div>
           <div class="mapView">
-              <!-- selectOption으로 선택된 지역 중심으로 지도 보여지게 -->
+            <!-- selectOption으로 선택된 지역 중심으로 지도 보여지게 -->
           </div>
-      </div>
+        </div>
       </div>
     </section>
     <!-- schedule 추가 모달 -->
