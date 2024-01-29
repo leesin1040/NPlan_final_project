@@ -1,3 +1,4 @@
+import { CreatePlaceDto } from './dto/create-place.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
@@ -9,6 +10,20 @@ export class PlaceService {
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
   ) {}
+
+  // tour api에서 받아온 place 정보 저장
+  async createPlace(createPlaceDto: CreatePlaceDto) {
+    return await this.placeRepository.save({
+      name: createPlaceDto.name,
+      address: createPlaceDto.address,
+      mapX: createPlaceDto.mapX,
+      mapY: createPlaceDto.mapY,
+      category: createPlaceDto.category,
+      cat1: createPlaceDto.cat1,
+      imaUrl: createPlaceDto.imaUrl,
+    });
+  }
+
   async getAddress() {
     const getAddress = await this.placeRepository.find({
       order: { id: 'ASC' },
@@ -20,7 +35,7 @@ export class PlaceService {
       where: {
         address: Like(`${region}%`),
       },
-      order: { raiting: 'DESC' },
+      order: { rank: 'DESC' },
       take: 10,
     });
     return getMainRegion;
@@ -36,9 +51,9 @@ export class PlaceService {
       const getContent = await this.placeRepository.find({
         where: {
           address: Like(`${region}%`),
-          contentId: In(['A01', 'A02', 'A03']),
+          cat1: In(['A01', 'A02', 'A03']),
         },
-        order: { raiting: 'DESC' },
+        order: { rank: 'DESC' },
         take: 10,
       });
       return getContent;
@@ -46,9 +61,9 @@ export class PlaceService {
       const getContent = await this.placeRepository.find({
         where: {
           address: Like(`${region}%`),
-          contentId: 'A04',
+          cat1: 'A04',
         },
-        order: { raiting: 'DESC' },
+        order: { rank: 'DESC' },
         take: 10,
       });
       return getContent;
@@ -56,9 +71,9 @@ export class PlaceService {
       const getContent = await this.placeRepository.find({
         where: {
           address: Like(`${region}%`),
-          contentId: 'A05',
+          cat1: 'A05',
         },
-        order: { raiting: 'DESC' },
+        order: { rank: 'DESC' },
         take: 10,
       });
       return getContent;
@@ -66,9 +81,9 @@ export class PlaceService {
       const getContent = await this.placeRepository.find({
         where: {
           address: Like(`${region}%`),
-          contentId: 'B02',
+          cat1: 'B02',
         },
-        order: { raiting: 'DESC' },
+        order: { rank: 'DESC' },
         take: 10,
       });
       return getContent;
