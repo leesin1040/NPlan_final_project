@@ -44,21 +44,22 @@ export class AppController {
   }
 
   //회원가입
-  @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
-  @Page('main')
-  getSignUp(@UserInfo() user: User) {
+  @Page('signup')
+  getSignUp() {
     const pageTitle = '회원가입';
     return {
-      user,
       pageTitle,
     };
   }
 
   //마이페이지
+  @UseGuards(LoginOrNotGuard)
   @Get('userinfo')
+  @Page('userinfo')
   getMyPage(@UserInfo() user: User) {
     const pageTitle = '마이페이지';
+    console.log(user);
     return {
       user,
       pageTitle,

@@ -20,7 +20,7 @@ document.getElementById('submit').addEventListener('click', async function (even
     });
     alert('등록완료!');
     //홈으로 이동
-    window.location.href = 'index.html';
+    window.location.href = '/home';
   } catch (error) {
     console.error(error);
   }
