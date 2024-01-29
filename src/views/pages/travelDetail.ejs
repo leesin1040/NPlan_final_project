@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <%-include('../partials/head.ejs') %>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e892dc4fbde45212004f1d658cecdb6f"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=여기js키&libraries=services"></script>
   </head>
   <body>
     <%-include('../partials/header.ejs') %>
@@ -21,7 +21,7 @@
           <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
             <div class="oneDatListTitle justify-content-between align-items-center" >
               <h4><%= dateString %></h4>
-              <button type="button" class="btn btn-outline-dark btn-sm text-end viewPathButton" data-column-id="<%= day.id %>">경로보기</button>
+              <button type="button" class="btn btn-outline-dark btn-sm text-end viewPathButton" id="viewDayPath<%= day.id %>" data-column-id="<%= day.id %>">경로보기</button>
             </div>
             <!-- 해당 일자의 스케줄 목록 렌더링 -->
             <% 
@@ -62,6 +62,7 @@
 <script src="/script/travelDetail.js"></script>
  <%-include('../partials/script.ejs') %>
  <script>
+  
   window.onload = function () {
   // getDays(travelId);
   // 버튼에 이벤트리스트할당
@@ -105,5 +106,7 @@ viewPathButtons.forEach((viewPathButton) => {
     viewPathModal.style.display = 'flex';
   });
 });
+
+
  </script>
   </body>

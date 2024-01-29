@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Day } from './entities/day.entity';
 import { DayDto } from './dto/day.dto';
 import { Place } from 'src/place/entities/place.entity';
+import { LexoRank } from 'lexorank';
 
 @Injectable()
 export class DayService {
@@ -63,9 +64,16 @@ export class DayService {
     const getDays = await this.dayRepository.find({
       where: { travel: { id: travelId } },
       order: { day: 'ASC' },
+      relations: ['schedule.place'],
+    });
+    getDays.forEach((day) => {
+      day.schedule.sort((a, b) => {
+        return LexoRank.parse(a.order).compareTo(LexoRank.parse(b.order));
+      });
     });
     return getDays;
   }
+
   //   리스트 상세조회
   async getDay(travelId: number, dayId: number) {
     // 클릭한 리스트 안에 존재하는 카드들의 위치정보를  순서대로 반환해준다
@@ -74,17 +82,10 @@ export class DayService {
       relations: ['schedule.place'],
     });
 
-    const getXY = [];
-    getCards[0].schedule.forEach((a) => {
-      getXY.push({
-        X: a.place.mapX,
-        Y: a.place.mapY,
-        name: a.place.name,
-        category: a.place.category,
-        contentId: a.place.contentId,
-      });
+    getCards[0].schedule.sort((a, b) => {
+      return LexoRank.parse(a.order).compareTo(LexoRank.parse(b.order));
     });
-    console.log(getXY);
+
     return getCards;
   }
 

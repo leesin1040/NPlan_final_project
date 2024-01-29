@@ -21,10 +21,17 @@ export class UpdatePlaceService {
   // @Cron(CronExpression.EVERY_5_SECONDS)
   // async updatePlacesJob() {
   //   try {
-  //     const place = await this.placeRepository.findOne({ where: { id: 2 } });
-  //     const updatePlace = await this.updatePlaceRepository.findOne({ where: { id: 3 } });
-  //     console.log(place.name);
-  //     console.log(updatePlace.name);
+  //     const queryRunner = this.dataSource.createQueryRunner();
+  //     await queryRunner.connect();
+  //     await queryRunner.startTransaction();
+
+  //     // MySQL에서 외래 키 제약 무시하고 모든 데이터 삭제
+  //     await queryRunner.query('SET FOREIGN_KEY_CHECKS = 0');
+  //     await queryRunner.query('TRUNCATE TABLE place');
+  //     await queryRunner.query('SET FOREIGN_KEY_CHECKS = 1');
+  //     const getplace = await this.updatePlaceRepository.find({ order: { id: 'ASC' }, take: 10 });
+  //     await this.placeRepository.save(getplace);
+  //     console.log('성공');
   //   } catch (error) {
   //     this.logger.error(`에러: ${error.message}`);
   //   }

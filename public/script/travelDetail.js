@@ -28,21 +28,21 @@ async function updateTravel() {
 
 // 스케쥴 상세보기 모달
 function viewScheduleDetail(scheduleId) {
-  axios.get(`api/schedule/one/${scheduleId}`).then((response) => {
+  axios.get(`/api/schedule/one/${scheduleId}`).then((response) => {
     // console.log(response.data);
-    const scheduleDetailData = response.data.data;
-    const scheduledayTitle = document.getElementById('dayTitle');
-    const scheduleName = document.getElementById('name');
-    const scheduleAddress = document.getElementById('address');
-    const scheduleCategory = document.getElementById('category');
-    const scheduleMemo = document.getElementById('memo');
-    const scheduleMap = document.getElementById('scheduleMap');
-    // day이름
-    scheduledayTitle.innerHTML += `${scheduleDetailData.day.day}일차`;
-    scheduleName.value = scheduleDetailData.place.name;
-    scheduleAddress.value = scheduleDetailData.place.address;
-    scheduleCategory.value = scheduleDetailData.place.category;
-    scheduleMemo.value = scheduleDetailData.memo;
+    // const scheduleDetailData = response.data.data;
+    // const scheduledayTitle = document.getElementById('dayTitle');
+    // const scheduleName = document.getElementById('name');
+    // const scheduleAddress = document.getElementById('address');
+    // const scheduleCategory = document.getElementById('category');
+    // const scheduleMemo = document.getElementById('memo');
+    // const scheduleMap = document.getElementById('scheduleMap');
+    // // day이름
+    // scheduledayTitle.innerHTML += `${scheduleDetailData.day.day}일차`;
+    // scheduleName.value = scheduleDetailData.place.name;
+    // scheduleAddress.value = scheduleDetailData.place.address;
+    // scheduleCategory.value = scheduleDetailData.place.category;
+    // scheduleMemo.value = scheduleDetailData.memo;
 
     // schedule map
     // 일단은 위치 마커만 추가
@@ -115,7 +115,7 @@ function viewDayPath(dayId) {
   viewPathModal.style.display = 'flex';
   // day에 속한 좌표들 가져오기
   axios
-    .get(`api/travel/${travelId}/day/${dayId}`)
+    .get(`/api/travel/1/day/${dayId}`)
     .then((response) => {
       const locationData = response.data.data;
 
@@ -144,119 +144,106 @@ function viewDayPath(dayId) {
         }
       });
 
-      var mapContainer = document.getElementById('dayMap'), // 지도를 표시할 div
+      let mapContainer = document.getElementById('dayMap'), // 지도를 표시할 div
         mapOption = {
-          center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-          level: 3, // 지도의 확대 레벨
+          // 좌표에 카드들 중 첫번쨰의 좌표
+          center: new kakao.maps.LatLng(newData.origin.y, newData.origin.x), // 지도의 중심좌표
+          level: 3,
         };
 
       // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-      var map = new kakao.maps.Map(mapContainer, mapOption);
-      // console.log(newData);
-      //   // 1.카카오 map에서 지도가져오기
-      //   let mapContainer = document.getElementById('dayMap'), // 지도를 표시할 div
-      //     mapOption = {
-      //       // 좌표에 카드들 중 첫번쨰의 좌표
-      //       center: new kakao.maps.LatLng(newData.origin.y, newData.origin.x), // 지도의 중심좌표
-      //       level: 3,
-      //     };
+      let map = new kakao.maps.Map(mapContainer, mapOption);
+      var positions = [
+        {
+          title: locationData[0].schedule[0].place.name,
+          latlng: new kakao.maps.LatLng(newData.origin.y, newData.origin.x),
+        },
+        {
+          title: locationData[0].schedule[locationData[0].schedule.length - 1].place.name,
+          latlng: new kakao.maps.LatLng(
+            String(newData.destination.y),
+            String(newData.destination.x),
+          ),
+        },
+      ];
+      newData.waypoints.forEach((waypoint) => {
+        positions.push({
+          title: waypoint.name,
+          latlng: new kakao.maps.LatLng(waypoint.y, waypoint.x),
+        });
+      });
+      console.log(positions);
+      // 마커 이미지의 이미지 주소입니다
+      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
-      //   // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-      //   let map = new kakao.maps.Map(mapContainer, mapOption);
-      //   // console.log(newData.destination.y);
-      //   var positions = [
-      //     {
-      //       title: locationData[0].schedule[0].place.name,
-      //       latlng: new kakao.maps.LatLng(newData.origin.y, newData.origin.x),
-      //     },
-      //     {
-      //       title: locationData[0].schedule[locationData[0].schedule.length - 1].place.name,
-      //       latlng: new kakao.maps.LatLng(
-      //         String(newData.destination.y),
-      //         String(newData.destination.x),
-      //       ),
-      //     },
-      //   ];
-      //   newData.waypoints.forEach((waypoint) => {
-      //     positions.push({
-      //       title: waypoint.name,
-      //       latlng: new kakao.maps.LatLng(waypoint.y, waypoint.x),
-      //     });
-      //   });
-      //   console.log(positions);
-      //   // 마커 이미지의 이미지 주소입니다
-      //   var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+      for (var i = 0; i < positions.length; i++) {
+        // 마커 이미지의 이미지 크기 입니다
+        var imageSize = new kakao.maps.Size(24, 35);
 
-      //   for (var i = 0; i < positions.length; i++) {
-      //     // 마커 이미지의 이미지 크기 입니다
-      //     var imageSize = new kakao.maps.Size(24, 35);
+        // 마커 이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-      //     // 마커 이미지를 생성합니다
-      //     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        // 마커를 생성합니다
+        var marker = new kakao.maps.Marker({
+          map: map, // 마커를 표시할 지도
+          position: positions[i].latlng, // 마커를 표시할 위치
+          title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          image: markerImage, // 마커 이미지
+          clickable: true,
+        });
 
-      //     // 마커를 생성합니다
-      //     var marker = new kakao.maps.Marker({
-      //       map: map, // 마커를 표시할 지도
-      //       position: positions[i].latlng, // 마커를 표시할 위치
-      //       title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-      //       image: markerImage, // 마커 이미지
-      //       clickable: true,
-      //     });
+        // 마커에 클릭이벤트를 등록합니다
+        kakao.maps.event.addListener(
+          marker,
+          'click',
+          (function (marker) {
+            var iwContent = `<div style = "width:100%; height:100%;">
+                             <div">${locationData[0].schedule[i].place.name}</div>
+                            <div>${locationData[0].schedule[i].place.address}</div>
+                            </div>`,
+              iwRemoveable = true;
+            var infowindow = new kakao.maps.InfoWindow({
+              content: iwContent,
+              removable: iwRemoveable,
+            });
+            return function () {
+              infowindow.open(map, marker);
+            };
+          })(marker),
+        );
+      }
 
-      //     // 마커에 클릭이벤트를 등록합니다
-      //     kakao.maps.event.addListener(
-      //       marker,
-      //       'click',
-      //       (function (marker) {
-      //         var iwContent = `<div style = "width:100%; height:100%;">
-      //                          <div">${locationData[0].schedule[i].place.name}</div>
-      //                         <div>${locationData[0].schedule[i].place.address}</div>
-      //                         </div>`,
-      //           iwRemoveable = true;
-      //         var infowindow = new kakao.maps.InfoWindow({
-      //           content: iwContent,
-      //           removable: iwRemoveable,
-      //         });
-      //         return function () {
-      //           infowindow.open(map, marker);
-      //         };
-      //       })(marker),
-      //     );
-      //   }
-
-      //   const REST_API_KEY = 'd41807851f9aa8590592ed4840439f53';
-      //   axios
-      //     .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', newData, {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //         Authorization: `KakaoAK ${REST_API_KEY}`,
-      //       },
-      //     })
-      //     .then((response) => {
-      //       // console.log(response.data.routes[0].sections);
-      //       const linePath = [];
-      //       response.data.routes[0].sections.forEach((a) => {
-      //         a.roads.forEach((router) => {
-      //           router.vertexes.forEach((vertex, index) => {
-      //             if (index % 2 === 0) {
-      //               linePath.push(
-      //                 new kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]),
-      //               );
-      //             }
-      //           });
-      //           var polyline = new kakao.maps.Polyline({
-      //             path: linePath,
-      //             strokeWeight: 5,
-      //             strokeColor: '#000000',
-      //             strokeOpacity: 0.7,
-      //             strokeStyle: 'solid',
-      //             endArrow: true,
-      //           });
-      //           polyline.setMap(map);
-      //         });
-      //       });
-      //     });
-      // })
+      const REST_API_KEY = '';
+      axios
+        .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', newData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `KakaoAK ${REST_API_KEY}`,
+          },
+        })
+        .then((response) => {
+          const linePath = [];
+          response.data.routes[0].sections.forEach((a) => {
+            a.roads.forEach((router) => {
+              router.vertexes.forEach((vertex, index) => {
+                if (index % 2 === 0) {
+                  linePath.push(
+                    new kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]),
+                  );
+                }
+              });
+            });
+            var polyline = new kakao.maps.Polyline({
+              path: linePath,
+              strokeWeight: 5,
+              strokeColor: '#000000',
+              strokeOpacity: 0.7,
+              strokeStyle: 'solid',
+              endArrow: true,
+            });
+            polyline.setMap(map);
+          });
+        });
     })
     .catch((error) => {
       console.error(error);
