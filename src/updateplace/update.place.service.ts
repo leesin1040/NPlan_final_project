@@ -18,15 +18,15 @@ export class UpdatePlaceService {
     private dataSource: DataSource,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
-  async updatePlacesJob() {
-    try {
-      const place = await this.placeRepository.findOne({ where: { id: 2 } });
-      const updatePlace = await this.updatePlaceRepository.findOne({ where: { id: 3 } });
-      console.log(place.name);
-      console.log(updatePlace.name);
-    } catch (error) {
-      this.logger.error(`에러: ${error.message}`);
-    }
-  }
+  // @Cron(CronExpression.EVERY_5_SECONDS)
+  // async updatePlacesJob() {
+  //   try {
+  //     const place = await this.placeRepository.findOne({ where: { id: 2 } });
+  //     const updatePlace = await this.updatePlaceRepository.findOne({ where: { id: 3 } });
+  //     console.log(place.name);
+  //     console.log(updatePlace.name);
+  //   } catch (error) {
+  //     this.logger.error(`에러: ${error.message}`);
+  //   }
+  // }
 }
