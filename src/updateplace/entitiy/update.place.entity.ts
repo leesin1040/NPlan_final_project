@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity('place')
 export class UpdatePlace {
@@ -11,20 +11,20 @@ export class UpdatePlace {
   @Column({ nullable: true })
   address: string;
 
-  @Column({ name: 'map_x', nullable: true })
-  mapX: string;
+  @Column({ name: 'map_x', type: 'double', nullable: true })
+  mapX: number;
 
-  @Column({ name: 'map_y', nullable: true })
-  mapY: string;
+  @Column({ name: 'map_y', type: 'double', nullable: true })
+  mapY: number;
 
   @Column({ nullable: true })
-  raiting: number;
+  rank: number;
 
   @Column({ name: 'category', nullable: true })
   category: string;
 
-  @Column({ name: 'content_id', nullable: true })
-  contentId: string;
+  @Column({ name: 'cat1', nullable: true })
+  cat1: string;
 
   @Column({ name: 'img_url', nullable: true })
   imgUrl: string;
