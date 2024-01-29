@@ -1,0 +1,115 @@
+<header class="p-3">
+  <div class="container">
+    <div
+      class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+    >
+      <a
+        href="/home"
+        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"
+      >
+        <img
+          height="60"
+          src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fdab6964d-c77a-4560-af98-508dec805d81%2F%25E1%2584%2586%25E1%2585%25AE%25E1%2584%258C%25E1%2585%25A6_2.svg?table=block&id=0624fc60-0e89-496c-a965-260b9e1f8491&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&userId=1977d907-fe92-4b00-9967-9101a7709d4f&cache=v2"
+        />
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 me-3">
+        <li><a href="/home" class="nav-link px-2 link-secondary">Home</a></li>
+      </ul>
+
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
+        <input
+          type="search"
+          class="form-control"
+          placeholder="여행 포스팅 검색..."
+          aria-label="Search"
+        />
+        <input type="button" class="btn btn-outline-secondary ms-2" value="검색" />
+      </form>
+      <% if(user===null){ %>
+      <button
+        type="button"
+        class="btn me-2"
+        id="BeforeLoginButton"
+        style="background-color: #6892d5; color: white"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
+      >
+        login
+      </button>
+      <button
+        type="button"
+        class="btn"
+        id="beforeLoginSignupBtn"
+        style="border-color: #6892d5; border-width: 2px; color: #6892d5"
+        onclick="location.href='/sign-up'"
+      >
+        sign up
+      </button>
+      <% }else{ %>
+      <div class="dropdown text-end" id="userExist">
+        <a
+          href="#"
+          class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=170667a&w=0&k=20&c=m-F9Doa2ecNYEEjeplkFCmZBlc5tm1pl1F7cBCh9ZzM="
+            alt="mdo"
+            width="32"
+            height="32"
+            class="rounded-circle"
+          />
+        </a>
+        <ul class="dropdown-menu text-small">
+          <li><a class="dropdown-item" href="/userinfo">마이페이지</a></li>
+          <li><a class="dropdown-item" href="/my-travel">내 여행 목록</a></li>
+          <li><a class="dropdown-item" href="#">찜한 여행 목록</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</header>
+<!-- 로그인 모달 -->
+<div
+  class="modal mpdal-backdrop fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  style="z-index: 1051"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container p-4">
+        <p class="form-label">이메일</p>
+        <input type="text" id="loginEmail" class="form-control" value="expample@email.com" />
+        <p class="form-label">비밀번호</p>
+        <input type="password" id="loginPassword" class="form-control" value="123123" />
+        <div class="my-2">
+          <p class="text-center">
+            아직 회원이 아니신가요?
+            <a href="./signup.html" style="color: rgb(20, 116, 206)">여기를 눌러서</a>
+            회원가입을 진행해 주세요!
+          </p>
+        </div>
+        <button
+          type="button"
+          class="btn"
+          style="background-color: #6892d5; color: white; width: 100%"
+          id="realLoginBtn"
+        >
+          여행가기
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

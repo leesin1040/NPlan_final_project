@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %>
+    <div class="container">
+      <!-- 본문 -->
+      <form id="users" class="d-flex flex-column justify-content-center align-items-center p-5">
+        <div class="mb-6">
+          <h2 class="title">회원등록</h2>
+          <input id="signupEmail" class="input-group-text" type="text" placeholder="이메일" />
+          <button type="button" class="btn btn-secondary" id="auth-submit">인증번호전송</button>
+          <input
+            id="authNumber"
+            class="input-group-text"
+            type="text"
+            placeholder="이메일 인증번호"
+          />
+          <button type="button" class="btn btn-secondary" id="auth-check">인증확인</button>
+          <input id="name" class="input-group-text" type="text" placeholder="이름" />
+          <input
+            id="signupPassword"
+            class="input-group-text"
+            type="password"
+            placeholder="비밀번호"
+          />
+          <input
+            id="passwordConfirm"
+            class="input-group-text"
+            type="password"
+            placeholder="비밀번호 확인"
+          />
+          <button type="button" id="signup" class="btn btn-secondary">회원가입</button>
+        </div>
+      </form>
+      <!-- 본문 -->
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('하이');
+      });
+      document.getElementById('signup').addEventListener('click', async function (event) {
+        event.preventDefault();
+        try {
+          const email = document.getElementById('signupEmail').value;
+          const name = document.getElementById('name').value;
+          const signupPassword = document.getElementById('signupPassword').value;
+          const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+          await axios.post('/api/auth/register', {
+            email: email,
+            name: name,
+            password: signupPassword,
+            passwordConfirm: passwordConfirm,
+          });
+          alert('등록완료!');
+          //홈으로 이동
+          window.location.href = '/home';
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      document.getElementById('auth-submit').addEventListener('click', async function () {
+        console.log('이메일 인증 들어옴 - 브라우저');
+        try {
+          const email = document.getElementById('signupEmail').value;
+
+          const result = await axios.post('/api/auth/email-check', {
+            email,
+          });
+
+          console.log('인증번호:', result.data.authNumber);
+          A = result.data.authNumber;
+
+          alert('메일함을 확인해 주세요');
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      let A;
+
+      document.getElementById('auth-check').addEventListener('click', async function () {
+        try {
+          const authNumber = document.getElementById('authNumber').value;
+          console.log('여기있니?', A);
+          console.log('넌누구냐', authNumber);
+          if (Number(authNumber) === Number(A)) {
+            alert('이메일 인증 성공');
+          } else {
+            alert('이메일 인증 실패');
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+    <%-include('../partials/script.ejs') %>
+  </body>
+</html>

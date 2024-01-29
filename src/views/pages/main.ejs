@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %> <%-include('../partials/boardCreateHeadImg.ejs') %>
+    <div class="container">
+      <!-- 본문 -->
+      <p><a href="">인기순</a> / <a href="">최신순</a></p>
+      <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
+        <!-- 여행 포스트 카드 반복문-->
+        <div class="col">
+          <div class="card h-100">
+            <img
+              src="https://images.unsplash.com/photo-1618297358013-d3cb3e23ce25?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              class="card-img-top"
+            />
+            <div class="card-body">
+              <h5 class="card-title">경주여행</h5>
+              <div class="my-1 mb-2">
+                <button type="button" class="btn btn-info btn-sm me-1" disabled>지역</button
+                ><button type="button" class="btn btn-success btn-sm" disabled>테마</button>
+              </div>
+              <div class="card-text">
+                <p>
+                  경주 여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요. 경주
+                  여행 좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행
+                  좋아요. 볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.경주 여행 좋아요.
+                  볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.
+                </p>
+              </div>
+              <div class="text-end mt-2">
+                <i class="fa-regular fa-comment cardIcons me-2">&ensp;20</i
+                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&ensp;50</span></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 여행 포스트 카드 끝 -->
+      </div>
+      <!-- 본문 -->
+    </div>
+    <script></script>
+    <%-include('../partials/script.ejs') %>
+  </body>
+</html>

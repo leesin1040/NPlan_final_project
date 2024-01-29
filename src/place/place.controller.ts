@@ -1,11 +1,15 @@
 import { Body, Controller, Get, HttpStatus, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('place')
 @Controller('api/place')
 export class PlaceController {
-  constructor(private readonly placeService: PlaceService) {}
+  constructor(
+    private readonly placeService: PlaceService,
+    private configService: ConfigService,
+  ) {}
   // place 전체조회
   @Get('')
   async getAddress() {
@@ -42,21 +46,28 @@ export class PlaceController {
       data,
     };
   }
+  // # 1	서울
+  // # 2	인천
+  // # 3	대전
+  // # 4	대구
+  // # 5	광주
+  // # 6	부산
+  // # 7	울산
+  // # 8	세종
+  // # 31	경기
+  // # 32	강원
+  // # 33	충북
+  // # 34	충남
+  // # 35	경북
+  // # 36	경남
+  // # 37	전북
+  // # 38	전남
+  // # 39	제주
+
+  // place 전체조회
+  @Get('api-key')
+  getApiKey() {
+    const TOUR_API_KEY = this.configService.get<string>('TOUR_API_KEY');
+    return TOUR_API_KEY;
+  }
 }
-// # 1	서울
-// # 2	인천
-// # 3	대전
-// # 4	대구
-// # 5	광주
-// # 6	부산
-// # 7	울산
-// # 8	세종
-// # 31	경기
-// # 32	강원
-// # 33	충북
-// # 34	충남
-// # 35	경북
-// # 36	경남
-// # 37	전북
-// # 38	전남
-// # 39	제주

@@ -24,8 +24,6 @@ export class ScheduleService {
       dayId: createScheduleDto.dayId,
       placeId: createScheduleDto.placeId,
       order: newOrder,
-      transportation: createScheduleDto.transportation,
-      memo: createScheduleDto.memo,
     });
   }
 
@@ -36,13 +34,14 @@ export class ScheduleService {
     return await this.scheduleRepository.find({
       where: { dayId },
       order: { order: 'ASC' },
-      select: { placeId: true, order: true }, // place table 연결 후 place title, category 함께 출력
+      relations: ['place'],
+      select: { placeId: true, order: true, id: true }, // place table 연결 후 place title, category 함께 출력
     });
   }
 
   // 단일 스케줄 상세 조회
   async findOne(id: number) {
-    return await this.scheduleRepository.findOne({ where: { id } });
+    return await this.scheduleRepository.findOne({ where: { id }, relations: ['day', 'place'] });
     // place table 연결 후 place title, addr, mapX, mapY, category 함께 출력
   }
 
@@ -139,5 +138,18 @@ export class ScheduleService {
     }
 
     return order;
+  }
+
+  // 스케줄 복사
+  async copy(id: number) {
+    const schedule = await this.findOne(id);
+
+    const newOrder = await this.getOrder(schedule.dayId);
+
+    return this.scheduleRepository.create({
+      dayId: schedule.dayId,
+      placeId: schedule.placeId,
+      order: newOrder,
+    });
   }
 }

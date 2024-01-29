@@ -9,6 +9,7 @@ const travelTitle = urlParams.get('title');
 document.title = travelTitle;
 document.getElementById('travelTitle').innerHTML += travelTitle;
 
+
 function getDays(travelId) {
   axios
     .get(`api/travel/${travelId}/day`)
@@ -32,21 +33,7 @@ function getDays(travelId) {
         </div>
           `;
         dayList.innerHTML += dayHtml;
-        const scheduleList = document.getElementById(`scheduleList${day.id}`);
-        console.log(scheduleList);
-        axios.get(`api/schedule/allOfDay/${day.id}`).then((response) => {
-          const scheduleData = response.data;
-
-          scheduleData.data.forEach((schedule) => {
-            console.log(schedule);
-
-            let scheduleHtml = `
-              <div>안녕
-            </div>
-              `;
-            scheduleList.innerHTML += scheduleHtml;
-          });
-        });
+        const scheduleId = `scheduleId${day.id}`;
       });
     })
     .catch((error) => {
@@ -54,21 +41,18 @@ function getDays(travelId) {
       // console.error('Error:', error);
     });
 }
-window.onload = function () {
-  getDays(travelId);
-  // 동적으로 생산된 버튼에 이벤트리스트할당
-  document.addEventListener('click', function (event) {
-    // 경로 보기 버튼
-    if (event.target.id.startsWith('viewDayPath')) {
-      const dayId = event.target.id.replace('viewDayPath', '');
-      viewDayPath(dayId);
-    }
-    // Add Schedule 버튼
-    else if (event.target.id.startsWith('addScheduleBtnId')) {
-      const dayId = event.target.id.replace('addScheduleBtnId', '');
-    }
-  });
-};
+// 동적으로 생산된 버튼에 이벤트리스트할당
+document.addEventListener('click', function (event) {
+  // 경로 보기 버튼
+  if (event.target.id.startsWith('viewDayPath')) {
+    const dayId = event.target.id.replace('viewDayPath', '');
+    viewDayPath(dayId);
+  }
+  // Add Schedule 버튼
+  else if (event.target.id.startsWith('addScheduleBtnId')) {
+    const dayId = event.target.id.replace('addScheduleBtnId', '');
+  }
+});
 // 경로보기 모달창 이벤트리스너 할당 및 Get Map
 function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');
@@ -84,7 +68,7 @@ function viewDayPath(dayId) {
 
   // 1.카카오 모빌리티에서 동선가져오기
 
-  const REST_API_KEY = 'asas'; // 여기에 카카오디벨로퍼스에서 발급 받은 REST API 키 값을 넣어주세요
+  const REST_API_KEY = ''; // 여기에 카카오디벨로퍼스에서 발급 받은 REST API 키 값을 넣어주세요
 
   const data = {
     // 출발지
@@ -113,12 +97,7 @@ function viewDayPath(dayId) {
   };
 
   axios
-    .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `KakaoAK ${REST_API_KEY}`,
-      },
-    })
+    .get(`api/travel/${travelId}/day/${dayId}`)
     .then((response) => {
       console.log(response.data);
       const ArrayRoads = response.data.routes[0].sections[0].roads;
@@ -134,17 +113,17 @@ function viewDayPath(dayId) {
               );
             }
           });
-          var polyline = new kakao.maps.Polyline({
-            path: linePath,
-            strokeWeight: 5,
-            strokeColor: '#000000',
-            strokeOpacity: 0.7,
-            strokeStyle: 'solid',
-            endArrow: true,
-          });
-          polyline.setMap(map);
         });
       });
+
+      var polyline = new kakao.maps.Polyline({
+        path: linePath,
+        strokeWeight: 5,
+        strokeColor: '#000000',
+        strokeOpacity: 0.7,
+        strokeStyle: 'solid',
+      });
+      polyline.setMap(map);
     })
     .catch((error) => {
       console.error(error);
@@ -158,35 +137,38 @@ function viewDayPath(dayId) {
       level: 3,
     };
 
-  // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-  let map = new kakao.maps.Map(mapContainer, mapOption);
-  console.log(data.destination.y);
-  // 마커 표시하기
-  // 카드들의 위치와 표시
-  // 마커를 표시할 위치와 title 객체 배열입니다
-  var positions = [
-    {
-      title: '출발지',
-      latlng: new kakao.maps.LatLng(data.origin.y, data.origin.x),
-    },
-    {
-      title: '경유지',
-      latlng: new kakao.maps.LatLng(data.waypoints[0].y, data.waypoints[0].x),
-    },
-    {
-      title: '도착지',
-      latlng: new kakao.maps.LatLng(String(data.destination.y), String(data.destination.x)),
-    },
-  ];
-  // 마커 이미지의 이미지 주소입니다
-  var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+      // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+      let map = new kakao.maps.Map(mapContainer, mapOption);
+      // console.log(newData.destination.y);
+      var positions = [
+        {
+          title: locationData[0].schedule[0].place.name,
+          latlng: new kakao.maps.LatLng(newData.origin.y, newData.origin.x),
+        },
+        {
+          title: locationData[0].schedule[locationData[0].schedule.length - 1].place.name,
+          latlng: new kakao.maps.LatLng(
+            String(newData.destination.y),
+            String(newData.destination.x),
+          ),
+        },
+      ];
+      newData.waypoints.forEach((waypoint) => {
+        positions.push({
+          title: waypoint.name,
+          latlng: new kakao.maps.LatLng(waypoint.y, waypoint.x),
+        });
+      });
+      console.log(positions);
+      // 마커 이미지의 이미지 주소입니다
+      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
-  for (var i = 0; i < positions.length; i++) {
-    // 마커 이미지의 이미지 크기 입니다
-    var imageSize = new kakao.maps.Size(24, 35);
+      for (var i = 0; i < positions.length; i++) {
+        // 마커 이미지의 이미지 크기 입니다
+        var imageSize = new kakao.maps.Size(24, 35);
 
-    // 마커 이미지를 생성합니다
-    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        // 마커 이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
@@ -194,38 +176,17 @@ function viewDayPath(dayId) {
       position: positions[i].latlng, // 마커를 표시할 위치
       title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       image: markerImage, // 마커 이미지
-      clickable: true,
     });
-
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(
-      marker,
-      'click',
-      (function (marker) {
-        var iwContent = `<div style = "width:100%; height:100%;"><div">제목: ${positions[i].title}</div>
-        <div>이미지들어가고</div>
-        <div>주소들어가고</div>
-        </div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-          iwRemoveable = true;
-        var infowindow = new kakao.maps.InfoWindow({
-          content: iwContent,
-          removable: iwRemoveable,
-        });
-        return function () {
-          infowindow.open(map, marker);
-        };
-      })(marker),
-    );
   }
 }
 
-// // 드래그 앤 드롭
-// let draggedCard = null;
-// let originColumn = null;
-// // 드래그 앤 드롭 설정
-// function setupDragAndDrop() {
-//   const cards = document.querySelectorAll('.schedule');
-//   const columns = document.querySelectorAll('.day');
+// 드래그 앤 드롭
+let draggedCard = null;
+let originColumn = null;
+// 드래그 앤 드롭 설정
+function setupDragAndDrop() {
+  const cards = document.querySelectorAll('.schedule');
+  const columns = document.querySelectorAll('.day');
 
 //   // 카드에 대한 이벤트 리스너 설정
 //   cards.forEach((card) => {

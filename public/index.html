@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>N-Plan</title>
+    <link rel="icon" href="/img/icons8-suitcase-48.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +23,7 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/main.css" />
     <script src="https://kit.fontawesome.com/6316216c76.js" crossorigin="anonymous"></script>
   </head>
   <body>
@@ -29,7 +31,8 @@
     <!-- 메인 이미지 -->
     <div
       style="
-        background: url(https://images.unsplash.com/photo-1532649097480-b67d52743b69?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+          url(https://images.unsplash.com/photo-1532649097480-b67d52743b69?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
         background-position: center;
         background-size: cover;
         height: 320px;
@@ -76,9 +79,9 @@
                   볼거 많은데 많이 걸어야 하니까 편한 신발을 신고 오세요.
                 </p>
               </div>
-              <div>
-                <i class="fa-regular fa-comment cardIcons me-2"> 20</i
-                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons"> 50</span></i>
+              <div class="text-end mt-2">
+                <i class="fa-regular fa-comment cardIcons me-2">&ensp;20</i
+                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&ensp;50</span></i>
               </div>
             </div>
           </div>
@@ -87,7 +90,7 @@
       </div>
     </div>
 
-    <!-- 모달 -->
+    <!-- 여행보드 모달 -->
     <div
       class="modal fade"
       id="boardModal"
@@ -113,7 +116,7 @@
                 type="text"
                 class="form-control"
                 id="boardTitle"
-                placeholder="여행 이름을 입력해주세요"
+                placeholder="여행 이름을 입력해주세요."
               />
             </div>
             <p for="startDate" class="form-label">시작 일정</p>
@@ -123,7 +126,7 @@
                 type="text"
                 name="start_date"
                 id="startDate"
-                placeholder="날짜를 선택하세요"
+                placeholder="날짜를 선택하세요."
               />
             </div>
             <p for="endDate" class="form-label">종료 일정</p>

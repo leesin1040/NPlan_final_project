@@ -1,55 +1,100 @@
 body {
   font-family: 'IBM Plex Sans KR', 'Noto Sans KR';
 }
-a,
-a:visited,
-a:hover,
-a:active {
-  color: #000000;
-  text-decoration: none;
+p {
+  margin-bottom: 7px;
 }
-
-.h1Title {
+/* 내 여행 보드 목록 */
+.myTravelTitle {
   font-weight: 600;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.643);
 }
-.card-text {
-  font-size: small;
-  height: 80px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 4; /* 텍스트 줄 수를 원하는 값으로 설정하세요. */
-  -webkit-box-orient: vertical;
+.img-stack {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
-
-.cardIcons {
-  margin-top: 5px;
-  font-size: 12px;
-  color: #999999;
+.memberImg {
+  align-items: end;
+  margin-left: -20px; /* 이미지 겹치기 */
+  z-index: 1; /* 쌓임 순서 조정 */
 }
-
-.likeHeart {
-  margin-top: 5px;
-  font-size: 12px;
-  color: red;
+.myTravelsRow,
+.invitedTravelsRow {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
 }
-
-.btn-sm {
-  --bs-btn-padding-y: 0.1rem;
-  --bs-btn-padding-x: 0.3rem;
-  --bs-btn-font-size: 0.75rem;
+.cardsRow .col {
+  display: inline-block;
+  width: calc(50% - 10px);
 }
 
-/* 모달 */
-.boardModalTitle {
-  font-weight: 600;
-  text-align: center;
+.myTravelsRow .col,
+.invitedTravelsRow .col {
+  flex: 0 0 calc(15% - 10px);
+  margin: 10px;
+}
+.travelCategory {
+  margin-top: 3rem;
+}
+/* 트레블 상세보기 */
+.updateModalBtn {
+  margin-left: 10px;
+  padding: 2px 7px;
+}
+.oneDayList {
+  width: 300px;
+  height: 75vh;
+  padding: 15px 15px;
+  border-radius: 15px;
+  margin: 10px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.oneDatListTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.scheduleAddButton {
+  align-self: flex-start;
+  margin-top: auto;
+}
+.scheduleBox {
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.input-group-text {
-  width: 100%;
+/* 트레블 보드 생성 모달 */
+.color-box {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  cursor: pointer;
+  margin: 2px;
+  border: 2px solid transparent;
 }
-.modal-footer {
-  border-top: 0;
-  padding: 10px 25px;
+.color-box.selected {
+  border: 2px solid black;
+}
+.selectBox {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+.selectBox.selected {
+  background-color: #79d1c3;
+  color: white;
+}
+.themeSideText {
+  font-size: 13px;
+  color: #6892d5;
 }
