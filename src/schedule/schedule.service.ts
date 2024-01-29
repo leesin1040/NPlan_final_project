@@ -28,15 +28,31 @@ export class ScheduleService {
   }
 
   // 리스트별 스케줄 전체 조회
-  async findAllByDayId(dayId: number) {
-    // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
+  // async findAllByDayId(dayId: number) {
+  //   // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
 
-    return await this.scheduleRepository.find({
+  //   return await this.scheduleRepository.find({
+  //     where: { dayId },
+  //     order: { order: 'ASC' },
+  //     relations: ['place'],
+  //     select: { placeId: true, order: true, id: true }, // place table 연결 후 place title, category 함께 출력
+  //   });
+  // }
+
+  // 리스트별 스케줄 전체 조회
+  async findAllByDayId(dayId: number) {
+    const schedules = await this.scheduleRepository.find({
       where: { dayId },
-      order: { order: 'ASC' },
       relations: ['place'],
-      select: { placeId: true, order: true, id: true }, // place table 연결 후 place title, category 함께 출력
+      select: { placeId: true, order: true, id: true }, // 필요한 필드 선택
     });
+
+    // LexoRank 기준으로 정렬
+    schedules.sort((a, b) => {
+      return LexoRank.parse(a.order).compareTo(LexoRank.parse(b.order));
+    });
+
+    return schedules;
   }
 
   // 단일 스케줄 상세 조회

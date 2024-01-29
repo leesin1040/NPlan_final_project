@@ -60,6 +60,10 @@ export class UserService {
     await this.findOneById(id);
     await this.userRepository.softDelete({ id });
   }
+  //회원탈퇴유저 살리기
+  async cancelUserDelete(id: number) {
+    await this.userRepository.restore({ id });
+  }
 
   //회원 이름으로 아이디 조회
   async findOneByName(name: string): Promise<User> {
