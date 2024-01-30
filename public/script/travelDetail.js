@@ -1,3 +1,7 @@
+var realTravelId = window.location.pathname.split('/')[2];
+
+console.log(realTravelId); // 출력: "1"
+
 // 여행보드 수정 엑시오스
 const boardUpdateBtn = document.getElementById('boardUpdateBtn');
 boardUpdateBtn.addEventListener('click', updateTravel);
@@ -218,7 +222,7 @@ function viewDayPath(dayId) {
         );
       }
 
-      const REST_API_KEY = '';
+      const REST_API_KEY = 'd41807851f9aa8590592ed4840439f53';
       axios
         .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', newData, {
           headers: {
