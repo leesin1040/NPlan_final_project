@@ -42,6 +42,7 @@ export class AppController {
   }
 
   //회원가입
+  @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
   @Page('signup')
   getSignUp() {

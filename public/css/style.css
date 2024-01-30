@@ -4,6 +4,34 @@ body {
 p {
   margin-bottom: 7px;
 }
+/* 마이페이지 */
+.userInfoContainer {
+  width: 500px;
+  padding: 20px 50px;
+  border-radius: 20px;
+}
+.userInfoImgBox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+#changeUserImgBtn {
+  width: 100px;
+}
+.updatepasswordBtn {
+  width: 400px;
+}
+#delete-profile-button {
+  width: 400px;
+}
+.input-group-text {
+  width: 100%;
+}
+.changePasswordinfo {
+  margin: 20px 0px;
+  font-size: 15px;
+  color: #6892d5;
+}
 /* 내 여행 보드 목록 */
 .myTravelTitle {
   font-weight: 600;
@@ -57,22 +85,40 @@ p {
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 .oneDatListTitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.scheduleListBox {
+  overflow-y: auto;
+}
+.scheduleListBox::-webkit-scrollbar {
+  width: 7px;
+}
+.scheduleListBox::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
 .scheduleAddButton {
-  align-self: flex-start;
-  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+}
+.scheduleAddBtn {
+  padding: 0.2rem 0.3rem;
+  font-size: 0.9rem;
 }
 .scheduleBox {
   background-color: white;
   border-radius: 10px;
   padding: 10px;
+  margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.schedulePlaceAdress {
+  font-size: 13px;
 }
 
 /* 트레블 보드 생성 모달 */
