@@ -30,6 +30,8 @@ export class PlaceService {
     });
     return getAddress;
   }
+
+  // [ ]: 추후 지역 별 place 찾기 기준을 address가 아닌 areaCode로 변경할 수 있음
   async getMainRegion(region: string) {
     const getMainRegion = await this.placeRepository.find({
       where: {
@@ -46,6 +48,8 @@ export class PlaceService {
   // 쇼핑 > A04
   // 음식점 > A05
   // 숙박 > B02
+
+  // [ ]: 추후 카테고리 별 place 찾기 request값을 cat1 별로 (cat2 추가 가능) 나눌 수 있음
   async getContent(region: string, content: string) {
     if (content === '관광지') {
       const getContent = await this.placeRepository.find({

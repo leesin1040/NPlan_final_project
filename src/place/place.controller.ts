@@ -37,7 +37,7 @@ export class PlaceController {
   }
 
   // place 지역별 ex)서울,경기,경남,경북
-  @Get('/region')
+  @Post('/region')
   async getMainRegion(@Body('region') region: string) {
     const data = await this.placeService.getMainRegion(region);
     return {
@@ -53,7 +53,7 @@ export class PlaceController {
   // 쇼핑 > A04
   // 음식점 > A05
   // 숙박 > B02
-  @Get('/region/content')
+  @Post('/region/content')
   async getContent(@Body('region') region: string, @Body('content') content: string) {
     const data = await this.placeService.getContent(region, content);
     return {
