@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Article } from 'src/article/entities/article.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Day } from 'src/day/entities/day.entity';
 import { Like } from 'src/like/entities/like.entity';
@@ -86,6 +87,9 @@ export class Travel {
 
   @OneToMany(() => Member, (member) => member.travel)
   member: Member[];
+
+  @OneToMany(() => Article, (article) => article.travel)
+  article: Article[];
 
   @OneToMany(() => Day, (day) => day.travel, { nullable: true })
   day: Day[];
