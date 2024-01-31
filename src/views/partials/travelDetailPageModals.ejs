@@ -132,16 +132,17 @@
 <!-- schedule 추가 모달 -->
 <section id="addScheduleModal" class="modal">
   <div class="modal-content">
-    <header>
+    <header class="addScheduleModal-header">
       <h1 id="tavelTitle">여행 이름</h1>
       <h2 id="dayTitle">n일차</h2>
+      <p onclick="closeModalPage()">X</p>
     </header>
-    <div class="container">
+    <div class="addScheduleModal-container">
       <!-- placeInfo, mapView 가로배열로 보여지게 -->
-      <div class="placeInfo">
-        <div class="selectOption">
+      <div class="addScheduleModal-placeInfo">
+        <div class="addScheduleModal-selectOption">
           <form action="#">
-            <label for="areaCode">지역 선택</label>
+            <label for="areaCode">지역: </label>
             <select name="지역" id="areaCode">
               <option value="1">서울</option>
               <option value="2">인천</option>
@@ -161,7 +162,7 @@
               <option value="38">전남</option>
               <option value="39">제주</option>
             </select>
-            <label for="category">카테고리 선택</label>
+            <label for="category">카테고리: </label>
             <select name="카테고리" id="category">
               <option value="O00">전체</option>
               <option value="A01">자연</option>
@@ -173,27 +174,33 @@
               <option value="C01">추천코스</option>
             </select>
             <!-- <input type="submit" value="Submit" id="submit" /> -->
-            <button id="submit">submit</button>
+            <button id="addScheduleModal-submit">submit</button>
           </form>
-          <button id="connectApi">더 많은 장소 보기</button>
         </div>
-        <div class="placeList">
-          <div class="place" id="134">
-            <div class="imgUrl">
+        <div class="addScheduleModal-placeList">
+          <div
+            class="addScheduleModal-place"
+            id="134"
+            data-mapx="35.9181953"
+            data-mapy="123.0626361"
+          >
+            <div class="addScheduleModal-imgUrl">
               <img
+                class="addScheduleModal-placeImg"
                 src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg"
               />
             </div>
-            <div class="placeContent">
-              <p class="name">장소 이름</p>
-              <p class="address">장소 주소</p>
-              <p class="category">카테고리</p>
+            <div class="addScheduleModal-placeContent">
+              <p class="placeName">장소 이름</p>
+              <p class="placeAddress">장소 주소</p>
+              <p class="placeCategory" data-cat1="A02">카테고리</p>
             </div>
-            <button class="select">선택</button>
+            <button class="addScheduleModal-select">선택</button>
           </div>
         </div>
+        <button id="connectApi">더 많은 장소 보기</button>
       </div>
-      <div class="mapView">
+      <div class="addScheduleModal-mapView">
         <!-- selectOption으로 선택된 지역 중심으로 지도 보여지게 -->
       </div>
     </div>

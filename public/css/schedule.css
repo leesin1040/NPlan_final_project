@@ -1,97 +1,120 @@
-body {
-  margin: 1rem auto;
+#addScheduleModal {
+  margin: 0;
   border: solid 0.1rem;
-  width: 100rem;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
   align-items: center;
 }
 
-header {
+.modal-content {
+  width: 70%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.addScheduleModal-header {
   border: solid 0.1rem;
-  height: 8rem;
+  padding: 1rem;
   width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
-header h1 {
-  border: solid 0.1rem;
-  margin: 1rem 1.5rem;
+.addScheduleModal-header h1 {
+  margin: 0.5rem;
 }
-header h2 {
-  border: solid 0.1rem;
-  margin: 1rem 1.5rem;
+.addScheduleModal-header h2 {
+  margin: 1rem;
 }
 
-.container {
+.addScheduleModal-header p {
+  position: fixed;
+  right: 17%;
+}
+
+.addScheduleModal-container {
   border: solid 0.1rem;
-  width: 100rem;
+  width: 100%;
   margin: 1rem auto;
   display: flex;
   flex-direction: row;
 }
 
-.placeInfo {
+.addScheduleModal-placeInfo {
   border: solid 0.1rem;
   margin: 0.5rem 0.5rem;
-  width: 30rem;
+  width: 34%;
 }
 
-.readPlace {
+.addScheduleModal-readPlace {
   border: solid 0.1rem;
   margin: 0.5rem 0.5rem;
   padding: 1rem 0rem 1rem 1rem;
   width: 29rem;
 }
 
-.readPlace button {
+.addScheduleModal-readPlace button {
   float: right;
   margin: 2rem 0.5rem 1rem 0.5rem;
 }
 
-.selectOption {
+.addScheduleModal-selectOption {
   border: solid 0.1rem;
   padding: 0.5rem 0.7rem 0 0.7rem;
   height: 2rem;
 }
 
+.selectOption #connectApi {
+  margin: 0.5rem auto;
+  width: 98%;
+  padding: 0.5rem;
+  height: 3rem;
+}
+
 .placeList {
   border: solid 0.1rem;
-  height: 64.5rem;
+  padding: 1rem;
+  height: 88%;
   overflow-y: scroll;
 }
 
-.placeList::-webkit-scrollbar {
+.addScheduleModal-placeList::-webkit-scrollbar {
   display: none;
 }
 
-.place {
+.addScheduleModal-place {
   border: solid 0.1rem;
-  margin: 1rem;
-  padding: 1rem;
-  width: 26rem;
-  height: 6rem;
+  margin: 0.5rem auto;
+  padding: 0.3rem;
+  width: 96%;
+  height: 15%;
   display: flex;
   flex-direction: row;
 }
 
-.imgUrl img {
+.addScheduleModal-placeImg {
   border: solid 0.1rem;
   width: 6rem;
   height: 6rem;
 }
 
-.placeContent {
+.addScheduleModal-placeContent {
   padding: 0.2rem;
-  margin: auto 0.5rem;
+  margin: 0 0.3rem;
   border: solid 0.1rem;
-  width: 20rem;
+  width: 60%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.placeContent p {
+.addScheduleModal-placeContent p {
   border: solid 0.1rem;
-  margin: 0.2rem;
+  margin: 0.1rem;
 }
 
 #connectApi {
@@ -99,9 +122,9 @@ header h2 {
   width: 97%;
 }
 
-.mapView {
+.addScheduleModal-mapView {
   border: solid 0.1rem;
   margin: 0.5rem 0.5rem;
-  width: 67rem;
-  height: 70rem;
+  width: 65%;
+  height: 50rem;
 }
