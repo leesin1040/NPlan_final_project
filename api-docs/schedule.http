@@ -1,5 +1,5 @@
 @domain = http://localhost:3000/api
-
+@accessToken = {{loginToken.response.body.data.accessToken}}
 
 ###
 # 스케줄 생성
@@ -9,10 +9,8 @@ POST {{domain}}/schedule
 Content-Type: application/json
 
 {
-    "dayId":,
-    "placeId":,
-    "transportation":,
-    "memo":
+    "dayId":4,
+    "placeId":5
 }
 
 ###

@@ -18,7 +18,7 @@
         };
         localStorage.removeItem('Authorization'); // 로컬 스토리지에서 엑세스 토큰 제거
         deleteCookie(cookieName); // 쿠키에서 엑세스 토큰 삭제
-        window.location.href = '/home'; // 메인 페이지로 리디렉션
+        window.location.href = '/'; // 메인 페이지로 리디렉션
       });
     }
     // 로그인 엑시오스 불러오기
@@ -90,7 +90,7 @@
           const { accessToken } = response.data.data.accessToken;
           localStorage.setItem('accessToken', accessToken);
           alert('로그인 되었습니다');
-          location.href = '/home';
+          location.href = '/';
         })
         .catch((error) => {
           alert(error.response.data.message);

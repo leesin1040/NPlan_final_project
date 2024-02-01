@@ -8,7 +8,6 @@ window.onload = function () {
   document.getElementById('delete-profile-button').addEventListener('click', deleteUserProfile);
 };
 
-// alert('형이야');
 //회원 정보 수정 요청 함수
 async function updateProfile() {
   try {
@@ -46,7 +45,7 @@ function deleteUserProfile() {
     .put('api/user/delete', {})
     .then((response) => {
       alert(response.data.message);
-      window.location.href = '/home';
+      window.location.href = '/';
     })
     .catch((error) => {
       alert('회원 탈퇴에 실패했습니다.');

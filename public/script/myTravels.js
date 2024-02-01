@@ -5,12 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
     .then((data) => {
       document.getElementById('header').innerHTML = data;
 
-      // header.html 로드 후 로그아웃 버튼 설정
+      // header 로드 후 로그아웃 버튼 설정
       const logoutButton = document.getElementById('logoutButton');
       if (logoutButton) {
         logoutButton.addEventListener('click', function () {
           localStorage.removeItem('accessToken'); // JWT 토큰 제거
-          window.location.href = '/home'; // 메인 페이지로 리디렉션
+          window.location.href = '/'; // 메인 페이지로 리디렉션
         });
       }
       // 로그인 여부에 따른 버튼 표기
@@ -67,7 +67,6 @@ async function createTravel() {
   let endDate = new Date(endDateString);
   let timeDifferenceInMilliseconds = endDate - startDate;
   let days = timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24);
-  let accessToken = localStorage.getItem('accessToken');
   await axios({
     method: 'POST',
     url: 'api/travel',
@@ -79,42 +78,15 @@ async function createTravel() {
       start_date: startDateString,
       end_date: endDateString,
     },
-    headers: { Authorization: `Bearer ${accessToken}` },
   })
     .then((response) => {
       axios.post(`api/travel/${response.data.data.newTravel.id}/days`, { days: days });
-      // alert(response.data.message);
-      // window.location.href = `/days.html?id=${response.data.data.newTravel.id}&title=${response.data.data.newTravel.title}`;
       window.location.reload();
     })
     .catch((error) => {
       alert(error.response.data.message);
     });
 }
-
-// 로그인 엑시오스
-function handleLogin(event) {
-  event.preventDefault();
-
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  if (!email || !password) {
-    alert('이메일과 비밀번호를 입력해주세요.');
-    return;
-  }
-  axios
-    .post('api/auth/login', { email, password })
-    .then((response) => {
-      const { accessToken } = response.data.data;
-      localStorage.setItem('accessToken', accessToken);
-      alert(response.data.message);
-      window.location.href = '/main';
-    })
-    .catch((error) => {
-      alert(error.response.data.message);
-    });
-}
-
 // 트레블 리스트 생성
 async function getTravels() {
   let accessToken = localStorage.getItem('accessToken');
