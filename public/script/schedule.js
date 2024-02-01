@@ -12,7 +12,7 @@ async function addSchedule(dayId) {
     .then((response) => {
       const data = response.data.data[0];
 
-      console.log(data.day);
+      // console.log(`${data.day}일차`);
       dayTitle.innerText = `${data.day}일차`;
     })
     .catch((error) => {
@@ -44,7 +44,7 @@ async function addSchedule(dayId) {
         region: areaCode,
       })
       .then((response) => {
-        const datas = response.data;
+        const datas = response.data.data;
         console.log(datas);
 
         showPlaceList(datas);
@@ -64,7 +64,7 @@ async function addSchedule(dayId) {
         content: cat1,
       })
       .then((response) => {
-        const datas = response.data;
+        const datas = response.data.data;
         console.log(datas);
 
         showPlaceList(datas);
@@ -77,7 +77,7 @@ async function addSchedule(dayId) {
 
   // place table에서 받아온 place 정보를 html에 띄우기
   function showPlaceList(datas) {
-    const placeList = document.getElementsByClassName('placeList');
+    const placeList = document.getElementById('addScheduleModal-placeList');
     placeList.innerHTML = '';
 
     datas.map((data) => {
@@ -86,11 +86,11 @@ async function addSchedule(dayId) {
       place.id = data.id;
       place.dataset.mapx = data.mapx;
       place.dataset.mapy = data.mapy;
-      place = document.appendChild(placeList);
+      placeList.appendChild(place);
 
       const imgUrl = document.createElement('div');
       imgUrl.className = 'addScheduleModal-imgUrl';
-      imgUrl = document.appendChild(place);
+      place.appendChild(imgUrl);
 
       const placeImg = document.createElement('img');
       placeImg.className = 'addScheduleModal-placeImg';
@@ -98,77 +98,42 @@ async function addSchedule(dayId) {
         ? (placeImg.src =
             'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg')
         : (placeImg.src = data.imgUrl);
-      placeImg = document.appendChild(imgUrl);
+      imgUrl.appendChild(placeImg);
 
       const placeContent = document.createElement('div');
       placeContent.className = 'addScheduleModal-placeContent';
-      placeContent = document.appendChild(place);
+      place.appendChild(placeContent);
 
       const placeName = document.createElement('p');
       placeName.className = 'placeName';
       placeName.innerText = data.name;
-      placeName = document.appendChild(placeContent);
+      placeContent.appendChild(placeName);
 
       const placeAddress = document.createElement('p');
       placeAddress.className = 'placeAddress';
       placeAddress.innerText = data.address;
-      placeAddress = document.appendChild(placeContent);
+      placeContent.appendChild(placeAddress);
 
       const placeCategory = document.createElement('p');
       placeCategory.className = 'placeCategory';
       placeCategory.dataset.cat1 = data.cat1;
       placeCategory.innerText = data.category;
-      placeCategory = document.appendChild(placeContent);
+      placeContent.appendChild(placeCategory);
+
+      const selectBtn = document.createElement('button');
+      selectBtn.className = 'addScheduleModal-select';
+      selectBtn.id = `selectPlace${data.id}`;
+      selectBtn.innerText = '선택';
+      place.appendChild(selectBtn);
     });
   }
 
-  // 장소 선택하면 해당 장소를 schedule에 등록
-  // api place list 중 하나 선택 시 해당 place를 place table에 추가하고 schedule 생성
-  document.querySelectorAll('.addScheduleModal-place').forEach((element) => {
-    element.addEventListener('click', async (event) => {
-      const placeId = event.currentTarget.id;
-      console.log(placeId);
+  document.addEventListener('click', (event) => {
+    if (event.target.id.startsWith('selectPlace')) {
+      const placeId = event.target.id.replace('selectPlace', '');
 
-      // // placeId가 없으면(tour api에서 가져온 장소라면) place 생성 후 placeId 반환받기
-      // if (!placeId) {
-      //   const mapx = event.currentTarget.dataset.mapx;
-      //   const mapy = event.currentTarget.dataset.mapy;
-      //   const placeName = event.currentTarget.getElementsByClassName('placeName')[0].innerText;
-      //   const placeAddress =
-      //     event.currentTarget.getElementsByClassName('placeAddress')[0].innerText;
-      //   const placeCategory =
-      //     event.currentTarget.getElementsByClassName('placeCategory')[0].innerText;
-      //   const cat1 = event.currentTarget.getElementsByClassName('placeCategory')[0].dataset.cat1;
-      //   const placeImg = event.currentTarget.getElementsByClassName('placeImg')[0].src;
-
-      //   // console.log(mapx, mapy, placeName, placeAddress, placeCategory, cat1, placeImg);
-      //   placeId = createNewPlace(
-      //     placeName,
-      //     placeAddress,
-      //     mapx,
-      //     mapy,
-      //     placeCategory,
-      //     cat1,
-      //     placeImg,
-      //   );
-      // }
-
-      // schedule 생성
-      // TODO: 추후 ejs로 변경
-      await axios
-        .post('api/schedule', {
-          placeId: id,
-          dayId: dayId,
-        })
-        .then((response) => {
-          const data = response.data;
-          console.log(data);
-        })
-        .catch((error) => {
-          // alert(error.response.data.message);
-          console.error('Error:', error);
-        });
-    });
+      selectPlace(placeId, dayId);
+    }
   });
 
   // // 더 많은 장소를 가져오기(Tour api 연결)
@@ -332,6 +297,50 @@ async function addSchedule(dayId) {
   //       console.error('Error:', error);
   //     });
   // }
+}
+
+// 장소 선택하면 해당 장소를 schedule에 등록
+// api place list 중 하나 선택 시 해당 place를 place table에 추가하고 schedule 생성
+async function selectPlace(placeId, dayId) {
+  console.log(placeId, '으악', dayId);
+  // // placeId가 없으면(tour api에서 가져온 장소라면) place 생성 후 placeId 반환받기
+  // if (!placeId) {
+  //   const mapx = event.currentTarget.dataset.mapx;
+  //   const mapy = event.currentTarget.dataset.mapy;
+  //   const placeName = event.currentTarget.getElementsByClassName('placeName')[0].innerText;
+  //   const placeAddress =
+  //     event.currentTarget.getElementsByClassName('placeAddress')[0].innerText;
+  //   const placeCategory =
+  //     event.currentTarget.getElementsByClassName('placeCategory')[0].innerText;
+  //   const cat1 = event.currentTarget.getElementsByClassName('placeCategory')[0].dataset.cat1;
+  //   const placeImg = event.currentTarget.getElementsByClassName('placeImg')[0].src;
+  //   // console.log(mapx, mapy, placeName, placeAddress, placeCategory, cat1, placeImg);
+  //   placeId = createNewPlace(
+  //     placeName,
+  //     placeAddress,
+  //     mapx,
+  //     mapy,
+  //     placeCategory,
+  //     cat1,
+  //     placeImg,
+  //   );
+  // }
+
+  // schedule 생성
+  // TODO: 추후 ejs로 변경
+  await axios
+    .post('/api/schedule', {
+      placeId,
+      dayId,
+    })
+    .then((response) => {
+      const data = response.data;
+      console.log(data);
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
 }
 
 // x버튼을 누르면 모달창 닫힘

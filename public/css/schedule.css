@@ -10,7 +10,7 @@
 }
 
 .modal-content {
-  width: 70%;
+  width: 35%;
   height: 70%;
   background-color: #fff;
   padding: 20px;
@@ -34,12 +34,13 @@
 
 .addScheduleModal-header p {
   position: fixed;
-  right: 20%;
+  right: 37%;
 }
 
 .addScheduleModal-container {
   border: solid 0.1rem;
   width: 100%;
+  height: 100%;
   margin: 1rem auto;
   display: flex;
   flex-direction: row;
@@ -48,7 +49,8 @@
 .addScheduleModal-placeInfo {
   border: solid 0.1rem;
   margin: 0.5rem 0.5rem;
-  width: 50%;
+  width: 100%;
+  height: 95%;
 }
 
 .addScheduleModal-readPlace {
@@ -66,7 +68,6 @@
 .addScheduleModal-selectOption {
   border: solid 0.1rem;
   padding: 0.5rem 0.7rem 0 0.7rem;
-  height: 3rem;
 }
 
 .selectOption #connectApi {
@@ -79,8 +80,8 @@
 .placeList {
   border: solid 0.1rem;
   padding: 1rem;
-  height: 88%;
-  overflow-y: scroll;
+  height: 100%;
+  overflow: scroll;
 }
 
 .addScheduleModal-placeList::-webkit-scrollbar {
@@ -116,6 +117,7 @@
 .addScheduleModal-placeContent p {
   border: solid 0.1rem;
   margin: 0.1rem;
+  overflow: hidden;
 }
 
 #connectApi {
