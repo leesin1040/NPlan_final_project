@@ -32,6 +32,12 @@ p {
   font-size: 15px;
   color: #6892d5;
 }
+/* 회원가입 */
+.signUpContainer {
+  width: 500px;
+  padding: 20px 50px;
+  border-radius: 20px;
+}
 /* 내 여행 보드 목록 */
 .myTravelTitle {
   font-weight: 600;
@@ -63,10 +69,14 @@ p {
   flex: 0 0 calc(15% - 10px);
   margin: 10px;
   border: 0;
+  height: 100px;
 }
 .myTravelsRow .card,
 .invitedTravelsRow .card {
   border: 0;
+}
+.travelListCardTitle {
+  font-size: 16px;
 }
 .travelCategory {
   margin-top: 3rem;

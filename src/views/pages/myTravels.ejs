@@ -12,14 +12,14 @@
         <div class="row myTravelsRow g-5">
           <div id="myTravelBoardContainer" class="d-flex flex-wrap">
             <% myTravels.forEach(Travel=>{ %>
-              <div class="col">
+              <div class="col travelListCard">
                 <a href="/travel/<%= Travel.id %>">
                   <div class="card h-100 rounded-3" data-id="<%= Travel.id %>">
                     <div class="card-body rounded-3" style="background-color: <%= Travel.color %>">
                       <div class="my-1 mb-2 text-center">
                         <button type="button" class="btn btn-info btn-sm me-1" disabled><%= Travel.region %></button
                         ><button type="button" class="btn btn-success btn-sm" disabled><%= Travel.theme %></button>
-                        <h5 class="card-title mt-3"><%= Travel.title %></h5>
+                        <h5 class="card-title travelListCardTitle mt-3"><%= Travel.title %></h5>
                       </div>
                       <!-- 맴버 프사들 -->
                       <div class="img-stack"></div>
