@@ -1,5 +1,25 @@
 // dayId 받아오기
-function addSchedule(dayId) {
+async function addSchedule(dayId) {
+  let path = window.location.pathname;
+  let pathParts = path.split('/');
+  let travelId = pathParts[pathParts.indexOf('travel') + 1];
+
+  const dayTitle = document.getElementById('dayTitle');
+  dayTitle.innerText = '';
+
+  await axios
+    .get(`/api/travel/${travelId}/day/${dayId}`, {})
+    .then((response) => {
+      const data = response.data.data[0];
+
+      console.log(data.day);
+      dayTitle.innerText = `${data.day}일차`;
+    })
+    .catch((error) => {
+      // alert(error.response.data.message);
+      console.error('Error:', error);
+    });
+
   // 지역 및 카테고리 선택
   const submit = document.getElementById('addScheduleModal-submit');
   submit.addEventListener('click', async (event) => {
@@ -24,7 +44,7 @@ function addSchedule(dayId) {
         region: areaCode,
       })
       .then((response) => {
-        const datas = response.data.data;
+        const datas = response.data;
         console.log(datas);
 
         showPlaceList(datas);
@@ -44,7 +64,7 @@ function addSchedule(dayId) {
         content: cat1,
       })
       .then((response) => {
-        const datas = response.data.data;
+        const datas = response.data;
         console.log(datas);
 
         showPlaceList(datas);
