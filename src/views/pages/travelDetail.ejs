@@ -68,8 +68,9 @@
 
   window.onload = function () {
  const realTravelId = '<%= oneTravel.id %>'
- console.log(realTravelId);
-    // getDays(travelId);
+  // console.log(realTravelId);
+  // getDays(travelId);
+
   // 버튼에 이벤트리스트할당
   document.addEventListener('click', function (event) {
     // 경로 보기 버튼
@@ -83,12 +84,8 @@
       document.getElementById('addScheduleModal').style.display = 'flex';
       addSchedule(dayId);
     }
-    //상세보기 버튼
+    // 상세보기 버튼
     else if (event.target.id.startsWith('scheduleDetail')) {
-      const closeDetailModal = document.getElementById('closeDetailModal');
-      closeDetailModal.addEventListener('click', () => {
-        viewScheduleModal.style.display = 'none';
-      });
       const scheduleId = event.target.id.replace('scheduleDetail', '');
       document.getElementById('viewScheduleModal').style.display = 'flex';
       // console.log(scheduleId);
