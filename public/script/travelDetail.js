@@ -109,6 +109,7 @@ function viewScheduleDetail(scheduleId) {
     );
   });
 }
+function recommendation() {}
 // 경로보기 모달창 이벤트리스너 할당 및 Get Map
 function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');

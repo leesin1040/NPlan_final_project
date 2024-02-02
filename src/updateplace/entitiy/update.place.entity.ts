@@ -48,4 +48,7 @@ export class UpdatePlace {
   // 장소 이미지 ex. http://~~.jpg
   @Column({ name: 'img_url', nullable: true })
   imgUrl: string;
+
+  @Column({ name: 'place_point', type: 'point', nullable: true })
+  placePoint: string;
 }
