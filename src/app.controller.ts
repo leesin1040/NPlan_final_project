@@ -92,9 +92,7 @@ export class AppController {
       return { dayId, schedules };
     });
     const schedulesResults = await Promise.all(schedulesPromises);
-
     const pageTitle = oneTravel.title;
-
     return {
       user,
       oneTravel: oneTravel,
