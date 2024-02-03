@@ -18,3 +18,20 @@ export const typeOrmModuleAsyncOptions: TypeOrmModuleAsyncOptions = {
     logging: true,
   }),
 };
+export const typeOrmModuleAsyncOptionsUpdatePlace: TypeOrmModuleAsyncOptions = {
+  name: 'travelPlace',
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService) => ({
+    namingStrategy: new SnakeNamingStrategy(),
+    type: 'mysql',
+    host: configService.get<string>('DB_PLACE_HOST'),
+    port: configService.get<number>('DB_PLACE_PORT'),
+    username: configService.get<string>('DB_PLACE_USERNAME'),
+    password: configService.get<string>('DB_PLACE_PASSWORD'),
+    database: configService.get<string>('DB_PLACE_NAME'),
+    synchronize: configService.get<boolean>('DB_PLACE_SYNC'),
+    autoLoadEntities: true,
+    logging: true,
+  }),
+};

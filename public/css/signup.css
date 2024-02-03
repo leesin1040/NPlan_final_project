@@ -1,0 +1,234 @@
+@font-face {
+  font-family: 'ChosunGu';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.main-box {
+  height: 550px;
+  display: block;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.head {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: 'ChosunGu';
+  text-align: center;
+  font-size: 3em;
+}
+
+.king {
+  margin: 0px;
+  padding: 0px;
+  width: 60px;
+  margin-right: 2%;
+}
+
+#submit {
+  font-family: 'ChosunGu';
+  background-color: #6892d5;
+  color: white;
+  font-size: 1.4rem;
+  width: 20%;
+  height: 80px;
+
+  border-radius: 20px;
+}
+
+.input {
+  font-family: 'ChosunGu';
+  margin-bottom: 15px;
+  color: #a4a6a7;
+}
+
+.row-align {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#auth-check {
+  font-family: 'ChosunGu';
+  background-color: #6892d5;
+  color: white;
+  font-size: 1.2rem;
+  width: 16%;
+  height: 40px;
+  border-radius: 7px;
+  margin-left: 5px;
+}
+
+#auth-submit {
+  font-family: 'ChosunGu';
+  background-color: #6892d5;
+  color: white;
+  font-size: 1.2rem;
+  width: 16%;
+  height: 40px;
+  border-radius: 7px;
+  margin-left: 5px;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.nav1 {
+  height: 40px;
+  background-color: #ffffff;
+}
+
+.nav2 {
+  height: 140px;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.logo-image {
+  width: 80%;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-image > img {
+  width: 15%;
+  margin-right: 40px;
+}
+
+.btn-box {
+  float: right;
+}
+
+button > img {
+  width: 100%;
+}
+
+/* .body {
+  background-color: #ffffff;
+} */
+
+#join {
+  background-color: white;
+  width: 80px;
+  height: 27px;
+
+  color: rgb(40, 39, 39);
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#logout {
+  background-color: white;
+  width: 80px;
+  height: 27px;
+
+  color: rgb(40, 39, 39);
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#join-owner {
+  background-color: white;
+  width: 80px;
+  height: 27px;
+
+  color: rgb(40, 39, 39);
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#owner-page {
+  background-color: white;
+  width: 80px;
+  height: 27px;
+
+  color: rgb(40, 39, 39);
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#login {
+  background-color: white;
+  width: 80px;
+  height: 27px;
+
+  color: rgb(40, 39, 39);
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#cart {
+  background-color: white;
+  width: 27px;
+  height: 27px;
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#my-page {
+  background-color: white;
+  width: 27px;
+  height: 27px;
+  border: none;
+  border-radius: 5px;
+
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#join:hover,
+#logout:hover,
+#join-owner:hover,
+#owner-page:hover,
+#login:hover,
+#cart:hover,
+#my-page:hover {
+  background-color: #af391e;
+  color: white;
+  cursor: pointer;
+}

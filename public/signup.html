@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="./image/king.png" />
+    <title>NPlan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/signup.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="./script/signup.js"></script>
+  </head>
+
+  <body class="body">
+    <!-- <div class="nav1">
+      <div class="btn-box">
+        <button id="cart"><img src="./image/cart.png" /></button>
+        <button id="my-page"><img src="./image/user.png" /></button>
+        <button id="logout">로그아웃</button>
+      </div>
+    </div> -->
+    <div class="nav2" id="gohome">
+      <div class="logo-image">
+        <img
+          src="https://teamsparta.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fdab6964d-c77a-4560-af98-508dec805d81%2F%25E1%2584%2586%25E1%2585%25AE%25E1%2584%258C%25E1%2585%25A6_2.svg?table=block&id=0624fc60-0e89-496c-a965-260b9e1f8491&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&userId=&cache=v2"
+        />
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto my-10 p-8 bg-white shadow-lg rounded-lg main-box">
+      <form id="users">
+        <div class="mb-6">
+          <div class="w-full h-20 rounded-lg head">
+            <div class="king">
+              <img
+                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbyIH9Q%2FbtsDKbwT0J0%2F4NH2P161dlTfSWKtWVUryk%2Fimg.png"
+              />
+            </div>
+            <div class="title">회원등록</div>
+          </div>
+          <div class="input row-align">
+            <input
+              id="email"
+              type="text"
+              placeholder="이메일"
+              class="w-1/3 h-10 p-4 border border-gray-300 rounded-md"
+            />
+            <button type="button" class="auth-btn" id="auth-submit">인증번호전송</button>
+          </div>
+          <div class="input row-align">
+            <input
+              id="authNumber"
+              type="text"
+              placeholder="이메일 인증번호"
+              class="w-1/3 h-10 p-4 border border-gray-300 rounded-md"
+            />
+            <button type="button" class="auth-btn" id="auth-check">인증확인</button>
+          </div>
+          <div class="input">
+            <input
+              id="name"
+              type="text"
+              placeholder="이름"
+              class="w-1/2 h-10 p-4 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div class="input">
+            <input
+              id="password"
+              type="password"
+              placeholder="비밀번호"
+              class="w-1/2 h-10 p-4 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div class="input">
+            <input
+              id="passwordConfirm"
+              type="password"
+              placeholder="비밀번호 확인"
+              class="w-1/2 h-10 p-4 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div class="input">
+            <button type="button" id="submit">회원가입</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+  </body>
+</html>

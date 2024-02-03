@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Article } from 'src/article/entities/article.entity';
 import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { Like } from 'src/like/entities/like.entity';
+import { Member } from 'src/member/entities/member.entity';
+import { Travel } from 'src/travel/entities/travel.entity';
 import {
   Column,
   CreateDateColumn,
@@ -15,7 +20,7 @@ import {
 @Index('email', ['email'], { unique: true })
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn({ unsigned: true })
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
   /**
@@ -33,7 +38,7 @@ export class User {
    * @example "01012345678"
    */
   @ApiProperty()
-  @IsNotEmpty({ message: '전화번호를 입력해주세요' })
+  // @IsNotEmpty({ message: '전화번호를 입력해주세요' })
   @Column()
   phone: string;
 
@@ -75,4 +80,26 @@ export class User {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshToken: RefreshToken[];
+
+  // Travel 1:N
+  @OneToMany(() => Travel, (travel) => travel.user)
+  travel: Travel[];
+
+  // Travel_member 1:N
+  @OneToMany(() => Member, (member) => member.user)
+  member: Travel[];
+
+  @OneToMany(() => Article, (article) => article.user)
+  article: Article[];
+
+  // Like 1:N
+  @OneToMany(() => Like, (like) => like.user)
+  like: Like[];
+
+  // Comment 1:N
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comment: Comment[];
+
+  @Column({ type: 'text', nullable: true, name: 'image_url' })
+  imageUrl: string;
 }

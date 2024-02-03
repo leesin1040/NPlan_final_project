@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NPlan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./css/login.css" />
+  </head>
+
+  <body>
+    <div class="nav1">
+      <div class="btn-box"></div>
+    </div>
+    <div class="nav2">
+      <div class="logo-image">
+        <img
+          src="https://teamsparta.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fdab6964d-c77a-4560-af98-508dec805d81%2F%25E1%2584%2586%25E1%2585%25AE%25E1%2584%258C%25E1%2585%25A6_2.svg?table=block&id=0624fc60-0e89-496c-a965-260b9e1f8491&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&userId=&cache=v2"
+          id="gohome"
+        />
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto my-10 p-8 bg-white shadow-lg rounded-lg main-box">
+      <div class="title-image">로그인</div>
+      <div class="input">
+        <input
+          type="text"
+          id="email"
+          placeholder="이메일"
+          class="w-1/2 h-10 p-4 border border-gray-300 rounded-md"
+        />
+      </div>
+      <div class="input">
+        <input
+          type="password"
+          id="password"
+          placeholder="비밀번호"
+          class="w-1/2 h-10 p-4 border border-gray-300 rounded-md"
+        />
+      </div>
+      <div class="link">
+        아직 회원이 아니신가요?
+        <a href="./signup.html" style="color: rgb(20, 116, 206)">여기를 눌러서</a> 회원가입을 진행해
+        주세요!
+      </div>
+      <div class="input">
+        <button type="button" id="loginBtn">여행가기</button>
+      </div>
+    </div>
+  </body>
+  <script src="./script/login.js"></script>
+</html>

@@ -1,0 +1,161 @@
+body {
+  font-family: 'IBM Plex Sans KR', 'Noto Sans KR';
+}
+p {
+  margin-bottom: 7px;
+}
+/* 마이페이지 */
+.userInfoContainer {
+  width: 500px;
+  padding: 20px 50px;
+  border-radius: 20px;
+}
+.userInfoImgBox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+#changeUserImgBtn {
+  width: 100px;
+}
+.updatepasswordBtn {
+  width: 400px;
+}
+#delete-profile-button {
+  width: 400px;
+}
+.input-group-text {
+  width: 100%;
+}
+.changePasswordinfo {
+  margin: 20px 0px;
+  font-size: 15px;
+  color: #6892d5;
+}
+/* 회원가입 */
+.signUpContainer {
+  width: 500px;
+  padding: 20px 50px;
+  border-radius: 20px;
+}
+/* 내 여행 보드 목록 */
+.myTravelTitle {
+  font-weight: 600;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.643);
+}
+.img-stack {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.memberImg {
+  align-items: end;
+  margin-left: -20px; /* 이미지 겹치기 */
+  z-index: 1; /* 쌓임 순서 조정 */
+}
+.myTravelsRow,
+.invitedTravelsRow {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
+.cardsRow .col {
+  display: inline-block;
+  width: calc(50% - 10px);
+}
+
+.myTravelsRow .col,
+.invitedTravelsRow .col {
+  flex: 0 0 calc(15% - 10px);
+  margin: 10px;
+  border: 0;
+  height: 100px;
+}
+.myTravelsRow .card,
+.invitedTravelsRow .card {
+  border: 0;
+}
+.travelListCardTitle {
+  font-size: 16px;
+}
+.travelCategory {
+  margin-top: 3rem;
+}
+/* 트레블 상세보기 */
+.updateModalBtn {
+  margin-left: 10px;
+  padding: 2px 7px;
+}
+.oneDayList {
+  width: 300px;
+  height: 75vh;
+  padding: 15px 15px;
+  border-radius: 15px;
+  margin: 10px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+.oneDatListTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.scheduleListBox {
+  overflow-y: auto;
+}
+.scheduleListBox::-webkit-scrollbar {
+  width: 7px;
+}
+.scheduleListBox::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+.scheduleAddButton {
+  position: sticky;
+  bottom: 0;
+}
+.scheduleAddBtn {
+  padding: 0.2rem 0.3rem;
+  font-size: 0.9rem;
+}
+.scheduleBox {
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.schedulePlaceAdress {
+  font-size: 13px;
+}
+
+/* 트레블 보드 생성 모달 */
+.color-box {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  cursor: pointer;
+  margin: 2px;
+  border: 2px solid transparent;
+}
+.color-box.selected {
+  border: 2px solid black;
+}
+.selectBox {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+.selectBox.selected {
+  background-color: #79d1c3;
+  color: white;
+}
+.themeSideText {
+  font-size: 13px;
+  color: #6892d5;
+}

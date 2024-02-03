@@ -1,0 +1,133 @@
+<div
+  style="
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
+      url(https://images.unsplash.com/photo-1614346950571-ddda7fc206af?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-position: center;
+    background-size: cover;
+    height: 320px;
+  "
+  class="jumbotron bg-cover text-white"
+>
+  <div class="container py-5 text-center">
+    <h1 class="display-4 h1Title">P를 위한 여행 가이드</h1>
+    <p class="font-italic mb-3">아래 버튼을 눌러 여행 계획을 짜보세요</p>
+    <button
+      href="#"
+      type="button"
+      class="btn px-4"
+      style="background-color: #ffffff"
+      data-bs-toggle="modal"
+      data-bs-target="#boardModal"
+    >
+      여행보드 생성
+    </button>
+  </div>
+</div>
+<div class="mb-4"></div>
+<!-- 여행보드 모달 -->
+<div
+  class="modal fade"
+  id="boardModal"
+  tabindex="-1"
+  aria-labelledby="boardModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 boardModalTitle" id="boardModalLabel">여행 보드 생성</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p for="boardTitle" class="form-label mt-3">여행 보드 이름</p>
+          <input
+            type="text"
+            class="form-control"
+            id="boardTitle"
+            placeholder="여행 이름을 입력해주세요."
+          />
+        </div>
+        <p for="startDate" class="form-label mt-3">시작 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="start_date"
+            id="startDate"
+            placeholder="날짜를 선택하세요."
+          />
+        </div>
+        <p for="endDate" class="form-label mt-3">종료 일정</p>
+        <div class="datePickerContainer">
+          <input
+            class="input-group-text"
+            type="text"
+            name="end_date"
+            id="endDate"
+            placeholder="날짜를 선택하세요"
+          />
+        </div>
+        <p for="regionSelection" class="mt-3">
+          대표 지역<span class="themeSideText ms-2"> 하나의 지역만 선택할 수 있습니다.</span>
+        </p>
+        <div class="region-selection" id="regionSelection">
+          <div class="region-box selectBox" data-region="서울">서울</div>
+          <div class="region-box selectBox" data-region="인천">인천</div>
+          <div class="region-box selectBox" data-region="경기도">경기도</div>
+          <div class="region-box selectBox" data-region="부산">부산</div>
+          <div class="region-box selectBox" data-region="대구">대구</div>
+          <div class="region-box selectBox" data-region="대전">대전</div>
+          <div class="region-box selectBox" data-region="광주">광주</div>
+          <div class="region-box selectBox" data-region="울산">울산</div>
+          <div class="region-box selectBox" data-region="세종">세종</div>
+          <div class="region-box selectBox" data-region="강원">강원</div>
+          <div class="region-box selectBox" data-region="충북">충북</div>
+          <div class="region-box selectBox" data-region="충남">충남</div>
+          <div class="region-box selectBox" data-region="전북">전북</div>
+          <div class="region-box selectBox" data-region="전남">전남</div>
+          <div class="region-box selectBox" data-region="경북">경북</div>
+          <div class="region-box selectBox" data-region="경남">경남</div>
+          <div class="region-box selectBox" data-region="제주">제주</div>
+        </div>
+        <!-- 숨겨진 지역 인풋 -->
+        <input type="hidden" name="region" id="selectedRegion" />
+
+        <p for="theme" class="mt-3">
+          테마 <span class="themeSideText ms-">하나의 테마만 선택할 수 있습니다.</span>
+        </p>
+        <div class="theme-selection" id="themeSelection">
+          <div class="theme-box selectBox" data-theme="문화">문화</div>
+          <div class="theme-box selectBox" data-theme="자연">자연</div>
+          <div class="theme-box selectBox" data-theme="도시">도시</div>
+          <div class="theme-box selectBox" data-theme="휴양">휴양</div>
+          <div class="theme-box selectBox" data-theme="음식">음식</div>
+        </div>
+        <!-- 숨겨진 테마 인풋 -->
+        <input type="hidden" name="theme" id="selectedTheme" />
+        <p for="color" class="form-label mt-3">색상</p>
+        <div class="color-selection" id="colorSelection">
+          <div class="color-box" style="background-color: #add8e6" data-color="#ADD8E6"></div>
+          <div class="color-box" style="background-color: #98eecc" data-color="#98EECC"></div>
+          <div class="color-box" style="background-color: #9fb4ff" data-color="#9FB4FF"></div>
+          <div class="color-box" style="background-color: #ffdab9" data-color="#FFDAB9"></div>
+          <div class="color-box" style="background-color: #ffc0cb" data-color="#FFC0CB"></div>
+          <div class="color-box" style="background-color: #dda0dd" data-color="#DDA0DD"></div>
+          <div class="color-box" style="background-color: #87cefa" data-color="#87CEFA"></div>
+          <div class="color-box" style="background-color: #afeeee" data-color="#AFEEEE"></div>
+          <div class="color-box" style="background-color: #ffb6c1" data-color="#FFB6C1"></div>
+          <div class="color-box" style="background-color: #e6e6fa" data-color="#E6E6FA"></div>
+          <div class="color-box" style="background-color: #d3d3d3" data-color="#D3D3D3"></div>
+          <div class="color-box" style="background-color: #ffebad" data-color="#FFEBAD"></div>
+        </div>
+        <!-- 숨겨진 컬러 인풋 -->
+        <input type="hidden" name="color" id="selectedColor" />
+      </div>
+      <div class="modal-footer text-center row">
+        <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="boardCreateBtn" class="btn col btn-dark">생성</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 모달끝 -->

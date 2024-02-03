@@ -1,10 +1,13 @@
+//accessToken 들어가야하는곳 @accessToken = 00
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzA2MDkyMzg3LCJleHAiOjE3MDYwOTk1ODd9.ujTL07RhZow58tsG1Oar2lskB_SxZssNIPg_y-rctm0
+
 ###회원가입 -완료
 POST  http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
   "name":"홍길동",
-  "email":"expample@email.com",
+  "email":"expample1@email.com",
   "phone":"01012341234",
   "password":"123123",
   "passwordConfirm":"123123"
@@ -17,4 +20,53 @@ Content-Type: application/json
 {
   "email":"expample@email.com",
   "password":"123123"
+}
+
+### 회원정보조회
+GET http://localhost:3000/api/user/info
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 비밀번호 변경
+PUT http://localhost:3000/api/user/info
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "password": "123123",
+  "newPassword": "456456",
+  "passwordConfirm": "456456"
+}
+
+### 회원탈퇴
+PUT  http://localhost:3000/api/user/delete
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 회원탈퇴취소
+PUT  http://localhost:3000/api/user/cancel
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "id":1
+}
+
+### 회원이름으로 아이디
+GET http://localhost:3000/api/user?name=사용자
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 아이디로 이름
+GET http://localhost:3000/api/user?id=19
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 이메일 인증 테스트
+
+POST http://localhost:3000/api/auth/email-check 
+Content-Type: application/json
+
+{
+  "email":"gksmfsf131@gmail.com"
 }

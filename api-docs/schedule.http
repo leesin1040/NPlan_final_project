@@ -1,0 +1,59 @@
+@domain = http://localhost:3000/api
+@accessToken = {{loginToken.response.body.data.accessToken}}
+
+###
+# 스케줄 생성
+# body: dayId, placeId
+#       (optional) transportation, memo
+POST {{domain}}/schedule
+Content-Type: application/json
+
+{
+    "dayId":4,
+    "placeId":5
+}
+
+###
+# 해당 일차 내 스케줄 모두 조회
+# parameter: dayId
+GET {{domain}}/schedule/allOfDay/1
+Content-Type: application/json
+
+
+###
+# 해당 스케줄 상세 조회
+# parameter: id
+GET {{domain}}/schedule/one/1
+Content-Type: application/json
+
+
+###
+# 해당 스케줄 수정
+# parameter: id
+# body: placeId, transportation, memo
+PATCH {{domain}}/schedule/update/1
+Content-Type: application/json
+
+{
+    "placeId":,
+    "transportation":,
+    "memo":
+}
+
+###
+# 해당 스케줄 이동
+# parameter: id
+# body: dayId(optional), index
+PATCH {{domain}}/schedule/move/1
+Content-Type: application/json
+
+{
+    "dayId":,
+    "index":
+}
+
+###
+# 해당 스케줄 삭제
+# parameter: id
+DELETE {{domain}}/schedule/delete/1
+Content-Type: application/json

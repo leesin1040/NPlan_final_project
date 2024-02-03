@@ -1,0 +1,144 @@
+#addScheduleModal {
+  margin: 0;
+  border: solid 0.1rem;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+#viewScheduleModal {
+  margin: 0;
+  border: solid 0.1rem;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: 35%;
+  height: 70%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.addScheduleModal-header {
+  border: solid 0.1rem;
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.addScheduleModal-header h1 {
+  margin: 0.5rem;
+}
+.addScheduleModal-header h2 {
+  margin: 1rem;
+}
+
+.addScheduleModal-header p {
+  position: fixed;
+  right: 37%;
+}
+
+.addScheduleModal-container {
+  border: solid 0.1rem;
+  width: 100%;
+  height: 100%;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.addScheduleModal-placeInfo {
+  border: solid 0.1rem;
+  margin: 0.5rem 0.5rem;
+  width: 100%;
+  height: 95%;
+}
+
+.addScheduleModal-readPlace {
+  border: solid 0.1rem;
+  margin: 0.5rem 0.5rem;
+  padding: 1rem 0rem 1rem 1rem;
+  width: 29rem;
+}
+
+.addScheduleModal-readPlace button {
+  float: right;
+  margin: 2rem 0.5rem 1rem 0.5rem;
+}
+
+.addScheduleModal-selectOption {
+  border: solid 0.1rem;
+  padding: 0.5rem 0.7rem 0 0.7rem;
+}
+
+.selectOption #connectApi {
+  margin: 0.5rem auto;
+  width: 98%;
+  padding: 0.5rem;
+  height: 3rem;
+}
+
+.placeList {
+  border: solid 0.1rem;
+  padding: 1rem;
+  height: 100%;
+  overflow: scroll;
+}
+
+.addScheduleModal-placeList::-webkit-scrollbar {
+  display: none;
+}
+
+.addScheduleModal-place {
+  border: solid 0.1rem;
+  margin: 0.5rem auto;
+  padding: 0.3rem;
+  width: 96%;
+  height: 15%;
+  display: flex;
+  flex-direction: row;
+}
+
+.addScheduleModal-placeImg {
+  border: solid 0.1rem;
+  width: 6rem;
+  height: 6rem;
+}
+
+.addScheduleModal-placeContent {
+  padding: 0.2rem;
+  margin: 0 0.3rem;
+  border: solid 0.1rem;
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.addScheduleModal-placeContent p {
+  border: solid 0.1rem;
+  margin: 0.1rem;
+  overflow: hidden;
+}
+
+#connectApi {
+  margin: 0.5rem;
+  width: 97%;
+}
+
+.addScheduleModal-mapView {
+  border: solid 0.1rem;
+  margin: 0.5rem 0.5rem;
+  width: 65%;
+  height: 50rem;
+}

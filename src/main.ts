@@ -3,13 +3,14 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('SERVER_PORT');
-
-  app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,19 +22,24 @@ async function bootstrap() {
 
   /**스웨거 */
   const config = new DocumentBuilder()
-    .setTitle('2024 내배캠 타임어택')
-    .setDescription('내배캠 타임어택 최이진')
+    .setTitle('노드3기 NP조 파이널 프로젝트')
+    .setDescription('NP조 파이널 프로젝트 API')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('api-docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       tagSorter: 'alpha',
       operationSorter: 'alpha',
     },
   });
+  app.use(cookieParser());
+  /** ejs 프론트 추가 */
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
+  app.setViewEngine('ejs');
 
   await app.listen(port);
 }
