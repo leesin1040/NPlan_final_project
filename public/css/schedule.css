@@ -20,8 +20,8 @@
   align-items: center;
 }
 
-.modal-content {
-  /* width: 35%; */
+.addScheduleModalContent {
+  width: 35%;
   height: 70%;
   background-color: #fff;
   padding: 20px;
