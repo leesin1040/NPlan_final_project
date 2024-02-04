@@ -14,22 +14,27 @@
       </div>
       <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
         <% days.forEach(day => {
-          const startDate = new Date(oneTravel.start_date);
-          startDate.setDate(startDate.getDate() + day.day - 1);
-          const dateString = startDate.toISOString().split('T')[0];
-      %>
+        const startDate = new Date(oneTravel.start_date);
+        startDate.setDate(startDate.getDate() + day.day - 1);
+        const dateString = startDate.toISOString().split('T')[0];
+        %>
           <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
             <div class="oneDatListTitle justify-content-between align-items-center mb-1" >
               <h5><%= dateString %></h5>
+              <% 
+              // 여기서 daySchedules와 해당 일자의 스케줄 개수를 확인
+              const daySchedules = schedulesResults.find(s => s.dayId === day.id);
+              if (daySchedules && daySchedules.schedules.length > 1) { // 스케줄이 2개 이상일 때만 버튼 렌더링
+              %>
               <button type="button" class="btn btn-outline-dark btn-sm text-end me-2 viewPathButton" id="viewDayPath<%= day.id %>" data-column-id="<%= day.id %>">경로보기</button>
+              <% } %>
             </div>
             <!-- 해당 일자의 스케줄 목록 렌더링 -->
             <div class="scheduleListBox">
-            <%
-            const daySchedules = schedulesResults.find(s => s.dayId === day.id);
-            if (daySchedules && daySchedules.schedules.length > 0) {
-              daySchedules.schedules.forEach(schedule => {
-            %>
+              <% 
+              if (daySchedules && daySchedules.schedules.length > 0) {
+                daySchedules.schedules.forEach(schedule => {
+              %>
             <div class="scheduleBox">
                 <!-- 스케줄 내용 렌더링 -->
                 <div

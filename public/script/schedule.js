@@ -302,7 +302,6 @@ async function addSchedule(dayId) {
 // 장소 선택하면 해당 장소를 schedule에 등록
 // api place list 중 하나 선택 시 해당 place를 place table에 추가하고 schedule 생성
 async function selectPlace(placeId, dayId) {
-  console.log(placeId, '으악', dayId);
   // // placeId가 없으면(tour api에서 가져온 장소라면) place 생성 후 placeId 반환받기
   // if (!placeId) {
   //   const mapx = event.currentTarget.dataset.mapx;
@@ -335,7 +334,7 @@ async function selectPlace(placeId, dayId) {
     })
     .then((response) => {
       const data = response.data;
-      console.log(data);
+      window.location.reload();
     })
     .catch((error) => {
       // alert(error.response.data.message);
