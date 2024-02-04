@@ -14,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { ArticleDto } from './dto/article.dto';
 
-@Controller('article')
+@Controller('api/article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 

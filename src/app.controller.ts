@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Param, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { sendToHTML } from './utils/file-utils';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
