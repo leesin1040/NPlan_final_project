@@ -43,6 +43,7 @@ import { ArticleModule } from './article/article.module';
     DayModule,
     PlaceModule,
     EmailModule,
+    ArticleModule,
     UpdatePlaceModule,
     ArticleModule,
     MailerModule.forRootAsync({
