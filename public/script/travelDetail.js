@@ -1,10 +1,9 @@
 var realTravelId = window.location.pathname.split('/')[2];
-
-console.log(realTravelId); // 출력: "1"
-
 // 여행보드 수정 엑시오스
 const boardUpdateBtn = document.getElementById('boardUpdateBtn');
+const boardDeleteBtn = document.getElementById('boardDeleteBtn');
 boardUpdateBtn.addEventListener('click', updateTravel);
+boardDeleteBtn.addEventListener('click', deleteTravel);
 async function updateTravel() {
   let travelId = document.getElementById('travelId').value;
   let startDateString = document.getElementById('startDate').value;
@@ -27,6 +26,23 @@ async function updateTravel() {
     window.location.reload();
   } catch (error) {
     alert(error.response.data.message);
+  }
+}
+
+async function deleteTravel() {
+  let travelId = document.getElementById('travelId').value;
+  try {
+    await axios.delete(`/api/travel/${travelId}`);
+    alert('여행보드가 삭제되었습니다.');
+    // 페이지 이동
+    window.location.href = '/my-travel';
+  } catch (error) {
+    // 개선된 에러 핸들링
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(error.response.data.message);
+    } else {
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   }
 }
 

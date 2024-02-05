@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Param, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { sendToHTML } from './utils/file-utils';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
@@ -92,9 +92,7 @@ export class AppController {
       return { dayId, schedules };
     });
     const schedulesResults = await Promise.all(schedulesPromises);
-
     const pageTitle = oneTravel.title;
-
     return {
       user,
       oneTravel: oneTravel,

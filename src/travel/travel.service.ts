@@ -45,8 +45,10 @@ export class TravelService {
         userId: userId,
       },
       relations: ['member'],
-      select: ['id', 'title', 'color', 'region', 'theme', 'member'],
+      select: ['id', 'title', 'color', 'region', 'theme', 'member', 'start_date', 'end_date'],
     });
+    // 내가 만든 여행목록 정렬
+    myTravels.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
     /**초대된 여행 목록 - 수락/거절 컬럼을 넣을 것인가? */
     const invitedTravelsRaw = await this.memberRepository.find({
       where: {
@@ -56,6 +58,7 @@ export class TravelService {
     });
     /**초대된 여행 목록을 map으로 원하는 정보만 전달, filter로 내가 만든 목록과 중복시 제외 */
     const invitedTravels = invitedTravelsRaw
+      .filter((item) => item.travel !== null) // null이 아닌 travel만 처리
       .map((item) => {
         return {
           id: item.travel.id,
@@ -64,9 +67,16 @@ export class TravelService {
           region: item.travel.region,
           theme: item.travel.theme,
           members: item.travel.member,
+          start_date: item.travel.start_date,
+          end_date: item.travel.end_date,
         };
       })
       .filter((invitedTravel) => !myTravels.some((myTravel) => myTravel.id === invitedTravel.id));
+    // 초대받은 여행 목록 정렬
+    invitedTravels.sort(
+      (a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
+    );
+
     return { myTravels, invitedTravels };
   }
   // --
