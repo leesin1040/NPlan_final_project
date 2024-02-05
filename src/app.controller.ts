@@ -1,6 +1,5 @@
 import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { sendToHTML } from './utils/file-utils';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
 import { TravelService } from './travel/travel.service';
 import { UserService } from './user/user.service';
@@ -105,18 +104,18 @@ export class AppController {
   //포스트 작성 페이지
   @Get('/post')
   postTravel(@Res() res: Response) {
-    return sendToHTML(res, 'post.html');
+    return;
   }
 
   //포스트 상세보기 - 삭제 기능
   @Get('post/:postId')
   getOnePost(@Res() res: Response) {
-    return sendToHTML(res, 'PostDetail.html');
+    return;
   }
 
   //포스트 수정
   @Get('update/:postId')
   updateOneTravel(@Res() res: Response) {
-    return sendToHTML(res, 'postUpdate.html');
+    return;
   }
 }
