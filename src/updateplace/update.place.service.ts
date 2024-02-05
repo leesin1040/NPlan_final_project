@@ -24,11 +24,16 @@ export class UpdatePlaceService {
     try {
       await queryRunner.connect();
       await queryRunner.startTransaction();
-      const getplace = await this.updatePlaceRepository.find({});
-      await this.placeRepository.save(getplace);
-
+      await queryRunner.query('use `travel-planner`');
+      await queryRunner.query('SET FOREIGN_KEY_CHECKS = 0');
+      await queryRunner.query('TRUNCATE TABLE place');
+      await queryRunner.query('SET FOREIGN_KEY_CHECKS = 1');
+      const getPlace = await this.updatePlaceRepository.find({});
+      await this.placeRepository.insert(getPlace);
+      await queryRunner.commitTransaction();
       console.log('끝');
     } catch (error) {
+      await queryRunner.rollbackTransaction();
       this.logger.error(`에러: ${error.message}`);
     }
   }
