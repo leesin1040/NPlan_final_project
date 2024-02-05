@@ -8,6 +8,7 @@ import { RegisterDto } from './dtos/register.dto';
 import bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
 import { RefreshToken } from './entities/refreshToken.entity';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
+    private readonly mailerService: MailerService,
   ) {}
 
   /**회원가입 */
@@ -82,5 +84,14 @@ export class AuthService {
     const payload = { id: savedToken.user.id };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
+  }
+
+  async sendAuthCode(email: string, authNumber: number): Promise<void> {
+    console.log('브라우저에서 들어온 이메일', email);
+    return this.mailerService.sendMail({
+      to: email,
+      subject: '[NPlan] 이메일 확인 인증번호 안내',
+      text: `아래 인증번호를 확인하여 이메일 주소 인증을 완료해 주세요.\n인증번호 4자리 👉 ${authNumber}`,
+    });
   }
 }

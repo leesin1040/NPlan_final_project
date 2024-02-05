@@ -16,11 +16,18 @@ import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
 import { Query } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { CreateUserDto } from './dtos/createuser.dto';
 
 @ApiTags('사용자')
 @Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post()
+  async register(@Body() createUserDto: CreateUserDto) {
+    const user = await this.userService.createUser(createUserDto);
+    return { message: '회원가입 성공', user };
+  }
 
   /**
    * 내 정보 조회
@@ -92,7 +99,7 @@ export class UserController {
     const data = await this.userService.deleteUser(userId);
     return {
       statusCode: HttpStatus.ACCEPTED,
-      message: '회원삭제되었습니다.',
+      message: '회원탈퇴 되었습니다.',
       data,
     };
   }
@@ -106,7 +113,7 @@ export class UserController {
     const data = await this.userService.cancelUserDelete(id);
     return {
       statusCode: HttpStatus.ACCEPTED,
-      message: '회원삭제취소되었습니다.',
+      message: '회원탈퇴 취소되었습니다.',
       data,
     };
   }

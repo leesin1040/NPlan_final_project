@@ -52,12 +52,6 @@ export class AuthController {
       message: '로그인 성공',
       data,
     });
-    // return {
-    //   statusCode: HttpStatus.OK,
-    //   message: '로그인 성공',
-    //   data,
-    // };
-    // // return res.status(HttpStatus.OK).json({ data });
   }
 
   /**
