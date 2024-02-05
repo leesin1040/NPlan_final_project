@@ -22,8 +22,6 @@ async function updateProfile() {
     });
 
     alert('비밀번호가 변경되었습니다.');
-    console.log(response);
-
     // Only reload the page if the password change was successful
     window.location.reload();
   } catch (error) {
@@ -37,7 +35,7 @@ document.getElementById('delete-profile-button').addEventListener('click', delet
 
 // 회원 탈퇴 요청 함수
 function deleteUserProfile() {
-  if (!confirm('정말로 계정을 삭제하시겠습니까?')) {
+  if (!confirm('정말로 탈퇴하시겠습니까?')) {
     return; // 사용자가 취소를 눌렀을 때
   }
 

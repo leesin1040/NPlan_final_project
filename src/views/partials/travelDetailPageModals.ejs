@@ -24,7 +24,8 @@
             placeholder="여행 이름을 입력해주세요."
           />
         </div>
-        <p for="startDate" class="form-label mt-3">시작 일정</p>
+        <!-- 여행 보드 수정 모달에서 시작 일정, 지역 선택 불가 -->
+        <!-- <p for="startDate" class="form-label mt-3">시작 일정</p>
         <div class="datePickerContainer">
           <input
             class="input-group-text"
@@ -68,7 +69,7 @@
           <div class="region-box selectBox" data-region="경남">경남</div>
           <div class="region-box selectBox" data-region="제주">제주</div>
         </div>
-        <!-- 숨겨진 지역 인풋 -->
+        숨겨진 지역 인풋
         <input type="hidden" name="region" id="selectedRegion" value="<%= oneTravel.region %>" />
 
         <p for="theme" class="mt-3">
@@ -80,7 +81,7 @@
           <div class="theme-box selectBox" data-theme="도시">도시</div>
           <div class="theme-box selectBox" data-theme="휴양">휴양</div>
           <div class="theme-box selectBox" data-theme="음식">음식</div>
-        </div>
+        </div> -->
         <!-- 숨겨진 테마 인풋 -->
         <input type="hidden" name="theme" id="selectedTheme" value="<%= oneTravel.theme %>" />
         <p for="color" class="form-label mt-3">색상</p>
@@ -105,6 +106,7 @@
         <button type="button" class="btn col btn-secondary" data-bs-dismiss="modal">취소</button>
         <button type="button" id="boardUpdateBtn" class="btn col btn-dark">수정</button>
       </div>
+      <button type="button" class="btn col btn-danger mx-3 mb-3" id="boardDeleteBtn" >보드 삭제</button>
     </div>
   </div>
 </div>
@@ -131,7 +133,7 @@
 
 <!-- schedule 추가 모달 -->
 <section id="addScheduleModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content addScheduleModalContent">
     <header class="addScheduleModal-header">
       <h1 id="tavelTitle"><%= oneTravel.title %></h1>
       <h2 id="dayTitle">n일차</h2>
@@ -174,7 +176,7 @@
               <option value="C01">추천코스</option>
             </select>
             <!-- <input type="submit" value="Submit" id="submit" /> -->
-            <button id="addScheduleModal-submit">submit</button>
+            <button id="addScheduleModal-submit">찾기</button>
           </form>
         </div>
         <div class="addScheduleModal-placeList" id="addScheduleModal-placeList">

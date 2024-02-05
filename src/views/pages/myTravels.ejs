@@ -11,24 +11,32 @@
         <h3 class="travelCategory">나의 여행보드</h3>
         <div class="row myTravelsRow g-5">
           <div id="myTravelBoardContainer" class="d-flex flex-wrap">
-            <% myTravels.forEach(Travel=>{ %>
-              <div class="col travelListCard">
-                <a href="/travel/<%= Travel.id %>">
-                  <div class="card h-100 rounded-3" data-id="<%= Travel.id %>">
-                    <div class="card-body rounded-3" style="background-color: <%= Travel.color %>">
-                      <div class="my-1 mb-2 text-center">
-                        <button type="button" class="btn btn-info btn-sm me-1" disabled><%= Travel.region %></button
-                        ><button type="button" class="btn btn-success btn-sm" disabled><%= Travel.theme %></button>
-                        <h5 class="card-title travelListCardTitle mt-3"><%= Travel.title %></h5>
-                      </div>
-                      <!-- 맴버 프사들 -->
-                      <div class="img-stack"></div>
-                      <!-- 맴버프사 끝 -->
+            <% myTravels.forEach(Travel => {
+              const today = new Date();
+              const endDate = new Date(Travel.end_date);
+              const isPast = endDate < today; // end_date가 오늘 날짜 이전인지 확인
+              const cardColor = isPast ? '#ccc' : Travel.color; // 지나간 여행인 경우 그레이
+            %>
+            <div class="col travelListCard">
+              <a href="/travel/<%= Travel.id %>">
+                <div class="card h-100 rounded-3" data-id="<%= Travel.id %>" style="background-color: <%= cardColor %>">
+                  <div class="card-body rounded-3">
+                    <div class="my-1 mb-2 text-center">
+                      <button type="button" class="btn btn-info btn-sm me-1" disabled><%= Travel.region %></button
+                      ><button type="button" class="btn btn-success btn-sm" disabled><%= Travel.theme %></button>
+                      <h5 class="card-title travelListCardTitle mt-3"><%= Travel.title %></h5>
+                      <p class="travelListCardDateInfo"><%= Travel.start_date %></p>
+                      <p class="travelListCardDateInfo">~<%= Travel.end_date %></p>
                     </div>
+                    <!-- 맴버 프사들 -->
+                    <div class="img-stack"></div>
+                    <!-- 맴버프사 끝 -->
                   </div>
-                </a>
+                </div>
+              </a>
             </div>
-            <% }) %>
+            <% }); %>
+            
           </div>
         </div>
         <h3 class="travelCategory">초대받은 여행보드</h3>

@@ -11,16 +11,27 @@
   <div class="container py-5 text-center">
     <h1 class="display-4 h1Title">P를 위한 여행 가이드</h1>
     <p class="font-italic mb-3">아래 버튼을 눌러 여행 계획을 짜보세요</p>
+    <% if(user===null){ %>
+      <button
+      href="#"
+      type="button"
+      class="btn btn-dark px-4"
+      data-bs-toggle="modal"
+      data-bs-target="#loginModal"
+    >
+      로그인
+    </button>
+      <% }else{ %>
     <button
       href="#"
       type="button"
-      class="btn px-4"
-      style="background-color: #ffffff"
+      class="btn btn-dark px-4"
       data-bs-toggle="modal"
       data-bs-target="#boardModal"
     >
       여행보드 생성
     </button>
+    <% } %>
   </div>
 </div>
 <div class="mb-4"></div>
