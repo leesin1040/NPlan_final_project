@@ -5,34 +5,61 @@
   </head>
   <body>
     <%-include('../partials/header.ejs') %>
-    <div class="container">
+
+    <div class="container card signUpContainer mt-5">
       <!-- 본문 -->
-      <form id="users" class="d-flex flex-column justify-content-center align-items-center p-5">
-        <div class="mb-6">
-          <h2 class="title">회원등록</h2>
-          <input id="signupEmail" class="input-group-text" type="text" placeholder="이메일" />
-          <button type="button" class="btn btn-secondary" id="auth-submit">인증번호전송</button>
-          <input
-            id="authNumber"
-            class="input-group-text"
-            type="text"
-            placeholder="이메일 인증번호"
-          />
-          <button type="button" class="btn btn-secondary" id="auth-check">인증확인</button>
-          <input id="name" class="input-group-text" type="text" placeholder="이름" />
-          <input
-            id="signupPassword"
-            class="input-group-text"
-            type="password"
-            placeholder="비밀번호"
-          />
-          <input
-            id="passwordConfirm"
-            class="input-group-text"
-            type="password"
-            placeholder="비밀번호 확인"
-          />
-          <button type="button" id="signup" class="btn btn-secondary">회원가입</button>
+      <h3 class="text-center mb-4">회원가입</h3>
+      <!-- Form Section -->
+      <form id="users">
+        <div class="mb-4 row">
+          <!-- 이메일 확인 -->
+          <label for="signupEmail">이메일</label>
+          <div class="col-sm-8">
+            <input id="signupEmail" class="input-group-text" type="text" placeholder="이메일" />
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-secondary input-group-text" id="auth-submit">
+              인증번호전송
+            </button>
+          </div>
+        </div>
+        <!-- 인증번호 -->
+        <div class="mb-5 row">
+          <label for="authNumber">이메일 인증번호</label>
+          <div class="col-sm-8">
+            <input
+              id="authNumber"
+              class="input-group-text col-sm-8"
+              type="text"
+              placeholder="이메일 인증번호"
+            />
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-secondary input-group-text" id="auth-check">
+              인증확인
+            </button>
+          </div>
+        </div>
+        <hr class="mb-5" />
+        <!-- 이름 -->
+        <div class="mb-4">
+          <label for="userInfoUserName">이름</label>
+          <input id="name" class="input-group-text" required />
+        </div>
+        <!-- 기존 비밀번호 -->
+        <div class="mb-4">
+          <label for="password">기존 비밀번호</label>
+          <input type="password" id="signupPassword" class="input-group-text" required />
+        </div>
+        <!-- 새 비밀번호 -->
+        <div class="mb-4">
+          <label for="passwordConfirm">비밀번호 확인</label>
+          <input type="password" id="passwordConfirm" class="input-group-text" required />
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" id="signup" class="btn btn-primary input-group-text">
+            회원가입
+          </button>
         </div>
       </form>
       <!-- 본문 -->
@@ -58,7 +85,7 @@
           });
           alert('등록완료!');
           //홈으로 이동
-          window.location.href = '/home';
+          window.location.href = '/';
         } catch (error) {
           console.error(error);
         }

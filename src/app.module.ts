@@ -47,6 +47,7 @@ import { RecommendateionModule } from './recommendation/recommendation.module';
     ArticleModule,
     RecommendateionModule,
     UpdatePlaceModule,
+    ArticleModule,
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: `smtps://${process.env.EMAIL_AUTH_EMAIL}:${process.env.EMAIL_AUTH_PASSWORD}@${process.env.EMAIL_HOST}`,

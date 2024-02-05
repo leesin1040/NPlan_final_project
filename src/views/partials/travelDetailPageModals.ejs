@@ -133,7 +133,7 @@
 <section id="addScheduleModal" class="modal">
   <div class="modal-content">
     <header class="addScheduleModal-header">
-      <h1 id="tavelTitle">여행 이름</h1>
+      <h1 id="tavelTitle"><%= oneTravel.title %></h1>
       <h2 id="dayTitle">n일차</h2>
       <p onclick="closeModalPage()">X</p>
     </header>
@@ -177,7 +177,7 @@
             <button id="addScheduleModal-submit">submit</button>
           </form>
         </div>
-        <div class="addScheduleModal-placeList">
+        <div class="addScheduleModal-placeList" id="addScheduleModal-placeList">
           <div
             class="addScheduleModal-place"
             id="134"
@@ -200,12 +200,12 @@
         </div>
         <button id="connectApi">더 많은 장소 보기</button>
       </div>
-      <div class="addScheduleModal-mapView">
+      <!-- <div class="addScheduleModal-mapView"> -->
         <!-- selectOption으로 선택된 지역 중심으로 지도 보여지게 -->
       </div>
     </div>
   </div>
-</section>
+</div>
 <!-- schedule 추가 모달 -->
 
 <!-- schedule 상세보기 모달 -->

@@ -31,7 +31,7 @@ export class AppController {
 
   // 메인페이지
   @UseGuards(LoginOrNotGuard)
-  @Get('home')
+  @Get()
   @Page('main')
   async hello(@UserInfo() user: User) {
     const pageTitle = '홈';
@@ -45,9 +45,10 @@ export class AppController {
   @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
   @Page('signup')
-  getSignUp() {
+  getSignUp(@UserInfo() user: User) {
     const pageTitle = '회원가입';
     return {
+      user,
       pageTitle,
     };
   }
@@ -91,7 +92,9 @@ export class AppController {
       return { dayId, schedules };
     });
     const schedulesResults = await Promise.all(schedulesPromises);
+
     const pageTitle = oneTravel.title;
+
     return {
       user,
       oneTravel: oneTravel,

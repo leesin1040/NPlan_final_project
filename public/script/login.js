@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (logoutButton) {
         logoutButton.addEventListener('click', function () {
           localStorage.removeItem('accessToken'); // JWT 토큰 제거
-          window.location.href = '/home'; // 메인 페이지로 리디렉션
+          window.location.href = '/'; // 메인 페이지로 리디렉션
         });
       }
 
@@ -49,7 +49,7 @@ function handleLogin(event) {
       const { accessToken } = response.data.data;
       localStorage.setItem('accessToken', accessToken);
       alert(response.data.message);
-      window.location.href = '/main';
+      window.location.href = '/home';
     })
     .catch((error) => {
       alert(error.response.data.message);
