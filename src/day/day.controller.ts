@@ -127,4 +127,16 @@ export class DayController {
       return new ApiResponseDTO<any>(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
   }
+
+  @Patch('/travel/:travelId/day/:dayId/directions')
+  async updateDirections(
+    @Param('dayId', ParseIntPipe) dayId: number,
+    @Body('directions') directions: any,
+    @Body('placePath') placePath: any,
+  ) {
+    try {
+      const data = await this.dayService.updateDirections(dayId, directions, placePath);
+      return new ApiResponseDTO<any>(HttpStatus.CREATED, `일차 경로 생성에 성공했습니다`, data);
+    } catch (error) {}
+  }
 }
