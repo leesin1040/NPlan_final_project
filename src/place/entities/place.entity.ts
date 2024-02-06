@@ -2,6 +2,12 @@ import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
+export enum PlaceStatus {
+  rejected = 'rejected',
+  approved = 'approved',
+  pending = 'pending',
+}
+
 @Entity('place')
 export class Place {
   @PrimaryGeneratedColumn()
@@ -64,6 +70,15 @@ export class Place {
   user: User;
 
   // place를 User에게 보여지는 기준
-  @Column({ name: 'status', nullable: true })
-  status: string;
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: PlaceStatus,
+    default: PlaceStatus.pending,
+    nullable: true,
+  })
+  status: PlaceStatus;
+
+  @Column({ name: 'place_id', type: 'int' })
+  placeId: number;
 }

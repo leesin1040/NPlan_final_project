@@ -1,5 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+export enum PlaceStatus {
+  rejected = 'rejected',
+  approved = 'approved',
+  pending = 'pending',
+}
 @Entity('place')
 export class UpdatePlace {
   @PrimaryGeneratedColumn()
@@ -51,4 +55,16 @@ export class UpdatePlace {
 
   @Column({ name: 'place_point', type: 'point', nullable: true })
   placePoint: string;
+
+  @Column({ name: 'place_id', type: 'int' })
+  placeId: number;
+  // place를 User에게 보여지는 기준
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: PlaceStatus,
+    default: PlaceStatus.pending,
+    nullable: true,
+  })
+  status: PlaceStatus;
 }
