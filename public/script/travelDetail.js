@@ -1,9 +1,10 @@
-var realTravelId = window.location.pathname.split('/')[2];
+let realTravelId = window.location.pathname.split('/')[2];
 // 여행보드 수정 엑시오스
 const boardUpdateBtn = document.getElementById('boardUpdateBtn');
 const boardDeleteBtn = document.getElementById('boardDeleteBtn');
 boardUpdateBtn.addEventListener('click', updateTravel);
 boardDeleteBtn.addEventListener('click', deleteTravel);
+
 async function updateTravel() {
   let travelId = document.getElementById('travelId').value;
   let startDateString = document.getElementById('startDate').value;
@@ -165,13 +166,12 @@ function closeDetailModalPage() {
 }
 
 // 경로보기 모달창 이벤트리스너 할당 및 Get Map
-function viewDayPath(dayId) {
+async function viewDayPath(dayId) {
   const viewPathModal = document.getElementById('viewPathModal');
   const closePathModal = document.getElementById('closePathModal');
   let path = window.location.pathname;
   let pathParts = path.split('/');
   let travelId = pathParts[pathParts.indexOf('travel') + 1];
-  console.log(travelId);
   closePathModal.addEventListener('click', () => {
     viewPathModal.style.display = 'none';
   });
@@ -180,78 +180,67 @@ function viewDayPath(dayId) {
   // day에 속한 좌표들 가져오기
   axios
     .get(`/api/travel/${travelId}/day/${dayId}`)
-    .then((response) => {
-      const locationData = response.data.data;
-
-      const newData = {
-        origin: {},
-        destination: {},
-        waypoints: [],
-      };
-      locationData[0].schedule.forEach((a, index) => {
-        if (index === 0) {
-          newData.origin = {
-            x: a.place.mapX,
-            y: a.place.mapY,
-          };
-        } else if (index === locationData[0].schedule.length - 1) {
-          newData.destination = {
-            x: a.place.mapX,
-            y: a.place.mapY,
-          };
-        } else {
-          newData.waypoints.push({
-            name: a.place.name,
-            x: a.place.mapX,
-            y: a.place.mapY,
-          });
-        }
-      });
+    .then(async (response) => {
+      const schedules = response.data.data.schedule;
+      const directions = response.data.data.directions;
+      let coords = JSON.parse(response.data.data.directions);
+      const cloneSchedules = [...schedules];
+      const origin = cloneSchedules.shift();
+      const destination = cloneSchedules.pop();
 
       let mapContainer = document.getElementById('dayMap'), // 지도를 표시할 div
         mapOption = {
           // 좌표에 카드들 중 첫번쨰의 좌표
-          center: new kakao.maps.LatLng(newData.origin.y, newData.origin.x), // 지도의 중심좌표
+          center: new kakao.maps.LatLng(origin.place.mapY, origin.place.mapX), // 지도의 중심좌표
           level: 3,
         };
 
       // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-      let map = new kakao.maps.Map(mapContainer, mapOption);
-      var positions = [
-        {
-          title: locationData[0].schedule[0].place.name,
-          latlng: new kakao.maps.LatLng(newData.origin.y, newData.origin.x),
-        },
-        {
-          title: locationData[0].schedule[locationData[0].schedule.length - 1].place.name,
-          latlng: new kakao.maps.LatLng(
-            String(newData.destination.y),
-            String(newData.destination.x),
-          ),
-        },
-      ];
-      newData.waypoints.forEach((waypoint) => {
-        positions.push({
-          title: waypoint.name,
-          latlng: new kakao.maps.LatLng(waypoint.y, waypoint.x),
-        });
-      });
-      console.log(positions);
-      // 마커 이미지의 이미지 주소입니다
-      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+      const map = new kakao.maps.Map(mapContainer, mapOption);
 
-      for (var i = 0; i < positions.length; i++) {
-        // 마커 이미지의 이미지 크기 입니다
-        var imageSize = new kakao.maps.Size(24, 35);
+      const positions = schedules.map((schedule) => ({
+        title: schedule.place.name,
+        address: schedule.place.address,
+        latlng: new kakao.maps.LatLng(schedule.place.mapY, schedule.place.mapX),
+      }));
+
+      const placePath = schedules.map((schedule) => schedule.place.id);
+      const previousPlacePath = response.data.data.placePath;
+      if (
+        !previousPlacePath ||
+        !directions ||
+        JSON.stringify(placePath) !== JSON.stringify(previousPlacePath)
+      ) {
+        coords = await drawDirections(
+          map,
+          origin,
+          destination,
+          schedules,
+          travelId,
+          dayId,
+          placePath,
+        );
+      }
+
+      // 마커 이미지의 이미지 주소입니다
+      let imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+
+      positions.forEach((position, index) => {
+        let imageSize;
+        if (positions.length - 1 === index || index === 0) {
+          imageSize = new kakao.maps.Size(36, 52);
+        } else {
+          imageSize = new kakao.maps.Size(24, 35);
+        }
 
         // 마커 이미지를 생성합니다
-        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
         // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
+        let marker = new kakao.maps.Marker({
           map: map, // 마커를 표시할 지도
-          position: positions[i].latlng, // 마커를 표시할 위치
-          title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          position: position.latlng, // 마커를 표시할 위치
+          title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           image: markerImage, // 마커 이미지
           clickable: true,
         });
@@ -261,12 +250,12 @@ function viewDayPath(dayId) {
           marker,
           'click',
           (function (marker) {
-            var iwContent = `<div style = "width:100%; height:100%;">
-                             <div">${locationData[0].schedule[i].place.name}</div>
-                            <div>${locationData[0].schedule[i].place.address}</div>
+            let iwContent = `<div style = "width:100%; height:100%;">
+                             <div">${position.title}</div>
+                            <div>${position.address}</div>
                             </div>`,
               iwRemoveable = true;
-            var infowindow = new kakao.maps.InfoWindow({
+            let infowindow = new kakao.maps.InfoWindow({
               content: iwContent,
               removable: iwRemoveable,
             });
@@ -275,41 +264,86 @@ function viewDayPath(dayId) {
             };
           })(marker),
         );
-      }
+      });
 
-      const REST_API_KEY = 'd41807851f9aa8590592ed4840439f53';
-      axios
-        .post('https://apis-navi.kakaomobility.com/v1/waypoints/directions', newData, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `KakaoAK ${REST_API_KEY}`,
-          },
-        })
-        .then((response) => {
-          const linePath = [];
-          response.data.routes[0].sections.forEach((a) => {
-            a.roads.forEach((router) => {
-              router.vertexes.forEach((vertex, index) => {
-                if (index % 2 === 0) {
-                  linePath.push(
-                    new kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]),
-                  );
-                }
-              });
-            });
-            var polyline = new kakao.maps.Polyline({
-              path: linePath,
-              strokeWeight: 5,
-              strokeColor: '#000000',
-              strokeOpacity: 0.7,
-              strokeStyle: 'solid',
-              endArrow: true,
-            });
-            polyline.setMap(map);
+      const kakaoCoords = coords.map((coord) =>
+        coord.map(({ lat, lng }) => new kakao.maps.LatLng(lat, lng)),
+      );
+
+      kakaoCoords.forEach((coord, index) => {
+        if (index === kakaoCoords.length - 1) {
+          return;
+        } else {
+          const polyline = new kakao.maps.Polyline({
+            path: coord,
+            strokeWeight: 5,
+            strokeColor: `#000000`,
+            strokeOpacity: 0.7,
+            strokeStyle: 'solid',
+            endArrow: true,
           });
-        });
+          polyline.setMap(map);
+        }
+      });
     })
     .catch((error) => {
       console.error(error);
+    });
+}
+
+// 경로api 연결
+async function drawDirections(map, origin, destination, schedules, travelId, dayId, placePath) {
+  const REST_API_KEY = 'd41807851f9aa8590592ed4840439f53';
+  const requestParams = {
+    origin: {
+      x: origin.place.mapX,
+      y: origin.place.mapY,
+    },
+    destination: {
+      x: destination.place.mapX,
+      y: destination.place.mapY,
+    },
+    waypoints: schedules.map((point) => ({
+      x: point.place.mapX,
+      y: point.place.mapY,
+    })),
+  };
+  const response = await axios.post(
+    'https://apis-navi.kakaomobility.com/v1/waypoints/directions',
+    requestParams,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `KakaoAK ${REST_API_KEY}`,
+      },
+    },
+  );
+  const sections = response.data.routes[0].sections;
+  const coords = sections.map((sections) => {
+    return sections.roads
+      .map((road) => {
+        // road.vertexes 에서 짝수 인덱스는 x, 홀수 인덱스는 y 인 좌표 object 반환
+        const lngs = road.vertexes.filter((vertex, index) => index % 2 === 0);
+        return lngs
+          .map((lng, index) => ({
+            lat: road.vertexes[index * 2 + 1],
+            lng,
+          }))
+          .flat();
+      })
+      .flat();
+  });
+  await savePath(travelId, dayId, coords, placePath);
+  return coords;
+}
+// api연결 후 저장
+async function savePath(travelId, dayId, coords, placePath) {
+  axios
+    .patch(`/api/travel/${travelId}/day/${dayId}/directions`, {
+      directions: coords,
+      placePath,
+    })
+    .catch((error) => {
+      alert(error);
     });
 }
