@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
 import { ConfigService } from '@nestjs/config';
@@ -30,18 +30,18 @@ export class PlaceController {
   async getAddress() {
     const data = await this.placeService.getAddress();
     return {
-      statusCode: HttpStatus.CREATED,
+      statusCode: HttpStatus.OK,
       message: 'place 조회에 성공했습니다',
       data,
     };
   }
 
   // place 지역별 ex)서울,경기,경남,경북
-  @Post('/region')
-  async getMainRegion(@Body('region') region: string) {
+  @Get('/region/:region')
+  async getMainRegion(@Param('region') region: string) {
     const data = await this.placeService.getMainRegion(region);
     return {
-      statusCode: HttpStatus.CREATED,
+      statusCode: HttpStatus.OK,
       message: `${region}의 place 조회에 성공했습니다`,
       data,
     };
@@ -53,11 +53,11 @@ export class PlaceController {
   // 쇼핑 > A04
   // 음식점 > A05
   // 숙박 > B02
-  @Post('/region/content')
-  async getContent(@Body('region') region: string, @Body('content') content: string) {
+  @Post('/region/:region/content/:content')
+  async getContent(@Param('region') region: string, @Param('content') content: string) {
     const data = await this.placeService.getContent(region, content);
     return {
-      statusCode: HttpStatus.CREATED,
+      statusCode: HttpStatus.OK,
       message: `${region}지역 ${content} place 조회에 성공했습니다`,
       data,
     };

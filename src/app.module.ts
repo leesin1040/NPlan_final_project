@@ -16,14 +16,12 @@ import { CommentModule } from './comment/comment.module';
 import { MemberModule } from './member/member.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { DayModule } from './day/day.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-
-import { join } from 'path';
 import { PlaceModule } from './place/place.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
 import { UpdatePlaceModule } from './updateplace/update.place.module';
 import { ArticleModule } from './article/article.module';
+import { RecommendateionModule } from './recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -43,6 +41,8 @@ import { ArticleModule } from './article/article.module';
     DayModule,
     PlaceModule,
     EmailModule,
+    ArticleModule,
+    RecommendateionModule,
     UpdatePlaceModule,
     ArticleModule,
     MailerModule.forRootAsync({

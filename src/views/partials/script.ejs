@@ -35,15 +35,38 @@
       });
     });
     // 지역 선택
+    // const regionBoxes = document.querySelectorAll('.region-box');
+    // regionBoxes.forEach((box) => {
+    //   box.addEventListener('click', function () {
+    //     const selectedRegion = this.getAttribute('data-region');
+    //     document.getElementById('selectedRegion').value = selectedRegion;
+    //     regionBoxes.forEach((box) => box.classList.remove('selected'));
+    //     this.classList.add('selected');
+    //   });
+    // });
+
+    // 여러 지역 선택
     const regionBoxes = document.querySelectorAll('.region-box');
+    let selectedRegions = []; // 선택된 지역들을 저장할 배열
     regionBoxes.forEach((box) => {
       box.addEventListener('click', function () {
         const selectedRegion = this.getAttribute('data-region');
-        document.getElementById('selectedRegion').value = selectedRegion;
-        regionBoxes.forEach((box) => box.classList.remove('selected'));
-        this.classList.add('selected');
+        // 이미 선택된 지역이면 선택 해제, 아니면 선택
+        if (selectedRegions.includes(selectedRegion)) {
+          // 선택 해제
+          const index = selectedRegions.indexOf(selectedRegion);
+          selectedRegions.splice(index, 1);
+          this.classList.remove('selected');
+        } else {
+          // 선택
+          selectedRegions.push(selectedRegion);
+          this.classList.add('selected');
+        }
+        // 숨겨진 입력 필드 업데이트
+        document.getElementById('selectedRegion').value = selectedRegions.join(', ');
       });
     });
+
     // 컬러 박스 선택
     document.querySelectorAll('.color-box').forEach((box) => {
       box.addEventListener('click', function () {
@@ -52,18 +75,27 @@
         document.getElementById('selectedColor').value = this.getAttribute('data-color');
       });
     });
-    //날짜
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
+
     if (startDateInput && endDateInput) {
-      flatpickr(startDateInput, {
-        position: 'above',
+      // 시작 날짜용 Flatpickr 인스턴스
+      const startFlatpickr = flatpickr(startDateInput, {
         minDate: 'today',
         dateFormat: 'Y-m-d',
         locale: 'ko',
+        onChange: function (selectedDates) {
+          // 선택된 시작 날짜가 있을 경우
+          if (selectedDates.length > 0) {
+            const startDate = selectedDates[0];
+            // 종료 날짜의 minDate를 시작 날짜로 설정
+            endFlatpickr.set('minDate', startDate);
+          }
+        },
       });
-      flatpickr(endDateInput, {
-        position: 'above',
+
+      // 종료 날짜용 Flatpickr 인스턴스
+      const endFlatpickr = flatpickr(endDateInput, {
         minDate: 'today',
         dateFormat: 'Y-m-d',
         locale: 'ko',
@@ -80,16 +112,12 @@
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
-    console.log('로그인 엑시오스');
     try {
       let response = axios
         .post('api/auth/login', { email: loginEmail, password: loginPassword })
         .then((response) => {
-          console.log(response.data.accessToken);
-          console.log(response.data.data);
           const { accessToken } = response.data.data.accessToken;
           localStorage.setItem('accessToken', accessToken);
-          alert('로그인 되었습니다');
           location.href = '/';
         })
         .catch((error) => {

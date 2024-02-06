@@ -16,6 +16,7 @@ export const typeOrmModuleAsyncOptions: TypeOrmModuleAsyncOptions = {
     synchronize: configService.get<boolean>('DB_SYNC'),
     autoLoadEntities: true,
     logging: true,
+    legacySpatialSupport: false,
   }),
 };
 export const typeOrmModuleAsyncOptionsUpdatePlace: TypeOrmModuleAsyncOptions = {
@@ -33,5 +34,6 @@ export const typeOrmModuleAsyncOptionsUpdatePlace: TypeOrmModuleAsyncOptions = {
     synchronize: configService.get<boolean>('DB_PLACE_SYNC'),
     autoLoadEntities: true,
     logging: true,
+    legacySpatialSupport: false,
   }),
 };

@@ -22,7 +22,7 @@ export class AuthService {
   ) {}
 
   /**회원가입 */
-  async register({ name, email, phone, password, passwordConfirm }: RegisterDto) {
+  async register({ name, email, password, passwordConfirm }: RegisterDto) {
     const passwordMatch = password === passwordConfirm;
     if (!passwordMatch) {
       throw new BadRequestException('비밀번호가 일치하지 않습니다.');
@@ -36,7 +36,6 @@ export class AuthService {
     const hashedPassword = bcrypt.hashSync(password, hashRounds);
     const user = await this.userRepository.save({
       name,
-      phone,
       email,
       password: hashedPassword,
     });

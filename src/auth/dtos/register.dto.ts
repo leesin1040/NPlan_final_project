@@ -2,7 +2,7 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/user/entities/user.entity';
 
-export class RegisterDto extends PickType(User, ['name', 'phone', 'email', 'password']) {
+export class RegisterDto extends PickType(User, ['name', 'email', 'password']) {
   /**
    *비밀번호
    *@example "123123"

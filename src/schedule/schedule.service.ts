@@ -28,18 +28,6 @@ export class ScheduleService {
   }
 
   // 리스트별 스케줄 전체 조회
-  // async findAllByDayId(dayId: number) {
-  //   // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
-
-  //   return await this.scheduleRepository.find({
-  //     where: { dayId },
-  //     order: { order: 'ASC' },
-  //     relations: ['place'],
-  //     select: { placeId: true, order: true, id: true }, // place table 연결 후 place title, category 함께 출력
-  //   });
-  // }
-
-  // 리스트별 스케줄 전체 조회
   async findAllByDayId(dayId: number) {
     const schedules = await this.scheduleRepository.find({
       where: { dayId },
@@ -58,7 +46,6 @@ export class ScheduleService {
   // 단일 스케줄 상세 조회
   async findOne(id: number) {
     return await this.scheduleRepository.findOne({ where: { id }, relations: ['day', 'place'] });
-    // place table 연결 후 place title, addr, mapX, mapY, category 함께 출력
   }
 
   // 스케줄 수정
@@ -69,6 +56,7 @@ export class ScheduleService {
     return await this.scheduleRepository.save(updatedSchedule);
   }
 
+  // 스케줄 이동
   async move(id: number, moveScheduleDto: MoveScheduleDto) {
     const movedSchedule = await this.findOne(id);
 
@@ -118,22 +106,22 @@ export class ScheduleService {
     return await this.scheduleRepository.save(movedSchedule);
   }
 
-  // order 재정렬
-  async reOrdering(dayId: number) {
-    const schedules = await this.findAllByDayId(dayId);
-
-    let lexorank = LexoRank.middle();
-    for (let i = 0; i < schedules.length; i++) {
-      schedules[i].order = lexorank.toString();
-      lexorank = lexorank.genNext();
-    }
-
-    return await this.scheduleRepository.save(schedules);
-  }
-
   // 스케줄 삭제
   async remove(id: number) {
     return await this.scheduleRepository.delete({ id });
+  }
+
+  // 스케줄 복사
+  async clone(id: number) {
+    const schedule = await this.findOne(id);
+
+    const newOrder = await this.getOrder(schedule.dayId);
+
+    return this.scheduleRepository.create({
+      dayId: schedule.dayId,
+      placeId: schedule.placeId,
+      order: newOrder,
+    });
   }
 
   // 스케줄 생성 시 정렬 순서를 저장할 수 있게 order 값 지정
@@ -156,16 +144,16 @@ export class ScheduleService {
     return order;
   }
 
-  // 스케줄 복사
-  async copy(id: number) {
-    const schedule = await this.findOne(id);
+  // order 재정렬
+  async reOrdering(dayId: number) {
+    const schedules = await this.findAllByDayId(dayId);
 
-    const newOrder = await this.getOrder(schedule.dayId);
+    let lexorank = LexoRank.middle();
+    for (let i = 0; i < schedules.length; i++) {
+      schedules[i].order = lexorank.toString();
+      lexorank = lexorank.genNext();
+    }
 
-    return this.scheduleRepository.create({
-      dayId: schedule.dayId,
-      placeId: schedule.placeId,
-      order: newOrder,
-    });
+    return await this.scheduleRepository.save(schedules);
   }
 }

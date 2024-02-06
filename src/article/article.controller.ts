@@ -8,28 +8,40 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { ArticleDto } from './dto/article.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('article')
+@Controller('api/article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   //포스트만들기
   @UseGuards(AuthGuard('jwt'))
-  @Post('/article')
-  async createPost(@Body() articleDto: ArticleDto, @Req() req) {
+  @Post('/posting')
+  @UseInterceptors(FileInterceptor('file'))
+  async createPost(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() articleDto: ArticleDto,
+    @Req() req,
+  ) {
     const userId = req.user.id;
-    const data = this.articleService.createArticle(userId, articleDto);
+    // 먼저 이미지를 Cloudflare에 업로드
+    const imageUrl = await this.articleService.uploadImageToCloudflare(file);
+    console.log(imageUrl, '<<<<<<<<<<<<이미지 url');
+    // 업로드된 이미지 URL을 포함하여 게시글 생성
+    const data = await this.articleService.createArticle(userId, articleDto, imageUrl);
     return { statusCode: HttpStatus.CREATED, message: '게시글 생성에 성공했습니다.', data };
   }
 
   //포스트 상세조회
   @UseGuards(AuthGuard('jwt'))
-  @Get('/article/:id')
+  @Get('/:id')
   getArticleById(@Param('id') id: number) {
     const data = this.articleService.getArticleById(id);
     return { statusCode: HttpStatus.FOUND, message: '게시글 상세조회에 성공했습니다.', data };
@@ -37,7 +49,7 @@ export class ArticleController {
 
   //내 포스트 전체 조회
   @UseGuards(AuthGuard('jwt'))
-  @Get('/article')
+  @Get('/my-post')
   getArticlesByUser(@Req() req) {
     const userId = req.user.id;
     const data = this.articleService.getArticlesByUser(userId);
@@ -45,7 +57,7 @@ export class ArticleController {
   }
 
   //포스트 전체 조회
-  @Get('/article')
+  @Get()
   getAllArticles() {
     const data = this.articleService.getAllArticles();
     return { statusCode: HttpStatus.FOUND, message: '게시글 전체조회에 성공했습니다.', data };
@@ -53,7 +65,7 @@ export class ArticleController {
 
   //포스트 수정
   @UseGuards(AuthGuard('jwt'))
-  @Put('/article/:id')
+  @Put('/:id')
   updateArticle(@Param('id') id: number, @Req() req, @Body() articleDto: ArticleDto) {
     const userId = req.user.id;
     const data = this.articleService.updateArticle(id, userId, articleDto);
@@ -62,7 +74,7 @@ export class ArticleController {
 
   //포스트 삭제
   @UseGuards(AuthGuard('jwt'))
-  @Delete('/article/:id')
+  @Delete('/:id')
   async deleteArticle(@Param('id') postId: number, @Req() req) {
     const userId = req.user.id;
     const data = this.articleService.deleteArticle(userId, postId);

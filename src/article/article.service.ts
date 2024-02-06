@@ -1,18 +1,17 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { ArticleDto } from './dto/article.dto';
 import { Article } from './entities/article.entity';
+import axios from 'axios';
+import FormData from 'form-data';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ArticleService {
   constructor(
+    private readonly configService: ConfigService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Article)
@@ -20,12 +19,13 @@ export class ArticleService {
   ) {}
 
   //포스트 만들기
-  async createArticle(userId: number, articleDto: ArticleDto) {
+  async createArticle(userId: number, articleDto: ArticleDto, imageUrl: string) {
     const { articleTitle, articleContent } = articleDto;
     const createdArticle = await this.articleRepository.save({
       articleTitle,
       articleContent,
       userId: userId,
+      imageUrl,
     });
 
     return createdArticle;
@@ -89,5 +89,26 @@ export class ArticleService {
     const deleteArticle = await this.articleRepository.delete({ id });
 
     return deleteArticle;
+  }
+
+  //이미지 업로드
+  async uploadImageToCloudflare(file: Express.Multer.File): Promise<string> {
+    const url = this.configService.get<string>('CLOUDFLARE_IMG');
+    const apiKey = this.configService.get<string>('CLOUDFLARE_API');
+    const formData = new FormData();
+    formData.append('file', file.buffer, file.originalname);
+
+    const response = await axios.post(url, formData, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        ...formData.getHeaders(),
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result.variants;
+    } else {
+      console.error('Error uploading image:', response.data); // 에러 로깅 추가
+      throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);
+    }
   }
 }
