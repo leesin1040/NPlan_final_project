@@ -14,7 +14,9 @@ export class ScheduleService {
   constructor(
     @InjectRepository(Schedule)
     private scheduleRepository: Repository<Schedule>,
+    @InjectRepository(Day)
     private dayRepository: Repository<Day>,
+    @InjectRepository(Place)
     private placeRepository: Repository<Place>,
   ) {}
   // 스케줄 생성
