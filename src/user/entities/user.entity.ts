@@ -37,10 +37,10 @@ export class User {
    *휴대전화 번호
    * @example "01012345678"
    */
-  @ApiProperty()
+  // @ApiProperty()
   // @IsNotEmpty({ message: '전화번호를 입력해주세요' })
-  @Column()
-  phone: string;
+  // @Column()
+  // phone: string;
 
   /**
    *이메일
