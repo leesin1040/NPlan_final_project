@@ -18,4 +18,7 @@ export class RegisterDto extends PickType(User, ['name', 'email', 'password']) {
   // )
   @IsString()
   passwordConfirm: string;
+
+  @IsNotEmpty()
+  readonly authNumber: number;
 }

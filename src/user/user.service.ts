@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
+import { CreateUserDto } from './dtos/createuser.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +21,22 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  // async createUser()
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { email, password } = createUserDto;
+
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new ConflictException('이미 가입된 이메일입니다.');
+    }
+
+    const newUser = this.userRepository.create({
+      email,
+      password,
+    });
+    return this.userRepository.save(newUser);
+  }
 
   /**유저 조회 */
   async findOneById(id: number) {
@@ -52,7 +73,7 @@ export class UserService {
       password: hashedNewPassword,
     });
 
-    return { message: '비밀번호 수정 완료' };
+    return { message: '비밀번호가 변경되었습니다.' };
   }
 
   //회원탈퇴

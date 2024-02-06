@@ -15,7 +15,7 @@
           <!-- 이메일 확인 -->
           <label for="signupEmail">이메일</label>
           <div class="col-sm-8">
-            <input id="signupEmail" class="input-group-text" type="text" placeholder="이메일" />
+            <input id="signupEmail" class="form-control" type="text" placeholder="이메일" />
           </div>
           <div class="col-sm-4">
             <button type="button" class="btn btn-secondary input-group-text" id="auth-submit">
@@ -29,7 +29,7 @@
           <div class="col-sm-8">
             <input
               id="authNumber"
-              class="input-group-text col-sm-8"
+              class="form-control col-sm-8"
               type="text"
               placeholder="이메일 인증번호"
             />
@@ -44,22 +44,20 @@
         <!-- 이름 -->
         <div class="mb-4">
           <label for="userInfoUserName">이름</label>
-          <input id="name" class="input-group-text" required />
+          <input id="name" class="form-control" required />
         </div>
         <!-- 기존 비밀번호 -->
         <div class="mb-4">
-          <label for="password">기존 비밀번호</label>
-          <input type="password" id="signupPassword" class="input-group-text" required />
+          <label for="password">비밀번호</label>
+          <input type="password" id="signupPassword" class="form-control" required />
         </div>
         <!-- 새 비밀번호 -->
         <div class="mb-4">
           <label for="passwordConfirm">비밀번호 확인</label>
-          <input type="password" id="passwordConfirm" class="input-group-text" required />
+          <input type="password" id="passwordConfirm" class="form-control" required />
         </div>
         <div class="flex justify-end mt-4">
-          <button type="button" id="signup" class="btn btn-primary input-group-text">
-            회원가입
-          </button>
+          <button type="button" id="signup" class="btn btn-primary form-control">회원가입</button>
         </div>
       </form>
       <!-- 본문 -->
