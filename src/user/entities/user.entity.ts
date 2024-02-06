@@ -5,6 +5,7 @@ import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Like } from 'src/like/entities/like.entity';
 import { Member } from 'src/member/entities/member.entity';
+import { Place } from 'src/place/entities/place.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import {
   Column,
@@ -37,10 +38,10 @@ export class User {
    *휴대전화 번호
    * @example "01012345678"
    */
-  @ApiProperty()
+  // @ApiProperty()
   // @IsNotEmpty({ message: '전화번호를 입력해주세요' })
-  @Column()
-  phone: string;
+  // @Column()
+  // phone: string;
 
   /**
    *이메일
@@ -91,6 +92,9 @@ export class User {
 
   @OneToMany(() => Article, (article) => article.user)
   article: Article[];
+
+  @OneToMany(() => Place, (place) => place.user)
+  place: Place[];
 
   // Like 1:N
   @OneToMany(() => Like, (like) => like.user)
