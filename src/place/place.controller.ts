@@ -53,7 +53,7 @@ export class PlaceController {
   // 쇼핑 > A04
   // 음식점 > A05
   // 숙박 > B02
-  @Post('/region/:region/content/:content')
+  @Get('/region/:region/content/:content')
   async getContent(@Param('region') region: string, @Param('content') content: string) {
     const data = await this.placeService.getContent(region, content);
     return {
