@@ -1,43 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Schedule } from './entities/schedule.entity';
 import { LexoRank } from 'lexorank';
 import { MoveScheduleDto } from './dto/move-schedule.dto';
+import { Schedule } from './entities/schedule.entity';
+import { Day } from 'src/day/entities/day.entity';
+import { Place } from 'src/place/entities/place.entity';
 
 @Injectable()
 export class ScheduleService {
   constructor(
     @InjectRepository(Schedule)
     private scheduleRepository: Repository<Schedule>,
+    private dayRepository: Repository<Day>,
+    private placeRepository: Repository<Place>,
   ) {}
   // 스케줄 생성
   async create(createScheduleDto: CreateScheduleDto) {
-    // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
+    const day = await this.dayRepository.find({ where: { id: createScheduleDto.dayId } });
+    if (!day.length) throw new NotFoundException('해당하는 일차를 찾을 수 없습니다.');
+
+    const place = await this.placeRepository.find({ where: { id: createScheduleDto.placeId } });
+    if (!place.length) throw new NotFoundException('해당하는 장소를 찾을 수 없습니다.');
+
+    const schedules = await this.findAllByDayId(createScheduleDto.dayId);
+    if (schedules.length >= 7)
+      throw new BadRequestException('한 일차에 스케줄은 7개를 초과할 수 없습니다.');
 
     // order 생성
     const newOrder = await this.getOrder(createScheduleDto.dayId);
 
+    //  [ ]: 추후 save -> insert로 교체 가능성 있음
     return await this.scheduleRepository.save({
       dayId: createScheduleDto.dayId,
       placeId: createScheduleDto.placeId,
       order: newOrder,
     });
   }
-
-  // 리스트별 스케줄 전체 조회
-  // async findAllByDayId(dayId: number) {
-  //   // (day entity 연결 후) dayId가 존재하지 않으면 throw 에러
-
-  //   return await this.scheduleRepository.find({
-  //     where: { dayId },
-  //     order: { order: 'ASC' },
-  //     relations: ['place'],
-  //     select: { placeId: true, order: true, id: true }, // place table 연결 후 place title, category 함께 출력
-  //   });
-  // }
 
   // 리스트별 스케줄 전체 조회
   async findAllByDayId(dayId: number) {
@@ -58,22 +59,32 @@ export class ScheduleService {
   // 단일 스케줄 상세 조회
   async findOne(id: number) {
     return await this.scheduleRepository.findOne({ where: { id }, relations: ['day', 'place'] });
-    // place table 연결 후 place title, addr, mapX, mapY, category 함께 출력
   }
 
   // 스케줄 수정
   async update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    const updatedSchedule = await this.findOne(id);
+    const schedule = await this.findOne(id);
+    if (!schedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
 
-    Object.assign(updatedSchedule, updateScheduleDto);
-    return await this.scheduleRepository.save(updatedSchedule);
+    Object.assign(schedule, updateScheduleDto);
+
+    //  [ ]: 추후 save -> insert로 교체 가능성 있음
+    return await this.scheduleRepository.save(schedule);
   }
 
+  // 스케줄 이동
   async move(id: number, moveScheduleDto: MoveScheduleDto) {
     const movedSchedule = await this.findOne(id);
+    if (!movedSchedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
 
-    // 스케줄이 있는 day의 id와 입력받은 dayId가 일치하지 않는다면(스케줄을 다른 일차로 옮긴다면)
+    const day = await this.dayRepository.find({ where: { id: moveScheduleDto.dayId } });
+    if (!day.length) throw new NotFoundException('해당하는 일차를 찾을 수 없습니다.');
+
+    // 스케줄이 있는 day의 id와 입력받은 dayId가 일치하지 않는다면(스케줄을 다른 일차로 옮기기)
     if (moveScheduleDto.dayId && movedSchedule.dayId !== moveScheduleDto.dayId) {
+      const schedules = await this.findAllByDayId(moveScheduleDto.dayId);
+      if (schedules.length >= 7)
+        throw new BadRequestException('한 일차에 스케줄은 7개를 초과할 수 없습니다.');
       movedSchedule.dayId = moveScheduleDto.dayId;
     }
 
@@ -82,6 +93,8 @@ export class ScheduleService {
     // 옮긴 day에 스케줄이 movedSchedule 하나라면 LexoRank 중앙값을 order에 저장 후 반환
     if (schedules.length === 1) {
       movedSchedule.order = LexoRank.middle().toString();
+
+      //  [ ]: 추후 save -> insert로 교체 가능성 있음
       return await this.scheduleRepository.save(movedSchedule);
     }
 
@@ -115,25 +128,30 @@ export class ScheduleService {
     }
 
     // 수정된 order, dayId 변경하여 저장
+    //  [ ]: 추후 save -> insert로 교체 가능성 있음
     return await this.scheduleRepository.save(movedSchedule);
-  }
-
-  // order 재정렬
-  async reOrdering(dayId: number) {
-    const schedules = await this.findAllByDayId(dayId);
-
-    let lexorank = LexoRank.middle();
-    for (let i = 0; i < schedules.length; i++) {
-      schedules[i].order = lexorank.toString();
-      lexorank = lexorank.genNext();
-    }
-
-    return await this.scheduleRepository.save(schedules);
   }
 
   // 스케줄 삭제
   async remove(id: number) {
-    return await this.scheduleRepository.delete({ id });
+    const schedule = await this.findOne(id);
+    if (!schedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
+
+    return await this.scheduleRepository.delete(schedule);
+  }
+
+  // 스케줄 복사
+  async clone(id: number) {
+    const schedule = await this.findOne(id);
+    if (!schedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
+
+    const newOrder = await this.getOrder(schedule.dayId);
+
+    return this.scheduleRepository.create({
+      dayId: schedule.dayId,
+      placeId: schedule.placeId,
+      order: newOrder,
+    });
   }
 
   // 스케줄 생성 시 정렬 순서를 저장할 수 있게 order 값 지정
@@ -149,23 +167,22 @@ export class ScheduleService {
         where: { dayId },
         order: { order: 'DESC' },
       });
-
       order = LexoRank.parse(lastOne.order).genNext().toString();
     }
-
     return order;
   }
 
-  // 스케줄 복사
-  async copy(id: number) {
-    const schedule = await this.findOne(id);
+  // order 재정렬
+  async reOrdering(dayId: number) {
+    const schedules = await this.findAllByDayId(dayId);
 
-    const newOrder = await this.getOrder(schedule.dayId);
+    let lexorank = LexoRank.middle();
+    for (let i = 0; i < schedules.length; i++) {
+      schedules[i].order = lexorank.toString();
+      lexorank = lexorank.genNext();
+    }
 
-    return this.scheduleRepository.create({
-      dayId: schedule.dayId,
-      placeId: schedule.placeId,
-      order: newOrder,
-    });
+    //  [ ]: 추후 save -> insert로 교체 가능성 있음
+    return await this.scheduleRepository.save(schedules);
   }
 }

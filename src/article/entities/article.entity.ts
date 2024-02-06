@@ -27,6 +27,10 @@ export class Article {
   @Column({ name: 'article_content', type: 'varchar' })
   articleContent: string;
 
+  @IsString()
+  @Column({ name: 'img_url', type: 'varchar', nullable: true })
+  imageUrl: string;
+
   /** 외래키들 */
   @ManyToOne(() => User, (user) => user.article, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
@@ -34,11 +38,11 @@ export class Article {
   @Column({ type: 'int', unsigned: true })
   userId: number;
 
-  @ManyToOne(() => Travel, (travel) => travel.article, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'travel_id' })
-  travel: Travel;
-  @Column({ type: 'int', unsigned: true })
-  travelId: number;
+  // @ManyToOne(() => Travel, (travel) => travel.article)
+  // @JoinColumn({ name: 'travel_id' })
+  // travel: Travel;
+  // @Column({ type: 'int', unsigned: true })
+  // travelId: number;
 
   @CreateDateColumn()
   createdAt: Date;
