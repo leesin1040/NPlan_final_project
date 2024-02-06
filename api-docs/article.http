@@ -1,0 +1,56 @@
+@domain = http://localhost:3000/api
+@accessToken = {{loginToken.response.body.data.accessToken}}
+
+###로그인 - 완료
+# @name loginToken
+POST  {{domain}}/auth/login
+Content-Type: application/json
+
+{
+  "email":"expample@email.com",
+  "password":"123123"
+}
+
+
+###아티클 생성 - 인섬니아 등에서 테스트 요
+POST  {{domain}}/article/posting
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "articleTitle": "경주로 가는 여행",
+  "articleContent": "글을 쓸 수 있나용",
+  "file":"파일올릴수있음"
+}
+
+###아티클 상세보기
+GET   {{domain}}/article/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+###내가 쓴 아티클 보기
+GET   {{domain}}/article/my-post
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###포스트 전체 보기
+GET   {{domain}}/article
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###아티클 수정
+Put   {{domain}}/article/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "articleTitle": "경주로 가는 여행",
+  "articleContent": "글을 쓸 수 있나용",
+  "file":"파일올릴수있음"
+}
+
+###아티클 수정
+DELETE  {{domain}}/article/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}

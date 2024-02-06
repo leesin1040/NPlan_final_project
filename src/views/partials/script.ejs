@@ -35,37 +35,37 @@
       });
     });
     // 지역 선택
-    const regionBoxes = document.querySelectorAll('.region-box');
-    regionBoxes.forEach((box) => {
-      box.addEventListener('click', function () {
-        const selectedRegion = this.getAttribute('data-region');
-        document.getElementById('selectedRegion').value = selectedRegion;
-        regionBoxes.forEach((box) => box.classList.remove('selected'));
-        this.classList.add('selected');
-      });
-    });
-
-    // 여러 지역 선택
     // const regionBoxes = document.querySelectorAll('.region-box');
-    // let selectedRegions = []; // 선택된 지역들을 저장할 배열
     // regionBoxes.forEach((box) => {
     //   box.addEventListener('click', function () {
     //     const selectedRegion = this.getAttribute('data-region');
-    //     // 이미 선택된 지역이면 선택 해제, 아니면 선택
-    //     if (selectedRegions.includes(selectedRegion)) {
-    //       // 선택 해제
-    //       const index = selectedRegions.indexOf(selectedRegion);
-    //       selectedRegions.splice(index, 1);
-    //       this.classList.remove('selected');
-    //     } else {
-    //       // 선택
-    //       selectedRegions.push(selectedRegion);
-    //       this.classList.add('selected');
-    //     }
-    //     // 숨겨진 입력 필드 업데이트
-    //     document.getElementById('selectedRegion').value = selectedRegions.join(', ');
+    //     document.getElementById('selectedRegion').value = selectedRegion;
+    //     regionBoxes.forEach((box) => box.classList.remove('selected'));
+    //     this.classList.add('selected');
     //   });
     // });
+
+    // 여러 지역 선택
+    const regionBoxes = document.querySelectorAll('.region-box');
+    let selectedRegions = []; // 선택된 지역들을 저장할 배열
+    regionBoxes.forEach((box) => {
+      box.addEventListener('click', function () {
+        const selectedRegion = this.getAttribute('data-region');
+        // 이미 선택된 지역이면 선택 해제, 아니면 선택
+        if (selectedRegions.includes(selectedRegion)) {
+          // 선택 해제
+          const index = selectedRegions.indexOf(selectedRegion);
+          selectedRegions.splice(index, 1);
+          this.classList.remove('selected');
+        } else {
+          // 선택
+          selectedRegions.push(selectedRegion);
+          this.classList.add('selected');
+        }
+        // 숨겨진 입력 필드 업데이트
+        document.getElementById('selectedRegion').value = selectedRegions.join(', ');
+      });
+    });
 
     // 컬러 박스 선택
     document.querySelectorAll('.color-box').forEach((box) => {
