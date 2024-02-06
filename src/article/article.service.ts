@@ -7,6 +7,7 @@ import { Article } from './entities/article.entity';
 import axios from 'axios';
 import FormData from 'form-data';
 import { ConfigService } from '@nestjs/config';
+import cheerio from 'cheerio';
 
 @Injectable()
 export class ArticleService {
@@ -19,13 +20,12 @@ export class ArticleService {
   ) {}
 
   //포스트 만들기
-  async createArticle(userId: number, articleDto: ArticleDto, imageUrl: string) {
-    const { articleTitle, articleContent } = articleDto;
+  async createArticle(userId: number, articleDto: ArticleDto) {
+    const { articleTitle, editorContent } = articleDto;
     const createdArticle = await this.articleRepository.save({
       articleTitle,
-      articleContent,
+      editorContent,
       userId: userId,
-      imageUrl,
     });
 
     return createdArticle;
@@ -34,17 +34,39 @@ export class ArticleService {
   //포스트 전체 조회
   async getAllArticles() {
     const articles = await this.articleRepository.find();
-    return articles;
+    const articleOne = await Promise.all(
+      articles.map(async (article) => {
+        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
+        const $ = cheerio.load(article.editorContent);
+        const imgUrl = $('img').first().attr('src');
+        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
+        const textContent = fullTextContent.slice(0, 100);
+        const user = await this.userRepository.findOne({ where: { id: article.userId } });
+        const userName = user ? user.name : null;
+        return {
+          ...article,
+          editorContent: textContent,
+          imgUrl,
+          userName,
+        };
+      }),
+    );
+
+    return articleOne;
   }
 
   //포스트 상세조회
   async getArticleById(id: number) {
-    const article = await this.articleRepository.findOne({ where: { id } });
-
-    if (!article) {
+    const getArticle = await this.articleRepository.findOne({ where: { id } });
+    if (!getArticle) {
       throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
-
+    const author = await this.userRepository.findOne({ where: { id: getArticle.userId } });
+    const writer = author.name;
+    const article = {
+      ...getArticle,
+      writer,
+    };
     return article;
   }
 
@@ -56,7 +78,7 @@ export class ArticleService {
 
   //포스트 수정
   async updateArticle(id: number, userId: number, articleDto: ArticleDto) {
-    const { articleTitle, articleContent } = articleDto;
+    const { articleTitle, editorContent } = articleDto;
     const article = await this.articleRepository.findOne({ where: { id } });
 
     if (!article) {
@@ -69,7 +91,7 @@ export class ArticleService {
 
     const updatedarticle = await this.articleRepository.save({
       articleTitle,
-      articleContent,
+      editorContent,
     });
 
     return updatedarticle;
@@ -96,6 +118,9 @@ export class ArticleService {
     const url = this.configService.get<string>('CLOUDFLARE_IMG');
     const apiKey = this.configService.get<string>('CLOUDFLARE_API');
     const formData = new FormData();
+    if (!file) {
+      throw new Error('이미지 파일이 제공되지 않았습니다.');
+    }
     formData.append('file', file.buffer, file.originalname);
 
     const response = await axios.post(url, formData, {
@@ -105,7 +130,8 @@ export class ArticleService {
       },
     });
     if (response.status === 200) {
-      return response.data.result.variants;
+      const imageUrl = response.data.result.variants;
+      return imageUrl;
     } else {
       console.error('Error uploading image:', response.data); // 에러 로깅 추가
       throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);

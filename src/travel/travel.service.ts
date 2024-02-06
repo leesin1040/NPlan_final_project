@@ -36,6 +36,13 @@ export class TravelService {
     });
     return { newTravel };
   }
+
+  /**여행 복제 */
+  copy() {
+    //트레블, 데이, 스케쥴값을 travel_id로 조회해서 다 가져온 다음
+    //데이터를 복제해서 새로 save 한다.
+  }
+
   // --
   /** 여행 목록(자신의 보드만 조회) */
   async findAll(userId: number) {

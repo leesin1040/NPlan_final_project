@@ -13,11 +13,13 @@ import { CommentService } from './comment/comment.service';
 import { Page } from './decorators/page.decorator';
 import { UserInfo } from './decorators/userInfo.decorator';
 import { User } from './user/entities/user.entity';
+import { ArticleService } from './article/article.service';
 
 @Controller()
 export class AppController {
   constructor(
     private configService: ConfigService,
+    private readonly articleService: ArticleService,
     private readonly userService: UserService,
     private readonly memberService: MemberService,
     private readonly travelService: TravelService,
@@ -101,20 +103,37 @@ export class AppController {
     };
   }
 
-  //포스트 작성 페이지
-  @Get('/post')
-  postTravel(@Res() res: Response) {
-    return;
+  //article 전체 조회 - 완
+  @UseGuards(LoginOrNotGuard)
+  @Get('/articles')
+  @Page('articleList')
+  async getArticles(@UserInfo() user: User, @Res() res: Response) {
+    const data = await this.articleService.getAllArticles();
+    const pageTitle = '후기 게시판';
+    return { user, data, pageTitle };
   }
 
-  //포스트 상세보기 - 삭제 기능
-  @Get('post/:postId')
-  getOnePost(@Res() res: Response) {
-    return;
+  //포스트 작성 페이지 - 완
+  @UseGuards(LoginOrNotGuard)
+  @Get('/post')
+  @Page('postArticle')
+  postTravel(@UserInfo() user: User) {
+    const pageTitle = '글쓰기';
+    return { user, pageTitle };
+  }
+
+  //포스트 상세보기 - 삭제 기능/수정버튼
+  @UseGuards(LoginOrNotGuard)
+  @Page('oneArticle')
+  @Get('article/:articleId')
+  async getOnePost(@UserInfo() user: User, @Param('articleId') articleId: number) {
+    const article = await this.articleService.getArticleById(articleId);
+    const pageTitle = '상세보기';
+    return { user, pageTitle, article };
   }
 
   //포스트 수정
-  @Get('update/:postId')
+  @Get('update/:articleId')
   updateOneTravel(@Res() res: Response) {
     return;
   }

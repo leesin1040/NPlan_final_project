@@ -8,7 +8,6 @@ Content-Type: application/json
 {
   "name":"홍길동",
   "email":"expample1@email.com",
-  "phone":"01012341234",
   "password":"123123",
   "passwordConfirm":"123123"
 }

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %>
+    <div class="container">
+      <button>뒤로가기</button>
+      <!-- 본문 -->
+      <p><%= article.id %></p>
+      <p><%= article.writer %></p>
+      <p><%= article.articleTitle %></p>
+      <div><%- article.editorContent %></div>
+      <!-- 본문 -->
+    </div>
+    <script></script>
+    <%-include('../partials/script.ejs') %>
+  </body>
+</html>

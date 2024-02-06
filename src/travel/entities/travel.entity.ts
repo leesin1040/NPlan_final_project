@@ -14,6 +14,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -88,8 +89,8 @@ export class Travel {
   @OneToMany(() => Member, (member) => member.travel)
   member: Member[];
 
-  // @OneToMany(() => Article, (article) => article.travel)
-  // article: Article[];
+  @OneToOne(() => Article, (article) => article.travel)
+  article: Article[];
 
   @OneToMany(() => Day, (day) => day.travel, { nullable: true })
   day: Day[];
