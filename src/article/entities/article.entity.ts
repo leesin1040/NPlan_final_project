@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Like } from 'src/like/entities/like.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,7 +17,7 @@ import {
 
 @Entity('article')
 export class Article {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
   @IsString()
@@ -31,6 +33,9 @@ export class Article {
   @Column({ name: 'views', type: 'int', default: 0 })
   views: number;
 
+  @Column({ name: 'likes_count', type: 'int', default: 0 })
+  likesCount: number;
+
   /** 외래키들 */
   @ManyToOne(() => User, (user) => user.article, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
@@ -43,6 +48,9 @@ export class Article {
   travel: Travel;
   @Column({ type: 'int', unsigned: true, nullable: true })
   travelId: number;
+
+  @OneToMany(() => Like, (like) => like.user)
+  like: Like[];
 
   @CreateDateColumn()
   createdAt: Date;

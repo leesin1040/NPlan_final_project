@@ -80,9 +80,6 @@ export class Travel {
   @Column({ type: 'int', unsigned: true })
   userId: number;
 
-  @OneToMany(() => Like, (like) => like.travel, { nullable: true })
-  like: Like[];
-
   @OneToMany(() => Comment, (comment) => comment.travel, { nullable: true })
   comment: Comment[];
 
