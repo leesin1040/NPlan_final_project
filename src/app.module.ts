@@ -34,7 +34,6 @@ import { RecommendateionModule } from './recommendation/recommendation.module';
     AuthModule,
     UserModule,
     TravelModule,
-    LikeModule,
     CommentModule,
     MemberModule,
     ScheduleModule,

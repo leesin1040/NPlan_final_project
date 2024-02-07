@@ -122,7 +122,7 @@ export class AppController {
     return { user, pageTitle };
   }
 
-  //포스트 상세보기 - 삭제 기능/수정버튼
+  //포스트 상세보기
   @UseGuards(LoginOrNotGuard)
   @Page('oneArticle')
   @Get('article/:articleId')
@@ -133,8 +133,12 @@ export class AppController {
   }
 
   //포스트 수정
+  @UseGuards(LoginOrNotGuard)
+  @Page('updateArticle')
   @Get('update/:articleId')
-  updateOneTravel(@Res() res: Response) {
-    return;
+  async updateOneTravel(@UserInfo() user: User, @Param('articleId') articleId: number) {
+    const article = await this.articleService.getArticleById(articleId);
+    const pageTitle = '포스트 수정';
+    return { user, pageTitle, article };
   }
 }

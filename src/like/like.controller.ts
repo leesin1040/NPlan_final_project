@@ -5,9 +5,9 @@ import { LikeService } from './like.service';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post(':postId')
-  likePost(@Req() req, @Param('postId') postId: number) {
+  @Post(':articleId')
+  likePost(@Req() req, @Param('articleId') articleId: number) {
     const userId = req.user.id;
-    return this.likeService.likePost(userId, postId);
+    return;
   }
 }
