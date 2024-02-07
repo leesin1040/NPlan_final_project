@@ -8,26 +8,69 @@
     <div class="container">
       <button onclick="window.history.back()" class="btn btn-secondary my-3">뒤로가기</button>
       <div class="card-body">
-        <div class="row border-bottom">
-          <div class="col">
+        <div class="row mt-3">
+          <div class="col align-items-center">
             <h2><%= article.articleTitle %></h2>
-            <p class="card-subtitle mb-2 text-muted">
-              <span class="small">글쓴이 </span><%= article.writer %>
-            </p>
+            &ensp;&ensp;&ensp;
+            <p><span class="small text-muted">글쓴이 </span><%= article.writer %></p>
           </div>
           <div class="col d-flex justify-content-end align-items-center">
             <div>
               <p><span class="small">게시물 번호 </span> &ensp; <%= article.id %></p>
               <p><span class="small">조회수 </span> &ensp;<%= article.views %></p>
+              <button
+                type="button"
+                onclick="window.location.href='/update/<%= article.id %>'"
+                class="btn btn-outline-secondary btn-sm"
+              >
+                수정
+              </button>
+              <button type="button" id="deleteArticleBtn" class="btn btn-outline-danger btn-sm">
+                삭제
+              </button>
             </div>
           </div>
         </div>
         <hr />
-        <div><%- article.editorContent %></div>
+        <div style="overflow: hidden"><%- article.editorContent %></div>
+        <div></div>
+        <div class="col d-flex justify-content-center align-items-center my-5">
+          <div
+            class="text-center rounded-circle border border-secondary-subtle"
+            style="width: 100px; height: 100px"
+          >
+            <i class="fa-solid fa-heart fa-2xl mt-4 p-2" style="color: red"></i>
+            <p class="mt-2"><%= article.likesCount %></p>
+          </div>
+        </div>
+        <hr class="my-5" />
       </div>
     </div>
 
-    <script></script>
+    <script>
+      document.getElementById('deleteArticleBtn').addEventListener('click', function () {
+        const articleId = this.getAttribute('data-article-id');
+
+        if (confirm('이 게시글을 정말 삭제하시겠습니까?')) {
+          axios
+            .delete(`/api/article/${articleId}`, {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+            .then((response) => {
+              if (response.status === 200) {
+                alert('게시글이 성공적으로 삭제되었습니다.');
+                window.location.href = '/articles';
+              }
+            })
+            .catch((error) => {
+              console.error('게시글 삭제 실패:', error);
+              alert('게시글 삭제에 실패했습니다. 다시 시도해주세요.');
+            });
+        }
+      });
+    </script>
     <%-include('../partials/script.ejs') %>
   </body>
 </html>

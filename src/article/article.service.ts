@@ -79,7 +79,7 @@ export class ArticleService {
     return articles;
   }
 
-  //포스트 수정
+  // 포스트 수정
   async updateArticle(id: number, userId: number, articleDto: ArticleDto) {
     const { articleTitle, editorContent } = articleDto;
     const article = await this.articleRepository.findOne({ where: { id } });
@@ -87,32 +87,26 @@ export class ArticleService {
     if (!article) {
       throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
-
     if (article.userId !== userId) {
       throw new UnauthorizedException('포스트를 업데이트할 권한이 없습니다.');
     }
 
-    const updatedArticle = await this.articleRepository.save({
-      articleTitle,
-      editorContent,
-    });
-
+    article.articleTitle = articleTitle;
+    article.editorContent = editorContent;
+    const updatedArticle = await this.articleRepository.save(article);
     return updatedArticle;
   }
 
   //포스트 삭제
-  async deleteArticle(userId: number, id: number) {
-    const article = await this.articleRepository.findOne({ where: { id } });
-
+  async deleteArticle(userId: number, articleId: number) {
+    const article = await this.articleRepository.findOne({ where: { id: articleId } });
     if (!article) {
       throw new NotFoundException('게시글을 찾을 수 없습니다.');
     }
-
     if (article.userId !== userId) {
       throw new UnauthorizedException('게시글을 삭제할 권한이 없습니다.');
     }
-    const deleteArticle = await this.articleRepository.delete({ id });
-
+    const deleteArticle = await this.articleRepository.remove(article);
     return deleteArticle;
   }
 

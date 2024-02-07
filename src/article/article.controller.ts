@@ -32,15 +32,15 @@ export class ArticleController {
 
   //포스트 상세조회
   @UseGuards(AuthGuard('jwt'))
-  @Get('/:id')
-  getArticleById(@Param('id') id: number) {
-    const data = this.articleService.getArticleById(id);
+  @Get('/:articleId')
+  getArticleById(@Param('id') articleId: number) {
+    const data = this.articleService.getArticleById(articleId);
     return { statusCode: HttpStatus.FOUND, message: '게시글 상세조회에 성공했습니다.', data };
   }
 
   //내 포스트 전체 조회
   @UseGuards(AuthGuard('jwt'))
-  @Get('/my-post')
+  @Get('/my-articles')
   getArticlesByUser(@Req() req) {
     const userId = req.user.id;
     const data = this.articleService.getArticlesByUser(userId);
@@ -56,19 +56,23 @@ export class ArticleController {
 
   //포스트 수정
   @UseGuards(AuthGuard('jwt'))
-  @Put('/:id')
-  updateArticle(@Param('id') id: number, @Req() req, @Body() articleDto: ArticleDto) {
+  @Put('/:articleId')
+  async updateArticle(
+    @Param('articleId') articleId: number,
+    @Req() req,
+    @Body() articleDto: ArticleDto,
+  ) {
     const userId = req.user.id;
-    const data = this.articleService.updateArticle(id, userId, articleDto);
+    const data = await this.articleService.updateArticle(articleId, userId, articleDto);
     return { statusCode: HttpStatus.OK, message: '게시글 수정에 성공했습니다.', data };
   }
 
   //포스트 삭제
   @UseGuards(AuthGuard('jwt'))
-  @Delete('/:id')
-  async deleteArticle(@Param('id') postId: number, @Req() req) {
+  @Delete('/:articleId')
+  async deleteArticle(@Param('articleId') articleId: number, @Req() req) {
     const userId = req.user.id;
-    const data = this.articleService.deleteArticle(userId, postId);
+    const data = this.articleService.deleteArticle(userId, articleId);
     return { statusCode: HttpStatus.OK, message: '게시글 삭제에 성공했습니다.', data };
   }
 
