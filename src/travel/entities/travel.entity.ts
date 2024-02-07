@@ -88,8 +88,8 @@ export class Travel {
   @OneToMany(() => Member, (member) => member.travel)
   member: Member[];
 
-  // @OneToMany(() => Article, (article) => article.travel)
-  // article: Article[];
+  @OneToMany(() => Article, (article) => article.travel)
+  article: Article[];
 
   @OneToMany(() => Day, (day) => day.travel, { nullable: true })
   day: Day[];

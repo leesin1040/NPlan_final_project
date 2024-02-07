@@ -38,11 +38,14 @@ export class Article {
   @Column({ type: 'int', unsigned: true })
   userId: number;
 
-  // @ManyToOne(() => Travel, (travel) => travel.article)
-  // @JoinColumn({ name: 'travel_id' })
-  // travel: Travel;
-  // @Column({ type: 'int', unsigned: true })
-  // travelId: number;
+  @Column({ default: 0 })
+  likesCount: number;
+
+  @ManyToOne(() => Travel, (travel) => travel.article)
+  @JoinColumn({ name: 'travel_id' })
+  travel: Travel;
+  @Column({ type: 'int', unsigned: true })
+  travelId: number;
 
   @CreateDateColumn()
   createdAt: Date;
