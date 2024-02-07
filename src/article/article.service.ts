@@ -83,14 +83,12 @@ export class ArticleService {
   async updateArticle(id: number, userId: number, articleDto: ArticleDto) {
     const { articleTitle, editorContent } = articleDto;
     const article = await this.articleRepository.findOne({ where: { id } });
-
     if (!article) {
       throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
     if (article.userId !== userId) {
       throw new UnauthorizedException('포스트를 업데이트할 권한이 없습니다.');
     }
-
     article.articleTitle = articleTitle;
     article.editorContent = editorContent;
     const updatedArticle = await this.articleRepository.save(article);

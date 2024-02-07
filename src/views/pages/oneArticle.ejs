@@ -5,7 +5,7 @@
   </head>
   <body>
     <%-include('../partials/header.ejs') %>
-    <div class="container">
+    <div class="container" style="width: 1000px">
       <button onclick="window.history.back()" class="btn btn-secondary my-3">뒤로가기</button>
       <div class="card-body">
         <div class="row mt-3">
@@ -16,8 +16,8 @@
           </div>
           <div class="col d-flex justify-content-end align-items-center">
             <div>
-              <p><span class="small">게시물 번호 </span> &ensp; <%= article.id %></p>
-              <p><span class="small">조회수 </span> &ensp;<%= article.views %></p>
+              <p><span class="small text-end">게시물 번호 </span> &ensp; <%= article.id %></p>
+              <p><span class="small text-end">조회수 </span> &ensp;<%= article.views %></p>
               <button
                 type="button"
                 onclick="window.location.href='/update/<%= article.id %>'"
@@ -39,7 +39,7 @@
             class="text-center rounded-circle border border-secondary-subtle"
             style="width: 100px; height: 100px"
           >
-            <i class="fa-solid fa-heart fa-2xl mt-4 p-2" style="color: red"></i>
+            <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: red"></i>
             <p class="mt-2"><%= article.likesCount %></p>
           </div>
         </div>
