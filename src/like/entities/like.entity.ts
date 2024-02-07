@@ -1,3 +1,4 @@
+import { Article } from 'src/article/entities/article.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -7,11 +8,11 @@ export class Like {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(() => Travel, (travel) => travel.like, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'travel_id' })
-  travel: Travel;
+  @ManyToOne(() => Article, (article) => article.like, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'article_id' })
+  article: Article;
   @Column({ type: 'int', unsigned: true })
-  travelId: number;
+  articleId: number;
 
   @ManyToOne(() => User, (user) => user.like, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
