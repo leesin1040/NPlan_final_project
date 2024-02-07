@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Like } from 'src/like/entities/like.entity';
+import { Like } from 'src/like/entities/articlelike.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { User } from 'src/user/entities/user.entity';
 import {

@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Article } from 'src/article/entities/article.entity';
 import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
-import { Like } from 'src/like/entities/like.entity';
+import { Like } from 'src/like/entities/articlelike.entity';
 import { Member } from 'src/member/entities/member.entity';
 import { Place } from 'src/place/entities/place.entity';
 import { Travel } from 'src/travel/entities/travel.entity';

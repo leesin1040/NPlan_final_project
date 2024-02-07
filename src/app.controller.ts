@@ -7,13 +7,13 @@ import { ScheduleService } from './schedule/schedule.service';
 import { PlaceService } from './place/place.service';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { MemberService } from './member/member.service';
-import { LikeService } from './like/like.service';
 import { DayService } from './day/day.service';
 import { CommentService } from './comment/comment.service';
 import { Page } from './decorators/page.decorator';
 import { UserInfo } from './decorators/userInfo.decorator';
 import { User } from './user/entities/user.entity';
 import { ArticleService } from './article/article.service';
+import { LikeService } from './like/articlelike.service';
 
 @Controller()
 export class AppController {
