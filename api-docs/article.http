@@ -19,8 +19,7 @@ Authorization: Bearer {{accessToken}}
 
 {
   "articleTitle": "경주로 가는 여행",
-  "articleContent": "글을 쓸 수 있나용",
-  "file":"파일올릴수있음"
+  "editorContent": "글을 쓸 수 있나용"
 }
 
 ###아티클 상세보기

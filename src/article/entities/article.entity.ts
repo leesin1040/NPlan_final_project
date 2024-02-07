@@ -8,6 +8,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -24,12 +25,11 @@ export class Article {
 
   @IsString()
   @IsNotEmpty({ message: '게시글 내용을 입력해주세요.' })
-  @Column({ name: 'article_content', type: 'varchar' })
-  articleContent: string;
+  @Column({ name: 'article_content', type: 'longtext' })
+  editorContent: string;
 
-  @IsString()
-  @Column({ name: 'img_url', type: 'varchar', nullable: true })
-  imageUrl: string;
+  @Column({ name: 'views', type: 'int', default: 0 })
+  views: number;
 
   /** 외래키들 */
   @ManyToOne(() => User, (user) => user.article, { onDelete: 'CASCADE' })
@@ -38,13 +38,10 @@ export class Article {
   @Column({ type: 'int', unsigned: true })
   userId: number;
 
-  @Column({ default: 0 })
-  likesCount: number;
-
-  @ManyToOne(() => Travel, (travel) => travel.article)
+  @OneToOne(() => Travel, (travel) => travel.article)
   @JoinColumn({ name: 'travel_id' })
   travel: Travel;
-  @Column({ type: 'int', unsigned: true })
+  @Column({ type: 'int', unsigned: true, nullable: true })
   travelId: number;
 
   @CreateDateColumn()

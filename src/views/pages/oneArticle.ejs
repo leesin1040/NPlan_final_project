@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %>
+    <div class="container">
+      <button onclick="window.history.back()" class="btn btn-secondary my-3">뒤로가기</button>
+      <div class="card-body">
+        <div class="row border-bottom">
+          <div class="col">
+            <h2><%= article.articleTitle %></h2>
+            <p class="card-subtitle mb-2 text-muted">
+              <span class="small">글쓴이 </span><%= article.writer %>
+            </p>
+          </div>
+          <div class="col d-flex justify-content-end align-items-center">
+            <div>
+              <p><span class="small">게시물 번호 </span> &ensp; <%= article.id %></p>
+              <p><span class="small">조회수 </span> &ensp;<%= article.views %></p>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div><%- article.editorContent %></div>
+      </div>
+    </div>
+
+    <script></script>
+    <%-include('../partials/script.ejs') %>
+  </body>
+</html>

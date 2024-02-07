@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%-include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/css/postingArticle.css" />
+</head>
+</head>
+<body>
+    <%-include('../partials/header.ejs') %>
+<div class="container htmlInput">
+    <p>제목</p>
+    <input type="text" name="articleTitle" id="articleTitle" class="articleTitle" placeholder="제목을 입력하세요" required>
+    <div class="options">
+        <button id="bold" class="option-button format pluginButton">
+        <i class="fa-solid fa-bold"></i>
+        </button>
+        <button id="superscript" class="option-button script pluginButton">
+        <i class="fa-solid fa-superscript"></i>
+        </button>
+        <button id="subscript" class="option-button script">
+        <i class="fa-solid fa-subscript"></i>
+        </button>
+        <button id="insertOrderedList" class="option-button pluginButton">
+        <div class="fa-solid fa-list-ol"></div>
+        </button>
+        <button id="insertUnorderedList" class="option-button pluginButton">
+        <i class="fa-solid fa-list"></i>
+        </button>
+        <button id="undo" class="option-button pluginButton">
+        <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button id="redo" class="option-button pluginButton">
+        <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button id="createLink" class="adv-option-button pluginButton">
+        <i class="fa fa-link"></i>
+        </button>
+        <button id="unlink" class="option-button pluginButton">
+        <i class="fa fa-unlink"></i>
+        </button>
+        <button id="justifyLeft" class="option-button align pluginButton">
+        <i class="fa-solid fa-align-left"></i>
+        </button>
+        <button id="justifyCenter" class="option-button align pluginButton">
+        <i class="fa-solid fa-align-center"></i>
+        </button>
+        <button id="justifyRight" class="option-button align pluginButton">
+        <i class="fa-solid fa-align-right"></i>
+        </button>
+        <button id="justifyFull" class="option-button align pluginButton">
+        <i class="fa-solid fa-align-justify"></i>
+        </button>
+        <button id="indent" class="option-button spacing pluginButton">
+        <i class="fa-solid fa-indent"></i>
+        </button>
+        <button id="imgBtn" class="option-button spacing pluginButton">
+        <i class="fa-regular fa-image"></i>
+        </button>
+        <button id="outdent" class="option-button spacing pluginButton">
+        <i class="fa-solid fa-heading"></i>
+        </button>
+        <select id="formatBlock" class="adv-option-button pluginButton">
+        <option value="H1">H1</option>
+        <option value="H2">H2</option>
+        <option value="H3">H3</option>
+        <option value="H4">H4</option>
+        <option value="H5">H5</option>
+        <option value="H6">H6</option>
+        </select>
+        <select id="fontName" class="adv-option-button"></select>
+        <select id="fontSize" class="adv-option-button"></select>
+    </div>
+    <div id="text-input" contenteditable="true"></div>
+    <div class="container">
+        <div class="row justify-content-end">
+          <button type="button" id="postingButton" class="btn btn-secondary mt-3">포스팅</button>
+        </div>
+      </div>
+      
+    </div>
+
+<!-- 수정 -->
+    <script src="./script/postArticle.js"></script>
+    <%-include('../partials/script.ejs') %>
+  </body>
+</html>

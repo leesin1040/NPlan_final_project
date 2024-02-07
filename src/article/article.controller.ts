@@ -24,18 +24,9 @@ export class ArticleController {
   //포스트만들기
   @UseGuards(AuthGuard('jwt'))
   @Post('/posting')
-  @UseInterceptors(FileInterceptor('file'))
-  async createPost(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() articleDto: ArticleDto,
-    @Req() req,
-  ) {
+  async createPost(@Body() articleDto: ArticleDto, @Req() req) {
     const userId = req.user.id;
-    // 먼저 이미지를 Cloudflare에 업로드
-    const imageUrl = await this.articleService.uploadImageToCloudflare(file);
-    console.log(imageUrl, '<<<<<<<<<<<<이미지 url');
-    // 업로드된 이미지 URL을 포함하여 게시글 생성
-    const data = await this.articleService.createArticle(userId, articleDto, imageUrl);
+    const data = await this.articleService.createArticle(userId, articleDto);
     return { statusCode: HttpStatus.CREATED, message: '게시글 생성에 성공했습니다.', data };
   }
 
@@ -79,5 +70,15 @@ export class ArticleController {
     const userId = req.user.id;
     const data = this.articleService.deleteArticle(userId, postId);
     return { statusCode: HttpStatus.OK, message: '게시글 삭제에 성공했습니다.', data };
+  }
+
+  //이미지 업로드
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/img')
+  @UseInterceptors(FileInterceptor('file'))
+  async imgUpload(@UploadedFile() file: Express.Multer.File) {
+    const maxWidth = 800;
+    const imageUrl = await this.articleService.uploadImageToCloudflare(file, maxWidth);
+    return { imageUrl };
   }
 }
