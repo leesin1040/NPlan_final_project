@@ -8,6 +8,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { ConfigService } from '@nestjs/config';
 import cheerio from 'cheerio';
+import sharp from 'sharp';
 
 @Injectable()
 export class ArticleService {
@@ -61,6 +62,8 @@ export class ArticleService {
     if (!getArticle) {
       throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
+    getArticle.views += 1;
+    await this.articleRepository.save(getArticle);
     const author = await this.userRepository.findOne({ where: { id: getArticle.userId } });
     const writer = author.name;
     const article = {
@@ -89,12 +92,12 @@ export class ArticleService {
       throw new UnauthorizedException('포스트를 업데이트할 권한이 없습니다.');
     }
 
-    const updatedarticle = await this.articleRepository.save({
+    const updatedArticle = await this.articleRepository.save({
       articleTitle,
       editorContent,
     });
 
-    return updatedarticle;
+    return updatedArticle;
   }
 
   //포스트 삭제
@@ -114,14 +117,12 @@ export class ArticleService {
   }
 
   //이미지 업로드
-  async uploadImageToCloudflare(file: Express.Multer.File): Promise<string> {
+  async uploadImageToCloudflare(file: Express.Multer.File, maxWidth: number): Promise<string> {
     const url = this.configService.get<string>('CLOUDFLARE_IMG');
     const apiKey = this.configService.get<string>('CLOUDFLARE_API');
+    const resizedImageBuffer = await sharp(file.buffer).resize({ width: maxWidth }).toBuffer();
     const formData = new FormData();
-    if (!file) {
-      throw new Error('이미지 파일이 제공되지 않았습니다.');
-    }
-    formData.append('file', file.buffer, file.originalname);
+    formData.append('file', resizedImageBuffer, file.originalname);
 
     const response = await axios.post(url, formData, {
       headers: {

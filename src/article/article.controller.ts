@@ -77,7 +77,8 @@ export class ArticleController {
   @Post('/img')
   @UseInterceptors(FileInterceptor('file'))
   async imgUpload(@UploadedFile() file: Express.Multer.File) {
-    const imageUrl = await this.articleService.uploadImageToCloudflare(file);
+    const maxWidth = 800;
+    const imageUrl = await this.articleService.uploadImageToCloudflare(file, maxWidth);
     return { imageUrl };
   }
 }

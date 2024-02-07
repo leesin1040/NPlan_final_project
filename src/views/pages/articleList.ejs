@@ -7,22 +7,30 @@
     <%-include('../partials/header.ejs') %>
     <div class="container">
       <!-- 본문 -->
-      <div class="row">
+      <div class="row my-4">
         <div class="col-md-6">
           <p><a href="">인기순</a> / <a href="">최신순</a></p>
         </div>
-        <div class="col-md-6 text-end">
-          <button type="button" onclick="location.href='/post'" class="btn btn-outline-secondary"><i class="fa-solid fa-pen me-2"></i>글쓰기</button>
-        </div>
+        <% if(user===null){ %>
+          <div class="col-md-6 text-end">
+            <p class="tex-sm">로그인 후 글을 작성할 수 있습니다.</p>
+          </div>
+          <% }else{ %>
+            <div class="col-md-6 text-end">
+              <button type="button" onclick="location.href='/post'" class="btn btn-outline-secondary"><i class="fa-solid fa-pen me-2"></i>글쓰기</button>
+            </div>
+            <% } %>
       </div>
       <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
         <!-- 여행 포스트 카드 반복문-->
         <% data.forEach(function(articleOne) { %>
         <div class="col">
-          <a href="/post/<%= articleOne.id %>">
+          <a href="/article/<%= articleOne.id %>">
           <div class="card h-100">
             <% if(articleOne.imgUrl) { %>
-              <img src="<%= articleOne.imgUrl %>" class="card-img-top" />
+              <div class="image-wrapper">
+                <img src="<%= articleOne.imgUrl %>" class="card-img-top" alt="Article Image" />
+              </div>
             <% } else { %>
               <!-- 기본 이미지 또는 대체 이미지 -->
               <img src="https://geojecci.korcham.net/images/no-image01.gif" class="card-img-top" />

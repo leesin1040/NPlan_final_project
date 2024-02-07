@@ -28,9 +28,8 @@ export class Article {
   @Column({ name: 'article_content', type: 'longtext' })
   editorContent: string;
 
-  // @IsString()
-  // @Column({ name: 'img_url', type: 'varchar', nullable: true })
-  // imageUrl: string;
+  @Column({ name: 'views', type: 'int', default: 0 })
+  views: number;
 
   /** 외래키들 */
   @ManyToOne(() => User, (user) => user.article, { onDelete: 'CASCADE' })

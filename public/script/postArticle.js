@@ -1,3 +1,64 @@
+document.getElementById('imgBtn').addEventListener('click', function () {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.click();
+  fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      axios
+        .post('/api/article/img', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          const imageUrl = response.data.imageUrl[0];
+          if (imageUrl) {
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.style.maxWidth = '800px'; // 이미지 최대 너비 설정
+            writingArea.appendChild(imgElement);
+          }
+        })
+        .catch((error) => {
+          console.error('업로드 실패:', error);
+        });
+    }
+  };
+});
+
+document.getElementById('postingButton').addEventListener('click', function () {
+  const articleTitle = document.getElementById('articleTitle').value;
+  const editorContent = document.getElementById('text-input').innerHTML;
+  if (!articleTitle || !editorContent.trim()) {
+    alert('제목과 내용을 모두 입력하세요.');
+    return;
+  }
+  const articleData = {
+    articleTitle,
+    editorContent,
+  };
+  axios
+    .post('/api/article/posting', articleData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        alert('게시글이 성공적으로 생성되었습니다.');
+        window.location.href = '/articles';
+      }
+    })
+    .catch((error) => {
+      console.error('게시글 생성 실패:', error);
+      alert('게시글 생성에 실패했습니다. 다시 시도해주세요.');
+    });
+});
+
 let optionsButtons = document.querySelectorAll('.option-button');
 let advancedOptionButton = document.querySelectorAll('.adv-option-button');
 let fontName = document.getElementById('fontName');
