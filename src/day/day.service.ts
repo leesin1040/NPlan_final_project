@@ -121,4 +121,20 @@ export class DayService {
 
   //   리스트삭제
   async deleteDay(dayId: number) {}
+
+  // 경로생성
+  async updateDirections(dayId: number, directions: any, placePath: any) {
+    try {
+      // 한 번의 update 호출로 두 속성을 함께 업데이트합니다.
+      const updateResult = await this.dayRepository.update(
+        { id: dayId },
+        { directions: JSON.stringify(directions.directions), placePath },
+      );
+
+      return updateResult;
+    } catch (error) {
+      console.log(error);
+      // 에러 처리
+    }
+  }
 }

@@ -18,4 +18,10 @@ export class Day {
 
   @Column({ nullable: true })
   day: number;
+
+  @Column({ type: 'longtext', nullable: true })
+  directions: string;
+
+  @Column({ type: 'json', nullable: true, name: 'place_path' })
+  placePath: number[];
 }
