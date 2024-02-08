@@ -1,4 +1,4 @@
-import { IsString, IsUrl } from 'class-validator';
+import { IsNumber, IsString, IsUrl } from 'class-validator';
 
 export class CreatePlaceDto {
   @IsString()
@@ -7,16 +7,12 @@ export class CreatePlaceDto {
   @IsString()
   address: string;
 
+  @IsNumber() // Assuming mapX and mapY are numbers
   mapX: number;
 
+  @IsNumber()
   mapY: number;
 
   @IsString()
-  category: string;
-
-  @IsString()
   cat1: string;
-
-  @IsUrl()
-  imaUrl?: string;
 }
