@@ -25,12 +25,12 @@ export class jwtStrategy extends PassportStrategy(Strategy) {
     return request?.cookies?.Authorization;
   }
   async validate(payload: JwtPayLoad) {
-    const findUser = await this.authService.findByUserId(payload.id);
+    const user = await this.authService.findByUserId(payload.id);
 
-    if (_.isNil(findUser)) {
+    if (_.isNil(user)) {
       throw new NotFoundException('해당되는 사용자를 찾을 수 없습니다.');
     }
     // console.log('jwt findUser', findUser);
-    return findUser;
+    return user;
   }
 }
