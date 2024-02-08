@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
-import { CreateUserDto } from './dtos/createuser.dto';
 
 @Injectable()
 export class UserService {
@@ -20,23 +14,6 @@ export class UserService {
     private readonly jwtService: JwtService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
-
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password } = createUserDto;
-
-    const existingUser = await this.userRepository.findOne({
-      where: { email },
-    });
-    if (existingUser) {
-      throw new ConflictException('이미 가입된 이메일입니다.');
-    }
-
-    const newUser = this.userRepository.create({
-      email,
-      password,
-    });
-    return this.userRepository.save(newUser);
-  }
 
   /**유저 조회 */
   async findOneById(id: number) {
@@ -54,19 +31,23 @@ export class UserService {
       where: { id: id },
       select: { id: true, password: true },
     });
+
     const isPasswordMatched = bcrypt.compareSync(password, user?.password ?? '');
     if (!isPasswordMatched) {
       throw new BadRequestException('입력하신 비밀번호가 기존 비밀번호와 일치하지 않습니다.');
     }
+
     const passwordSame = bcrypt.compareSync(newPassword, user?.password ?? '');
     if (passwordSame) {
       throw new BadRequestException('사용중인 비밀번호와 변경된 내용이 없습니다.');
     }
+
     /**새 비밀번호 일치 확인 */
     const isNewPasswordMatched = newPassword === passwordConfirm;
     if (!isNewPasswordMatched) {
       throw new BadRequestException('입력하신 새 비밀번호와 확인용 비밀번호가 일치하지 않습니다.');
     }
+
     const hashRounds = this.configService.get<number>('PASSWORD_HASH_ROUNDS');
     const hashedNewPassword = bcrypt.hashSync(newPassword, hashRounds);
     await this.userRepository.update(id, {
@@ -81,6 +62,7 @@ export class UserService {
     await this.findOneById(id);
     await this.userRepository.softDelete({ id });
   }
+
   //회원탈퇴유저 살리기
   async cancelUserDelete(id: number) {
     await this.userRepository.restore({ id });

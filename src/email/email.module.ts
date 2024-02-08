@@ -3,11 +3,14 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailController } from './email.controller';
 import { EmailService } from './email.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      imports: [ConfigModule], // ConfigModule을 import
+      imports: [ConfigModule, TypeOrmModule.forFeature([User])], // ConfigModule을 import
       useFactory: async (configService: ConfigService) => ({
         transport: {
           service: 'gmail',
@@ -22,6 +25,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService], // ConfigService를 inject
     }),
+    UserModule,
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [EmailController],
   providers: [EmailService],

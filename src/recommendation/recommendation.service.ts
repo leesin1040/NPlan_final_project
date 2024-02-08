@@ -194,70 +194,199 @@ export class RecommendationService {
       // await this.createRecommendation(region);
     }
   }
-
   async createRecommendationPlace(userId: number, region: string) {
-    // console.log(userId);
-    // function calculateCosineSimilarity(userVector: string, placeVector: string[]): number {
-    //   // Convert user vector and place vector to arrays of features
-    //   const userFeatures = userVector.split(' ');
-    //   const placeFeatures = placeVector;
-    //   // Merge unique features from user and place vectors
-    //   const allFeatures = Array.from(new Set([...userFeatures, ...placeFeatures]));
-    //   // Create vectors with binary values indicating feature presence
-    //   const userBinaryVector = allFeatures.map((feature) =>
-    //     userFeatures.includes(feature) ? 1 : 0,
-    //   );
-    //   const placeBinaryVector = allFeatures.map((feature) =>
-    //     placeFeatures.includes(feature) ? 1 : 0,
-    //   );
-    //   // Calculate cosine similarity
-    //   const dotProduct = userBinaryVector.reduce(
-    //     (sum, value, index) => sum + value * placeBinaryVector[index],
-    //     0,
-    //   );
-    //   const magnitudeUser = Math.sqrt(userBinaryVector.reduce((sum, value) => sum + value ** 2, 0));
-    //   const magnitudePlace = Math.sqrt(
-    //     placeBinaryVector.reduce((sum, value) => sum + value ** 2, 0),
-    //   );
-    //   if (magnitudeUser === 0 || magnitudePlace === 0) {
-    //     return 0;
-    //   }
-    //   const similarity = dotProduct / (magnitudeUser * magnitudePlace);
-    //   return similarity;
-    // }
-    // const userVector = '1 A04 시장';
-    // // const places = await this.placeRepository.find({ where: { areaCode: region } });
-    // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
-    // const matchingPlaces = [];
-    // const myPlaces = await this.travelRepository.find({
-    //   where: { userId: userId },
-    //   relations: ['day.schedule.place'],
-    // });
-    // for (const myPlace of myPlaces) {
-    //   for (const day of myPlace.day) {
-    //     for (const schedule of day.schedule) {
-    //       const placeInfo = schedule.place;
-    //       const extractedInfo = {
-    //         areaCode: placeInfo.areaCode,
-    //         cat1: placeInfo.cat1,
-    //         category: placeInfo.category,
-    //       };
-    //       matchingPlaces.push(extractedInfo);
-    //     }
-    //   }
-    // }
-    // console.log(matchingPlaces);
-    // // acticle 의 travel_id의 전체 travel의 day들의 schedule들의 place값들
-    // const recommendations = matchingPlaces.map((place) => {
-    //   const placeVector: string[] = Object.values(place);
-    //   console.log(placeVector);
-    //   const cosineSimilarity = calculateCosineSimilarity(userVector, placeVector);
-    //   return { place, cosineSimilarity };
-    // });
-    // // Sort recommendations by cosine similarity (descending order)
-    // recommendations.sort((a, b) => b.cosineSimilarity - a.cosineSimilarity);
-    // // Get the top recommended places
-    // const topRecommendations = recommendations.slice(0, 5);
-    // console.log(topRecommendations);
+    const myPlaceData = ['A01', 'A02', 'A03', 'A04', 'B02', 'A05'];
+    const myMatCategories = ['한식', '양식', '일식', '중식'];
+    // const myMat = ['한식', '양식', '일식', '중식'];
+    const places = await this.placeRepository.find({
+      where: { areaCode: region },
+    });
+
+    // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
+    const myPlaces = await this.travelRepository.find({
+      where: { userId: userId },
+      relations: ['day.schedule.place'],
+    });
+    const myPlaceCounts: { [key: string]: number } = {};
+    const myMatCounts: { [key: string]: number } = {};
+    for (const matCategory of myMatCategories) {
+      myMatCounts[matCategory] = 0; // 초기화
+    }
+    for (const myPlace of myPlaces) {
+      for (const day of myPlace.day) {
+        for (const schedule of day.schedule) {
+          const placeInfo = schedule.place.cat1;
+          myPlaceCounts[placeInfo] = (myPlaceCounts[placeInfo] || 0) + 1;
+
+          const matInfo = schedule.place.category;
+          if (myMatCategories.includes(matInfo)) {
+            myMatCounts[matInfo] = (myMatCounts[matInfo] || 0) + 1;
+          }
+        }
+      }
+    }
+
+    console.log(myPlaceCounts);
+    console.log(myMatCounts);
   }
+
+  // async createRecommendationPlace(userId: number, region: string) {
+  //   const oneHotCategories = ['A01', 'A02', 'A03', 'A04'];
+  //   const places = await this.placeRepository.find({
+  //     where: { areaCode: region },
+  //     order: { rank: 'DESC' },
+  //     take: 200,
+  //   });
+  //   const placesWithOneHot = places.map((place) => {
+  //     const extractedInfo = {
+  //       cat1: place.cat1,
+  //     };
+
+  //     const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+  //     const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+
+  //     if (cat1Index !== -1) {
+  //       oneHotEncoded[cat1Index] = 1;
+  //     }
+
+  //     return {
+  //       cat1: extractedInfo.cat1,
+  //       oneHotEncoded: oneHotEncoded,
+  //     };
+  //   });
+
+  //   console.log(placesWithOneHot);
+  //   // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
+  //   const myPlaces = await this.travelRepository.find({
+  //     where: { userId: userId },
+  //     relations: ['day.schedule.place'],
+  //   });
+  //   const myVector = [];
+  //   const placeVector = [];
+
+  //   // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
+  //   for (const myPlace of myPlaces) {
+  //     for (const day of myPlace.day) {
+  //       for (const schedule of day.schedule) {
+  //         const placeInfo = schedule.place;
+  //         const extractedInfo = {
+  //           cat1: placeInfo.cat1,
+  //         };
+
+  //         const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+  //         const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+  //         if (cat1Index !== -1) {
+  //           oneHotEncoded[cat1Index] = 1;
+  //         }
+
+  //         myVector.push(...oneHotEncoded);
+  //       }
+  //     }
+  //   }
+
+  //   // 추천하려는 지역의 장소 정보를 하나의 벡터로 합치기
+  //   for (const placeWithOneHot of placesWithOneHot) {
+  //     placeVector.push(...placeWithOneHot.oneHotEncoded);
+  //   }
+
+  //   console.log('User Vector:', myVector);
+  //   console.log('Place Vector:', placeVector);
+
+  //   function cosineSimilarity(vectorA, vectorB) {
+  //     // 벡터의 내적 계산
+  //     const dotProduct = vectorA.reduce((acc, val, i) => acc + val * vectorB[i], 0);
+
+  //     // 벡터의 크기(노름) 계산
+  //     const magnitudeA = Math.sqrt(vectorA.reduce((acc, val) => acc + val ** 2, 0));
+  //     const magnitudeB = Math.sqrt(vectorB.reduce((acc, val) => acc + val ** 2, 0));
+
+  //     // 코사인 유사도 계산
+  //     return dotProduct / (magnitudeA * magnitudeB);
+  //   }
+
+  //   // 유사도 계산
+  //   const similarity = cosineSimilarity(myVector, placeVector);
+  //   console.log(`Cosine Similarity between User Vector and Place Vector: ${similarity}`);
+  // }
+
+  // async createRecommendationPlace(userId: number, region: string) {
+  //   const oneHotCategories = ['A01', 'A02', 'A03', 'A04'];
+  //   const places = await this.placeRepository.find({ where: { areaCode: region } });
+  //   const placesWithOneHot = places.map((place) => {
+  //     const extractedInfo = {
+  //       cat1: place.cat1,
+  //     };
+
+  //     const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+  //     const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+
+  //     if (cat1Index !== -1) {
+  //       oneHotEncoded[cat1Index] = 1;
+  //     }
+
+  //     return {
+  //       oneHotEncoded: oneHotEncoded,
+  //     };
+  //   });
+
+  //   console.log(placesWithOneHot);
+  //   const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
+
+  //   const matchingPlaces = [];
+  //   const myPlaces = await this.travelRepository.find({
+  //     where: { userId: userId },
+  //     relations: ['day.schedule.place'],
+  //   });
+
+  //   for (const myPlace of myPlaces) {
+  //     for (const day of myPlace.day) {
+  //       for (const schedule of day.schedule) {
+  //         const placeInfo = schedule.place;
+  //         const extractedInfo = {
+  //           cat1: placeInfo.cat1,
+  //         };
+
+  //         // 원핫인코딩 배열 초기화
+  //         const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+
+  //         // 원핫인코딩 수행
+  //         const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+  //         if (cat1Index !== -1) {
+  //           oneHotEncoded[cat1Index] = 1;
+  //         }
+
+  //         // 결과를 matchingPlaces에 추가
+  //         matchingPlaces.push({
+  //           oneHotEncoded: oneHotEncoded,
+  //         });
+  //       }
+  //     }
+  //   }
+  //   console.log(matchingPlaces);
+
+  //   function cosineSimilarity(vectorA, vectorB) {
+  //     // 벡터의 내적 계산
+  //     const dotProduct = vectorA.reduce((acc, val, i) => acc + val * vectorB[i], 0);
+
+  //     // 벡터의 크기(노름) 계산
+  //     const magnitudeA = Math.sqrt(vectorA.reduce((acc, val) => acc + val ** 2, 0));
+  //     const magnitudeB = Math.sqrt(vectorB.reduce((acc, val) => acc + val ** 2, 0));
+
+  //     // 코사인 유사도 계산
+  //     return dotProduct / (magnitudeA * magnitudeB);
+  //   }
+
+  //   // matchingPlaces와 placesWithOneHot 배열 간의 코사인 유사도 계산
+  //   for (const matchingPlace of matchingPlaces) {
+  //     for (const placeWithOneHot of placesWithOneHot) {
+  //       const similarity = cosineSimilarity(
+  //         matchingPlace.oneHotEncoded,
+  //         placeWithOneHot.oneHotEncoded,
+  //       );
+  //       console.log(
+  //         `Similarity between ${matchingPlace.cat1} and ${placeWithOneHot.cat1}: ${similarity}`,
+  //       );
+  //     }
+  //   }
+  // }
 }
