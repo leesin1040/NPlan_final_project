@@ -2,6 +2,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { Like } from 'src/like/entities/articlelike.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -51,6 +52,10 @@ export class Article {
 
   @OneToMany(() => Like, (like) => like.user)
   like: Like[];
+
+  @OneToMany(() => Comment, (comment) => comment.article)
+  @JoinColumn({ name: 'article_id' })
+  comment: Comment[];
 
   @CreateDateColumn()
   createdAt: Date;
