@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { RegisterDto } from './dtos/register.dto';
 import bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
-import { RefreshToken } from './entities/refreshToken.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -16,12 +15,10 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectRepository(RefreshToken)
-    private readonly refreshTokenRepository: Repository<RefreshToken>,
     private readonly mailerService: MailerService,
   ) {}
 
-  /**회원가입 */
+  /* 회원가입 */
   async register({ name, email, password, passwordConfirm }: RegisterDto) {
     const passwordMatch = password === passwordConfirm;
     if (!passwordMatch) {
@@ -42,55 +39,49 @@ export class AuthService {
 
     return this.login(user.id);
   }
-  /**로그인 */
+
+  /* 로그인 */
   async login(userId: number) {
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = new RefreshToken();
 
     const user = await this.userRepository.findOne({ where: { id: userId } });
-    refreshToken.user = user;
-    refreshToken.token = this.jwtService.sign(payload);
-    refreshToken.expiryDate = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
-    await this.refreshTokenRepository.save(refreshToken);
+
+    user.refreshToken = this.jwtService.sign(payload);
+    await this.userRepository.save(user);
+
     return { accessToken: accessToken };
   }
 
-  /**유저 확인 */
+  /* 유저 확인 */
   async validateUser({ email, password }: LoginDto) {
     const user = await this.userRepository.findOne({
       where: { email },
       select: { id: true, password: true },
     });
+
     const passwordMatch = bcrypt.compareSync(password, user?.password ?? '');
-    if (!user || !passwordMatch) {
-      return null;
-    }
+    if (!user || !passwordMatch) return null;
+
     return { id: user.id };
   }
-  //jwt.strategy.ts 파일에 유저 정보 넘겨주기 위한 함수
+
+  // jwt.strategy.ts 파일에 유저 정보 넘겨주기 위한 함수
   async findByUserId(id: number): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
   }
 
+  // 토큰 갱신
   async refresh(refreshToken: string) {
-    const savedToken = await this.refreshTokenRepository.findOne({
-      where: { token: refreshToken },
+    const user = await this.userRepository.findOne({
+      where: { refreshToken },
     });
-    if (!savedToken || savedToken.expiryDate < new Date()) {
+
+    if (!user.refreshToken) {
       throw new BadRequestException('유효하지 않은 토큰입니다.');
     }
-    const payload = { id: savedToken.user.id };
+    const payload = { id: user.id };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
-  }
-
-  async sendAuthCode(email: string, authNumber: number): Promise<void> {
-    console.log('브라우저에서 들어온 이메일', email);
-    return this.mailerService.sendMail({
-      to: email,
-      subject: '[NPlan] 이메일 확인 인증번호 안내',
-      text: `아래 인증번호를 확인하여 이메일 주소 인증을 완료해 주세요.\n인증번호 4자리 👉 ${authNumber}`,
-    });
   }
 }

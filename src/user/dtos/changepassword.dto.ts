@@ -8,7 +8,7 @@ export class ChangePasswordDto extends PickType(User, ['password']) {
    * @example "123123"
    */
   @ApiProperty()
-  @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
+  @IsNotEmpty({ message: '새로운 비밀번호를 입력해주세요.' })
   @IsString()
   newPassword: string;
 
@@ -17,7 +17,7 @@ export class ChangePasswordDto extends PickType(User, ['password']) {
    * @example "123123"
    */
   @ApiProperty()
-  @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
+  @IsNotEmpty({ message: '새로운 비밀번호를 다시 한 번 입력해주세요.' })
   @IsString()
   passwordConfirm: string;
 }
