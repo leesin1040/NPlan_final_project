@@ -11,7 +11,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { DayDto } from './dto/day.dto';
 import { DayService } from './day.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDTO } from 'src/response/dto/api.response.dto';

@@ -90,7 +90,6 @@ export class TravelService {
   /**여행 상세 조회 */
   async findOneTravel(id: number, userId: number) {
     const oneTravel = await this.travelRepository.findOne({ where: { id } });
-    // oneTravel이 존재하지 않으면 에러 메시지를 반환
     if (!oneTravel) {
       throw new NotFoundException('존재하지 않는 여행보드 입니다.');
     }
