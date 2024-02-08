@@ -5,12 +5,18 @@ import { DataSource, In, Not, Repository } from 'typeorm';
 import { Place } from 'src/place/entities/place.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { Day } from 'src/day/entities/day.entity';
+import { Like } from 'src/like/entities/like.entity';
 
 @Injectable()
 export class RecommendationService {
   constructor(
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
+    @InjectRepository(Like)
+    private readonly likeRepository: Repository<Like>,
+    @InjectRepository(Travel)
+    private readonly travelRepository: Repository<Travel>,
+
     // @InjectRepository(Travel)
     // private readonly travelRepository: Repository<Travel>,
     // @InjectRepository(Day)
@@ -19,7 +25,28 @@ export class RecommendationService {
     // private readonly scheduleRepository: Repository<Schedule>,
     private dataSource: DataSource,
   ) {}
+  //   추천한 장소 주변 반경 몇km안에 다음장소 추천 이런식
 
+  //   일단 1박 2일만 구현
+
+  //   지역만 입력
+  //   테마는 나중
+  //   이동시간 제외
+
+  //   장소하나당 머무는 시간 2시간
+  //   점심시간 12:00 시작
+  //   저녁시간 18:00 시작
+  //   저녁먹고 숙소로 가정
+  //   맨마지막은 숙소
+
+  //   관광지같은 경우 10:00~16:00이라고 가정//안할수도
+  //   요금은 아몰랑
+
+  // 다익스트라 알고리즘
+  //
+
+  // 벨만-포드 알고리즘
+  // 사이클이 없는 방향성
   async createRecommendation(region: string) {
     // 1일차 place에서 areaCode(region)
     // cat(B02제외 쇼핑몰,백화점 제외) -> region내에 1순위 관광지 10:00 ~ 12:00
@@ -35,7 +62,7 @@ export class RecommendationService {
       await queryRunner.startTransaction();
 
       const schedules = [];
-      const radius = 5000;
+      const radius = 10000;
 
       const oneFirstTouristSpots = await this.placeRepository
         .createQueryBuilder('place')
@@ -167,27 +194,70 @@ export class RecommendationService {
       // await this.createRecommendation(region);
     }
   }
+
+  async createRecommendationPlace(userId: number, region: string) {
+    // console.log(userId);
+    // function calculateCosineSimilarity(userVector: string, placeVector: string[]): number {
+    //   // Convert user vector and place vector to arrays of features
+    //   const userFeatures = userVector.split(' ');
+    //   const placeFeatures = placeVector;
+    //   // Merge unique features from user and place vectors
+    //   const allFeatures = Array.from(new Set([...userFeatures, ...placeFeatures]));
+    //   // Create vectors with binary values indicating feature presence
+    //   const userBinaryVector = allFeatures.map((feature) =>
+    //     userFeatures.includes(feature) ? 1 : 0,
+    //   );
+    //   const placeBinaryVector = allFeatures.map((feature) =>
+    //     placeFeatures.includes(feature) ? 1 : 0,
+    //   );
+    //   // Calculate cosine similarity
+    //   const dotProduct = userBinaryVector.reduce(
+    //     (sum, value, index) => sum + value * placeBinaryVector[index],
+    //     0,
+    //   );
+    //   const magnitudeUser = Math.sqrt(userBinaryVector.reduce((sum, value) => sum + value ** 2, 0));
+    //   const magnitudePlace = Math.sqrt(
+    //     placeBinaryVector.reduce((sum, value) => sum + value ** 2, 0),
+    //   );
+    //   if (magnitudeUser === 0 || magnitudePlace === 0) {
+    //     return 0;
+    //   }
+    //   const similarity = dotProduct / (magnitudeUser * magnitudePlace);
+    //   return similarity;
+    // }
+    // const userVector = '1 A04 시장';
+    // // const places = await this.placeRepository.find({ where: { areaCode: region } });
+    // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
+    // const matchingPlaces = [];
+    // const myPlaces = await this.travelRepository.find({
+    //   where: { userId: userId },
+    //   relations: ['day.schedule.place'],
+    // });
+    // for (const myPlace of myPlaces) {
+    //   for (const day of myPlace.day) {
+    //     for (const schedule of day.schedule) {
+    //       const placeInfo = schedule.place;
+    //       const extractedInfo = {
+    //         areaCode: placeInfo.areaCode,
+    //         cat1: placeInfo.cat1,
+    //         category: placeInfo.category,
+    //       };
+    //       matchingPlaces.push(extractedInfo);
+    //     }
+    //   }
+    // }
+    // console.log(matchingPlaces);
+    // // acticle 의 travel_id의 전체 travel의 day들의 schedule들의 place값들
+    // const recommendations = matchingPlaces.map((place) => {
+    //   const placeVector: string[] = Object.values(place);
+    //   console.log(placeVector);
+    //   const cosineSimilarity = calculateCosineSimilarity(userVector, placeVector);
+    //   return { place, cosineSimilarity };
+    // });
+    // // Sort recommendations by cosine similarity (descending order)
+    // recommendations.sort((a, b) => b.cosineSimilarity - a.cosineSimilarity);
+    // // Get the top recommended places
+    // const topRecommendations = recommendations.slice(0, 5);
+    // console.log(topRecommendations);
+  }
 }
-//   간단한 컨텐츠기반 추천시스템
-//   추천한 장소 주변 반경 몇km안에 다음장소 추천 이런식
-
-//   일단 1박 2일만 구현
-
-//   지역만 입력
-//   테마는 나중
-//   이동시간 제외
-
-//   장소하나당 머무는 시간 2시간
-//   점심시간 12:00 시작
-//   저녁시간 18:00 시작
-//   저녁먹고 숙소로 가정
-//   맨마지막은 숙소
-
-//   관광지같은 경우 10:00~16:00이라고 가정//안할수도
-//   요금은 아몰랑
-
-// 다익스트라 알고리즘
-//
-
-// 벨만-포드 알고리즘
-// 사이클이 없는 방향성

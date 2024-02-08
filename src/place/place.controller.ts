@@ -1,8 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, UseGuards, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
 import { ConfigService } from '@nestjs/config';
 import { CreatePlaceDto } from './dto/create-place.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { addressMapping } from './utils/address.mapping';
+import { categoryMapping } from './utils/category.mapping';
+import { ApiResponseDTO } from 'src/response/dto/api.response.dto';
 
 @ApiTags('place')
 @Controller('api/place')
@@ -14,26 +18,29 @@ export class PlaceController {
 
   // place 생성
   @ApiOperation({ summary: '스케줄 생성' })
+  @UseGuards(AuthGuard('jwt'))
   @Post('')
-  async createPlace(@Body() createPlaceDto: CreatePlaceDto) {
-    const data = await this.placeService.createPlace(createPlaceDto);
+  async createPlace(@Req() req, @Body() createPlaceDto: CreatePlaceDto) {
+    try {
+      const userId = req.user.id;
+      const { sigunguCode, areaCode } = addressMapping(createPlaceDto.address);
+      const cat1 = categoryMapping(createPlaceDto.cat1);
+      const data = await this.placeService.createPlace(
+        createPlaceDto,
+        userId,
+        sigunguCode,
+        areaCode,
+        cat1,
+      );
 
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: `플레이스 생성에 성공했습니다.`,
-      data,
-    };
-  }
-
-  // place 전체조회
-  @Get('')
-  async getAddress() {
-    const data = await this.placeService.getAddress();
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'place 조회에 성공했습니다',
-      data,
-    };
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: `플레이스 생성에 성공했습니다.`,
+        data,
+      };
+    } catch (error) {
+      return new ApiResponseDTO<any>(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
   }
 
   // place 지역별 ex)서울,경기,경남,경북

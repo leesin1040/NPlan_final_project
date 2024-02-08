@@ -38,69 +38,6 @@ p {
   padding: 20px 50px;
   border-radius: 20px;
 }
-/* 내 여행 보드 목록 */
-.myTravelTitle {
-  font-weight: 600;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.643);
-}
-.image-wrapper {
-  width: 300px;
-  height: 300px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.image-wrapper img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-}
-
-.img-stack {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-.memberImg {
-  align-items: end;
-  margin-left: -20px; /* 이미지 겹치기 */
-  z-index: 1; /* 쌓임 순서 조정 */
-}
-.myTravelsRow,
-.invitedTravelsRow {
-  display: flex;
-  flex-wrap: wrap;
-  overflow-x: auto;
-}
-.cardsRow .col {
-  display: inline-block;
-  width: calc(50% - 10px);
-}
-
-.myTravelsRow .col,
-.invitedTravelsRow .col {
-  flex: 0 0 calc(15% - 10px);
-  margin: 10px;
-  border: 0;
-  height: 130px;
-}
-.myTravelsRow .card,
-.invitedTravelsRow .card {
-  border: 0;
-}
-.travelListCardTitle {
-  font-size: 16px;
-}
-.travelCategory {
-  margin-top: 3rem;
-}
-.travelListCardDateInfo {
-  font-size: 13px;
-  color: rgba(0, 0, 0, 0.5);
-  margin: -5px;
-}
 /* 트레블 상세보기 */
 .updateModalBtn {
   margin-left: 10px;
@@ -178,4 +115,20 @@ p {
 .themeSideText {
   font-size: 13px;
   color: #6892d5;
+}
+
+/* 게시물 상세페이지 */
+.input-text-comment {
+  width: 100%;
+}
+
+.oneComment {
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 20px 30px;
+  margin: 15px 0px;
+}
+.writeDate {
+  font-size: 13px;
+  font-weight: 100;
 }

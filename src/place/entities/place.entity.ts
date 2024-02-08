@@ -58,7 +58,7 @@ export class Place {
   cat2: string;
 
   // 장소 이미지 ex. http://~~.jpg
-  @Column({ name: 'img_url', nullable: true })
+  @Column({ name: 'img_url', nullable: true, default: null })
   imgUrl: string;
 
   @Column({ name: 'place_point', type: 'point', nullable: true })
@@ -79,6 +79,6 @@ export class Place {
   })
   status: PlaceStatus;
 
-  @Column({ name: 'place_id', type: 'int' })
+  @Column({ name: 'place_id', type: 'int', nullable: true })
   placeId: number;
 }
