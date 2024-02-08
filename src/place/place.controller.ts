@@ -4,8 +4,8 @@ import { PlaceService } from './place.service';
 import { ConfigService } from '@nestjs/config';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { addressMapping } from './util/address.mapping';
-import { categoryMapping } from './util/category.mapping';
+import { addressMapping } from './utils/address.mapping';
+import { categoryMapping } from './utils/category.mapping';
 import { ApiResponseDTO } from 'src/response/dto/api.response.dto';
 
 @ApiTags('place')
