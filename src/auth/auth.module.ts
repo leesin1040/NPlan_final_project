@@ -8,11 +8,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { jwtStrategy } from './strategies/jwt.strategy';
-import { RefreshToken } from './entities/refreshToken.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, RefreshToken]),
+    TypeOrmModule.forFeature([User]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

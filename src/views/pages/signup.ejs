@@ -46,18 +46,20 @@
           <label for="userInfoUserName">이름</label>
           <input id="name" class="form-control" required />
         </div>
-        <!-- 기존 비밀번호 -->
+        <!-- 비밀번호 -->
         <div class="mb-4">
           <label for="password">비밀번호</label>
           <input type="password" id="signupPassword" class="form-control" required />
         </div>
-        <!-- 새 비밀번호 -->
+        <!-- 비밀번호 확인 -->
         <div class="mb-4">
           <label for="passwordConfirm">비밀번호 확인</label>
           <input type="password" id="passwordConfirm" class="form-control" required />
         </div>
         <div class="flex justify-end mt-4">
-          <button type="button" id="signup" class="btn btn-primary form-control">회원가입</button>
+          <button type="button" id="signup" class="btn btn-primary form-control" disabled="true">
+            회원가입
+          </button>
         </div>
       </form>
       <!-- 본문 -->
@@ -67,6 +69,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         console.log('하이');
       });
+
       document.getElementById('signup').addEventListener('click', async function (event) {
         event.preventDefault();
         try {
@@ -81,13 +84,17 @@
             password: signupPassword,
             passwordConfirm: passwordConfirm,
           });
+
           alert('등록완료!');
           //홈으로 이동
           window.location.href = '/';
         } catch (error) {
-          console.error(error);
+          console.error(error.response.data.message);
+          alert(error.response.data.message);
         }
       });
+
+      let authNumber = 0;
 
       document.getElementById('auth-submit').addEventListener('click', async function () {
         console.log('이메일 인증 들어옴 - 브라우저');
@@ -99,28 +106,45 @@
           });
 
           console.log('인증번호:', result.data.authNumber);
-          A = result.data.authNumber;
+          authNumber = result.data.authNumber;
 
           alert('메일함을 확인해 주세요');
         } catch (error) {
-          console.error(error);
+          console.error(error.response.data.message);
+          alert(error.response.data.message);
         }
       });
 
-      let A;
-
       document.getElementById('auth-check').addEventListener('click', async function () {
         try {
-          const authNumber = document.getElementById('authNumber').value;
-          console.log('여기있니?', A);
-          console.log('넌누구냐', authNumber);
-          if (Number(authNumber) === Number(A)) {
-            alert('이메일 인증 성공');
-          } else {
-            alert('이메일 인증 실패');
+          const enteredNumber = document.getElementById('authNumber').value;
+
+          console.log('이메일 인증 번호', authNumber);
+          console.log('입력받은 인증번호', enteredNumber);
+
+          const result = await axios.post('/api/auth/auth-check', {
+            enteredNumber,
+            authNumber,
+          });
+
+          const success = result.data.success;
+          console.log(success, result.data.message);
+
+          const signupBtn = document.getElementById('signup');
+          console.log(signupBtn.id, success == true);
+
+          if (success == true) {
+            console.log('야야야야');
+            signupBtn.disabled = false;
+          } else if (success == false) {
+            console.log('호호호호');
+            signupBtn.disabled = true;
           }
+
+          alert(result.data.message);
         } catch (error) {
-          console.error(error);
+          console.error(error.response.data.message);
+          alert(error.response.data.message);
         }
       });
     </script>
