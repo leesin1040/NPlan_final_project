@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Article } from 'src/article/entities/article.entity';
-import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Like } from 'src/like/entities/articlelike.entity';
 import { Member } from 'src/member/entities/member.entity';
@@ -79,8 +78,8 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
-  refreshToken: RefreshToken[];
+  @Column()
+  refreshToken: string;
 
   // Travel 1:N
   @OneToMany(() => Travel, (travel) => travel.user)
