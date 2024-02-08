@@ -3,6 +3,7 @@ import { Like } from './entities/like.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from 'src/article/entities/article.entity';
+import {LikeEsRepository} from "./likeEs.repository";
 
 @Injectable()
 export class LikeService {
@@ -11,6 +12,7 @@ export class LikeService {
     private readonly likeRepository: Repository<Like>,
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+    private readonly likeEsRepository: LikeEsRepository
   ) {}
 
   async likePost(userId: number, articleId: number) {
@@ -42,5 +44,19 @@ export class LikeService {
     // 계산된 좋아요 수를 게시글 엔티티에 저장합니다.
     article.likesCount = likesCount;
     await this.articleRepository.save(article);
+  }
+
+  async searchLike() {
+    // 로직 처리
+    const body = {
+      "query": {
+        "term": {
+          "id": "2",
+        }
+      }
+    }
+
+    const result = await this.likeEsRepository.searchLike(body);
+    return result
   }
 }
