@@ -333,11 +333,11 @@ async function drawDirections(map, origin, destination, schedules, travelId, day
       })
       .flat();
   });
-  await savePath(travelId, dayId, coords, placePath);
+  await createPath(travelId, dayId, coords, placePath);
   return coords;
 }
 // api연결 후 저장
-async function savePath(travelId, dayId, coords, placePath) {
+async function createPath(travelId, dayId, coords, placePath) {
   axios
     .patch(`/api/travel/${travelId}/day/${dayId}/directions`, {
       directions: coords,
