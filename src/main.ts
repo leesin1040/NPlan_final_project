@@ -24,7 +24,7 @@ async function bootstrap() {
   /**스웨거 */
   const config = new DocumentBuilder()
     .setTitle('노드3기 NP조 파이널 프로젝트')
-    .setDescription('NP조 파이널 프로젝트 API')
+    .setDescription('NP조 파이널 프로젝트 API-수정필요')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
