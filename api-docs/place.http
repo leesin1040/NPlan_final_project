@@ -10,9 +10,21 @@ Content-Type: application/json
   "email":"123123@email.com",
   "password":"123123"
 }
-###place 전체조회
-GET {{domain}}/place
+
+
+###place생성
+post {{domain}}/place
 Content-Type: application/json
+
+{
+  "name":"내집",
+  "address":"서울 중구 신당동 308-1",
+  "mapX":127.123,
+  "mapY":38.123,
+  "cat1":"숙박"
+}
+
+
 
 ###place 시,도,군
 GET {{domain}}/place/region
@@ -39,9 +51,10 @@ Content-Type: application/json
 
 
 ### 추천
-POST {{domain}}/recommendation
+POST {{domain}}/recommendationTravel
 
-
+### 추천장소
+Get {{domain}}/recommendationPlace
 
 
 
