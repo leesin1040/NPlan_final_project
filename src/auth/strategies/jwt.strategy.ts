@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -25,12 +25,12 @@ export class jwtStrategy extends PassportStrategy(Strategy) {
     return request?.cookies?.Authorization;
   }
   async validate(payload: JwtPayLoad) {
-    const findUser = await this.authService.findByUserId(payload.id);
+    const user = await this.authService.findByUserId(payload.id);
 
-    if (_.isNil(findUser)) {
-      throw new NotFoundException('해당되는 사용자를 찾을 수 없습니다.');
+    if (_.isNil(user)) {
+      throw new UnauthorizedException('해당되는 사용자를 찾을 수 없습니다.');
     }
     // console.log('jwt findUser', findUser);
-    return findUser;
+    return user;
   }
 }

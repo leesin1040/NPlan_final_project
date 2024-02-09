@@ -271,19 +271,15 @@ async function viewDayPath(dayId) {
       );
 
       kakaoCoords.forEach((coord, index) => {
-        if (index === kakaoCoords.length - 1) {
-          return;
-        } else {
-          const polyline = new kakao.maps.Polyline({
-            path: coord,
-            strokeWeight: 5,
-            strokeColor: `#000000`,
-            strokeOpacity: 0.7,
-            strokeStyle: 'solid',
-            endArrow: true,
-          });
-          polyline.setMap(map);
-        }
+        const polyline = new kakao.maps.Polyline({
+          path: coord,
+          strokeWeight: 5,
+          strokeColor: `#000000`,
+          strokeOpacity: 0.7,
+          strokeStyle: 'solid',
+          endArrow: true,
+        });
+        polyline.setMap(map);
       });
     })
     .catch((error) => {
@@ -333,15 +329,19 @@ async function drawDirections(map, origin, destination, schedules, travelId, day
       })
       .flat();
   });
-  await savePath(travelId, dayId, coords, placePath);
+  // console.log(coords);
+  await createPath(travelId, dayId, coords, placePath);
   return coords;
 }
 // api연결 후 저장
-async function savePath(travelId, dayId, coords, placePath) {
+async function createPath(travelId, dayId, coords, placePath) {
   axios
     .patch(`/api/travel/${travelId}/day/${dayId}/directions`, {
       directions: coords,
       placePath,
+    })
+    .then((response) => {
+      console.log(response.data.data);
     })
     .catch((error) => {
       alert(error);

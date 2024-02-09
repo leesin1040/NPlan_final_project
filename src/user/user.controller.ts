@@ -1,33 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Post,
-  Put,
-  Request,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Put, Request, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
 import { Query } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { CreateUserDto } from './dtos/createuser.dto';
 
 @ApiTags('사용자')
 @Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  async register(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.createUser(createUserDto);
-    return { message: '회원가입 성공', user };
-  }
 
   /**
    * 내 정보 조회
@@ -81,7 +62,7 @@ export class UserController {
 
     return {
       statusCode: HttpStatus.OK,
-      message: '내 정보 조회에 성공했습니다.(이름으로)',
+      message: '사용자의 이름으로 아이디 조회에 성공했습니다.',
       data,
     };
   }
@@ -103,6 +84,7 @@ export class UserController {
       data,
     };
   }
+
   /**
    * 탈퇴유저 살리기
    * @param id
@@ -117,6 +99,7 @@ export class UserController {
       data,
     };
   }
+
   // /**
   //  * 유저 이미지 수정
   //  */
