@@ -44,11 +44,12 @@ export class AuthService {
   async login(userId: number) {
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload);
 
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
-    user.refreshToken = this.jwtService.sign(payload);
-    await this.userRepository.save(user);
+    // user.refreshToken = this.jwtService.sign(payload);
+    await this.userRepository.update({ id: user.id }, { refreshToken });
 
     return { accessToken: accessToken };
   }
