@@ -52,7 +52,7 @@ export class AuthService {
 
   //   return { accessToken: accessToken };
   // }
-  /* 로그인 긴급수정 */
+  /* 로그인 핫픽스 */
   async login(userId: number) {
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);
