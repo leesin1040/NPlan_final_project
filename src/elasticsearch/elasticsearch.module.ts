@@ -19,5 +19,6 @@ import { Article } from 'src/article/entities/article.entity';
   ],
   providers: [SearchService],
   controllers: [SearchController],
+  exports: [SearchService],
 })
 export class SearchModule {}

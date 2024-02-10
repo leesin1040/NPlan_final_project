@@ -18,7 +18,7 @@ export class SearchController {
         },
       },
     };
-    return await this.searchService.search('articles', query);
+    return await this.searchService.searchTitle('articles', query);
   }
 
   @Get('/article')
