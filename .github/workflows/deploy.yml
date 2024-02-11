@@ -71,6 +71,8 @@ jobs:
                   value: ${{ secrets.CLOUDFLARE_API }}
                 - name: ELASTICSEARCH_NODE
                   value: ${{ secrets.ELASTICSEARCH_NODE }}
+                  - name: DISCORD_WEBHOOK_URL
+                  value: ${{ secrets.DISCORD_WEBHOOK_URL }}
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
