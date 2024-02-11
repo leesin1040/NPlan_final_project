@@ -69,6 +69,8 @@ jobs:
                   value: ${{ secrets.CLOUDFLARE_IMG }}
                 - name: CLOUDFLARE_API
                   value: ${{ secrets.CLOUDFLARE_API }}
+                - name: ELASTICSEARCH_NODE
+                  value: ${{ secrets.ELASTICSEARCH_NODE }}
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
