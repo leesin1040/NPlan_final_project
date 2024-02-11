@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { AppService } from './app.service';
+import { Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
 import { TravelService } from './travel/travel.service';
 import { UserService } from './user/user.service';
@@ -10,16 +10,17 @@ import { MemberService } from './member/member.service';
 import { LikeService } from './like/like.service';
 import { DayService } from './day/day.service';
 import { CommentService } from './comment/comment.service';
-import { Page } from './decorators/page.decorator';
-import { UserInfo } from './decorators/userInfo.decorator';
 import { User } from './user/entities/user.entity';
 import { ArticleService } from './article/article.service';
 import { SearchService } from './elasticsearch/elasticsearch.service';
+import { UserInfo } from './common/decorators/userInfo.decorator';
+import { Page } from './common/decorators/page.decorator';
 
 @Controller()
 export class AppController {
   constructor(
     private configService: ConfigService,
+    private readonly appService: AppService,
     private readonly articleService: ArticleService,
     private readonly userService: UserService,
     private readonly memberService: MemberService,
@@ -37,10 +38,12 @@ export class AppController {
   @Get()
   @Page('main')
   async hello(@UserInfo() user: User) {
+    const data = await this.articleService.getByLikeArticles();
     const pageTitle = '홈';
     return {
       user,
       pageTitle,
+      data,
     };
   }
 
@@ -48,7 +51,7 @@ export class AppController {
   @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
   @Page('signup')
-  getSignUp(@UserInfo() user: User) {
+  async getSignUp(@UserInfo() user: User) {
     const pageTitle = '회원가입';
     return {
       user,
@@ -104,12 +107,22 @@ export class AppController {
       pageTitle,
     };
   }
+  //내 article 조회
+  @UseGuards(LoginOrNotGuard)
+  @Get('/my-articles')
+  @Page('articleList')
+  async getMyArticles(@UserInfo() user: User) {
+    const userId = user.id;
+    const data = await this.articleService.getArticlesByUser(userId);
+    const pageTitle = '내 후기 목록';
+    return { user, data, pageTitle };
+  }
 
-  //article 전체 조회 - 완
+  //article 전체 조회
   @UseGuards(LoginOrNotGuard)
   @Get('/articles')
   @Page('articleList')
-  async getArticles(@UserInfo() user: User, @Res() res: Response) {
+  async getArticles(@UserInfo() user: User) {
     const data = await this.articleService.getAllArticles();
     const pageTitle = '후기 게시판';
     return { user, data, pageTitle };
@@ -161,5 +174,19 @@ export class AppController {
     const pageTitle = `검색:${title}`;
     const data = await this.searchService.searchTitle('articles', query);
     return { user, pageTitle, data };
+  }
+
+  @Page('error')
+  @Get('/error-page')
+  getErr() {
+    const pageTitle = '에러페이지';
+    return { pageTitle };
+  }
+
+  @Post('/api/err-msg')
+  async sendErrToTeam(@Body() body: { message: string }) {
+    const { message } = body;
+    const data = await this.appService.sendNotification(message);
+    return { data };
   }
 }
