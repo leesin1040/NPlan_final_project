@@ -1,9 +1,21 @@
-import { Body, Controller, Get, HttpStatus, Put, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Put,
+  Request,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
 import { Query } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('사용자')
 @Controller('api/user')
@@ -100,15 +112,21 @@ export class UserController {
     };
   }
 
-  // /**
-  //  * 유저 이미지 수정
-  //  */
-  // @ApiOperation({ summary: '이미지 업로드' })
-  // @UseInterceptors(FilesInterceptor('file'))
-  // @UseGuards(AuthGuard('jwt'))
-  // @Post('upload')
-  // uploadImg(@UploadedFiles() files: Array<Express.Multer.File>) {
-  //   console.log(files);
-  //   return files;
-  // }
+  /**
+   * 유저 이미지 수정
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Post('upload-img')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImg(@Request() req, @UploadedFile() file: Express.Multer.File) {
+    const userId = req.user.id;
+    const maxWidth = 150;
+    const data = await this.userService.uploadImageToCloudflare(userId, file, maxWidth);
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      message: '이미지가 변경되었습니다.',
+      data,
+    };
+  }
 }

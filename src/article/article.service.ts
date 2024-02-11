@@ -180,7 +180,7 @@ export class ArticleService {
       const imageUrl = response.data.result.variants;
       return imageUrl;
     } else {
-      console.error('Error uploading image:', response.data); // 에러 로깅 추가
+      console.error('이미지 업로드 실패:', response.data); // 에러 로깅 추가
       throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);
     }
   }
