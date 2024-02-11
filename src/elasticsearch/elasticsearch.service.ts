@@ -24,19 +24,7 @@ export class SearchService {
     });
     const result = hits.body.hits.hits.map((hit) => ({
       id: hit._id,
-      ...hit._source,
-    }));
-    return result;
-  }
-
-  async search(index: string, query: any) {
-    const hits = await this.esService.search({
-      index,
-      body: query,
-    });
-    const result = hits.body.hits.hits.map((hit) => ({
-      id: hit._id,
-      ...hit._source,
+      ...hit._source, // 여기서 writer 포함 확인
     }));
     return result;
   }
@@ -107,12 +95,12 @@ export class SearchService {
     const indexName = 'articles';
     await this.deleteIndex(indexName);
     await this.createIndex(indexName);
-    const articles = await this.articleRepository.find();
+    const articles = await this.articleRepository.find({ relations: ['user'] });
     const indexPromises = articles.map((article) => {
       const articleToIndex = {
         id: article.id,
         title: article.articleTitle,
-        writer: article.user,
+        writer: article.user.name,
       };
       return this.indexData(indexName, articleToIndex);
     });

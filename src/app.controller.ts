@@ -159,7 +159,7 @@ export class AppController {
       },
     };
     const pageTitle = `검색:${title}`;
-    const data = await this.searchService.searchTitle('article', query);
+    const data = await this.searchService.searchTitle('articles', query);
     return { user, pageTitle, data };
   }
 }
