@@ -9,11 +9,13 @@ import FormData from 'form-data';
 import { ConfigService } from '@nestjs/config';
 import cheerio from 'cheerio';
 import sharp from 'sharp';
+import { SearchService } from 'src/elasticsearch/elasticsearch.service';
 
 @Injectable()
 export class ArticleService {
   constructor(
     private readonly configService: ConfigService,
+    private esService: SearchService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Article)
@@ -28,7 +30,11 @@ export class ArticleService {
       editorContent,
       userId: userId,
     });
-
+    await this.esService.indexData('articles', {
+      id: createdArticle.id,
+      title: createdArticle.articleTitle,
+      writer: createdArticle.user,
+    });
     return createdArticle;
   }
 
@@ -92,6 +98,10 @@ export class ArticleService {
     article.articleTitle = articleTitle;
     article.editorContent = editorContent;
     const updatedArticle = await this.articleRepository.save(article);
+    await this.esService.updateData('articles', updatedArticle.id.toString(), {
+      title: updatedArticle.articleTitle,
+      writer: updatedArticle.user,
+    });
     return updatedArticle;
   }
 
@@ -100,12 +110,13 @@ export class ArticleService {
     const article = await this.articleRepository.findOne({ where: { id: articleId } });
 
     if (!article) {
-      throw new NotFoundException('게시글을 찾을 수 없습니다.');
+      throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
     if (article.userId !== userId) {
-      throw new UnauthorizedException('게시글을 삭제할 권한이 없습니다.');
+      throw new UnauthorizedException('포스트를 삭제할 권한이 없습니다.');
     }
     const deleteArticle = await this.articleRepository.delete(article.id);
+    await this.esService.deleteData('articles', article.id.toString());
     return deleteArticle;
   }
 

@@ -22,6 +22,7 @@ import { EmailModule } from './email/email.module';
 import { UpdatePlaceModule } from './updateplace/update.place.module';
 import { ArticleModule } from './article/article.module';
 import { RecommendateionModule } from './recommendation/recommendation.module';
+import { SearchModule } from './elasticsearch/elasticsearch.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { RecommendateionModule } from './recommendation/recommendation.module';
         },
       }),
     }),
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
