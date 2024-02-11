@@ -30,10 +30,12 @@ export class ArticleService {
       editorContent,
       userId: userId,
     });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException('사용자를 찾을 수 없습니다.');
     await this.esService.indexData('articles', {
       id: createdArticle.id,
       title: createdArticle.articleTitle,
-      writer: createdArticle.user,
+      writer: user.name,
     });
     return createdArticle;
   }
@@ -100,7 +102,6 @@ export class ArticleService {
     const updatedArticle = await this.articleRepository.save(article);
     await this.esService.updateData('articles', updatedArticle.id.toString(), {
       title: updatedArticle.articleTitle,
-      writer: updatedArticle.user,
     });
     return updatedArticle;
   }
