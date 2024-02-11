@@ -78,14 +78,14 @@ export class SearchService {
   /**아래는 초기 세팅시 테이블(인덱스)기준 세팅 */
   // 인덱스(테이블)을 생성
   async createIndex(indexName: string) {
-    const { body: indexExists } = await this.esService.indices.exists({ index: indexName });
+    const indexExists = await this.esService.indices.exists({ index: indexName });
     if (!indexExists) {
       await this.esService.indices.create({ index: indexName });
     }
   }
   //인덱스(테이블)를 삭제
   async deleteIndex(indexName: string) {
-    const { body: indexExists } = await this.esService.indices.exists({ index: indexName });
+    const indexExists = await this.esService.indices.exists({ index: indexName });
     if (indexExists) {
       await this.esService.indices.delete({ index: indexName });
     }
