@@ -5,16 +5,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from 'src/article/entities/article.entity';
 import { data } from 'cheerio/lib/api/attributes';
+import { Place } from 'src/place/entities/place.entity';
 
 @Injectable()
 export class SearchService {
   constructor(
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+    @InjectRepository(Place)
+    private readonly placeRepository: Repository<Place>,
     private readonly esService: ElasticsearchService,
   ) {}
 
   async searchTitle(index: string, query: any) {
+    const hits = await this.esService.search({
+      index,
+      body: query,
+    });
+    const result = hits.body.hits.hits.map((hit) => ({
+      id: hit._id,
+      ...hit._source,
+    }));
+    return result;
+  }
+
+  async search(index: string, query: any) {
     const hits = await this.esService.search({
       index,
       body: query,
@@ -72,8 +87,7 @@ export class SearchService {
     });
   }
 
-  /**아래는 초기 세팅시 */
-
+  /**아래는 초기 세팅시 테이블(인덱스)기준 세팅 */
   // 인덱스(테이블)을 생성
   async createIndex(indexName: string) {
     const { body: indexExists } = await this.esService.indices.exists({ index: indexName });
@@ -81,7 +95,6 @@ export class SearchService {
       await this.esService.indices.create({ index: indexName });
     }
   }
-
   //인덱스(테이블)를 삭제
   async deleteIndex(indexName: string) {
     const { body: indexExists } = await this.esService.indices.exists({ index: indexName });
@@ -89,19 +102,19 @@ export class SearchService {
       await this.esService.indices.delete({ index: indexName });
     }
   }
-
   //기존에 있는 인덱스(테이블)를 삭제하고 새로 생성한 뒤 데이터를 넣는다.
   async indexAllArticle() {
-    await this.deleteIndex('articles');
-    await this.createIndex('articles');
+    const indexName = 'articles';
+    await this.deleteIndex(indexName);
+    await this.createIndex(indexName);
     const articles = await this.articleRepository.find();
     const indexPromises = articles.map((article) => {
-      const placeToIndex = {
+      const articleToIndex = {
         id: article.id,
         title: article.articleTitle,
         writer: article.user,
       };
-      return this.indexData('articles', placeToIndex);
+      return this.indexData(indexName, articleToIndex);
     });
     return Promise.all(indexPromises);
   }

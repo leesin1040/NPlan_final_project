@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
 import { TravelService } from './travel/travel.service';
@@ -14,6 +14,7 @@ import { Page } from './decorators/page.decorator';
 import { UserInfo } from './decorators/userInfo.decorator';
 import { User } from './user/entities/user.entity';
 import { ArticleService } from './article/article.service';
+import { SearchService } from './elasticsearch/elasticsearch.service';
 
 @Controller()
 export class AppController {
@@ -28,6 +29,7 @@ export class AppController {
     private readonly placeService: PlaceService,
     private readonly likeService: LikeService,
     private readonly commentService: CommentService,
+    private readonly searchService: SearchService,
   ) {}
 
   // 메인페이지
@@ -140,5 +142,24 @@ export class AppController {
     const article = await this.articleService.getArticleById(articleId);
     const pageTitle = '포스트 수정';
     return { user, pageTitle, article };
+  }
+  // 검색
+  @UseGuards(LoginOrNotGuard)
+  @Page('search')
+  @Get('search')
+  async search(@UserInfo() user: User, @Query('title') title: string) {
+    const query = {
+      query: {
+        match: {
+          title: {
+            query: title,
+            fuzziness: 1,
+          },
+        },
+      },
+    };
+    const pageTitle = `검색:${title}`;
+    const data = await this.searchService.searchTitle('article', query);
+    return { user, pageTitle, data };
   }
 }

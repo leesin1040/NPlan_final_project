@@ -18,14 +18,15 @@
         <li><a href="/articles" class="nav-link px-2 link-secondary">후기 게시판</a></li>
       </ul>
 
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
+      <form action="search" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search">
         <input
           type="search"
+          name="title"
           class="form-control"
-          placeholder="여행 포스팅 검색..."
+          placeholder="여행 후기 검색..."
           aria-label="Search"
         />
-        <input type="button" class="btn btn-outline-secondary ms-2" value="검색" />
+        <button type="submit" class="btn btn-outline-secondary ms-2">search</button>
       </form>
       <% if(user===null){ %>
       <button

@@ -26,26 +26,10 @@
         <% data.forEach(function(articleOne) { %>
         <div class="col">
           <a href="/article/<%= articleOne.id %>">
-          <div class="card h-100">
-            <% if(articleOne.imgUrl) { %>
-              <div class="image-wrapper">
-                <img src="<%= articleOne.imgUrl %>" class="card-img-top" alt="Article Image" />
-              </div>
-            <% } else { %>
-              <!-- 기본 이미지 또는 대체 이미지 -->
-              <img src="https://geojecci.korcham.net/images/no-image01.gif" class="card-img-top" />
-            <% } %>
+          <div class="card">
             <div class="card-body">
-              <h5 class="card-title"><%= articleOne.articleTitle %></h5>
-              <div class="card-text">
-                <p>
-                  <%= articleOne.editorContent %>
-                </p>
-              </div>
-              <div class="text-end mt-2">
-                <i class="fa-regular fa-comment cardIcons me-2">&ensp;20</i
-                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&ensp;<%= articleOne.likesCount %></span></i>
-              </div>
+              <p>게시물 ID : <%= articleOne.id %></p>
+              <h5 class="card-title"><%= articleOne.title %></h5>
             </div>
           </div>
         </a>
