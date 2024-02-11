@@ -49,22 +49,23 @@
                 해당 페이지가 지속적으로 나타날 경우 팀에게 알려주세요!
                 <a href="#" id="notify-team">팀에게 알리기</a>
               </p>
-              <form class="hideInput mb-5" style="display: none" id="sendMessageForm">
-                <input
-                  type="text"
-                  name="message"
-                  id="messageInput"
-                  class="input-text-comment form-control"
-                  placeholder="팀에게 전달할 말을 작성해주세요"
-                  style="height: 100px"
-                />
-                <input
-                  type="button"
-                  class="btn btn-secondary mt-2"
-                  value="보내기"
-                  id="sendMessageBtn"
-                />
-              </form>
+              <div class="hideInput" style="display: none">
+                <form class="hideInput mb-5" style="display: flex" id="sendMessageForm">
+                  <input
+                    type="text"
+                    name="message"
+                    id="messageInput"
+                    class="form-control"
+                    placeholder="팀에게 전달할 말을 작성해주세요"
+                  />
+                  <input
+                    type="button"
+                    class="btn btn-secondary ms-2"
+                    value="보내기"
+                    id="sendMessageBtn"
+                  />
+                </form>
+              </div>
               <div>
                 <a
                   class="btn bsb-btn-5xl btn-dark rounded-pill px-5 fs-6 m-0"
@@ -98,6 +99,7 @@
           alert('보낼 메시지가 없어요!');
           return;
         }
+        sendMessageBtn.disabled = true;
         axios
           .post('/api/err-msg', { message: messageInput })
           .then((response) => {
@@ -105,6 +107,7 @@
           })
           .catch((error) => {
             alert('메시지 전달에 실패했습니다.');
+            sendMessageBtn.disabled = false;
           });
       });
     </script>
