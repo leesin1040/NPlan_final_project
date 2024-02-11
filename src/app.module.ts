@@ -23,6 +23,8 @@ import { UpdatePlaceModule } from './updateplace/update.place.module';
 import { ArticleModule } from './article/article.module';
 import { RecommendateionModule } from './recommendation/recommendation.module';
 import { SearchModule } from './elasticsearch/elasticsearch.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/filters/exception.filter';
 
 @Module({
   imports: [
@@ -57,6 +59,6 @@ import { SearchModule } from './elasticsearch/elasticsearch.module';
     SearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })
 export class AppModule {}

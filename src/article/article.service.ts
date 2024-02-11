@@ -60,8 +60,32 @@ export class ArticleService {
         };
       }),
     );
-
     return articleOne;
+  }
+
+  async getByLikeArticles() {
+    const articles = await this.articleRepository.find();
+    const articleOne = await Promise.all(
+      articles.map(async (article) => {
+        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
+        const $ = cheerio.load(article.editorContent);
+        const imgUrl = $('img').first().attr('src');
+        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
+        const textContent = fullTextContent.slice(0, 100);
+        const user = await this.userRepository.findOne({ where: { id: article.userId } });
+        const userName = user ? user.name : null;
+        return {
+          ...article,
+          editorContent: textContent,
+          imgUrl,
+          userName,
+        };
+      }),
+    );
+    // likeCount를 기준으로 포스트를 정렬
+    const sortedArticles = articleOne.sort((a, b) => b.likesCount - a.likesCount);
+    const topFourArticles = sortedArticles.slice(0, 4);
+    return topFourArticles;
   }
 
   //포스트 상세조회
@@ -84,7 +108,24 @@ export class ArticleService {
   //내 포스트 전체 조회
   async getArticlesByUser(userId: number) {
     const articles = await this.articleRepository.find({ where: { userId: userId } });
-    return articles;
+    const articleOne = await Promise.all(
+      articles.map(async (article) => {
+        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
+        const $ = cheerio.load(article.editorContent);
+        const imgUrl = $('img').first().attr('src');
+        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
+        const textContent = fullTextContent.slice(0, 100);
+        const user = await this.userRepository.findOne({ where: { id: article.userId } });
+        const userName = user ? user.name : null;
+        return {
+          ...article,
+          editorContent: textContent,
+          imgUrl,
+          userName,
+        };
+      }),
+    );
+    return articleOne;
   }
 
   // 포스트 수정
@@ -139,7 +180,7 @@ export class ArticleService {
       const imageUrl = response.data.result.variants;
       return imageUrl;
     } else {
-      console.error('Error uploading image:', response.data); // 에러 로깅 추가
+      console.error('이미지 업로드 실패:', response.data); // 에러 로깅 추가
       throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);
     }
   }
