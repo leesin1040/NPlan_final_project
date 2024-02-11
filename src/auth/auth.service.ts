@@ -41,6 +41,18 @@ export class AuthService {
   }
 
   /* 로그인 */
+  // async login(userId: number) {
+  //   const payload = { id: userId };
+  //   const accessToken = this.jwtService.sign(payload);
+
+  //   const user = await this.userRepository.findOne({ where: { id: userId } });
+
+  //   user.refreshToken = this.jwtService.sign(payload);
+  //   await this.userRepository.save(user);
+
+  //   return { accessToken: accessToken };
+  // }
+  /* 로그인 핫픽스 */
   async login(userId: number) {
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);

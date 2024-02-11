@@ -6,6 +6,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
+import axios from 'axios';
+import FormData from 'form-data';
+import sharp from 'sharp';
 
 @Injectable()
 export class UserService {
@@ -82,12 +85,30 @@ export class UserService {
     }
   }
 
-  // // 유저 이미지 수정
-  // async updateUserImage(id: number, file: Express.Multer.File) {
-  //   const user = await this.userRepository.findOne(id);
-
-  //   if (!user) {
-  //     throw new NotFoundException('사용자를 찾을 수 없습니다.');
-  //   }
-  // }
+  // 유저 이미지 수정
+  async uploadImageToCloudflare(userId: number, file: Express.Multer.File, maxWidth: number) {
+    const url = this.configService.get<string>('CLOUDFLARE_IMG');
+    const apiKey = this.configService.get<string>('CLOUDFLARE_API');
+    const resizedImageBuffer = await sharp(file.buffer).resize({ width: maxWidth }).toBuffer();
+    const formData = new FormData();
+    formData.append('file', resizedImageBuffer, file.originalname);
+    const response = await axios.post(url, formData, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        ...formData.getHeaders(),
+      },
+    });
+    console.log('=================', response);
+    if (response.status === 200) {
+      const imageUrl = response.data.result.variants;
+      console.log(imageUrl);
+      const data = await this.userRepository.update(userId, {
+        imageUrl,
+      });
+      return data;
+    } else {
+      console.error('이미지 업로드 실패:', response.data); // 에러 로깅 추가
+      throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);
+    }
+  }
 }
