@@ -1,0 +1,100 @@
+/* 스케쥴 추가 모달 */
+#addScheduleModal {
+  margin: 0;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.addScheduleModalContent {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  width: 700px;
+  height: 850px;
+}
+.addScheduleModal-container {
+  display: flex;
+  flex-direction: row;
+}
+.addScheduleModal-placeList {
+  height: 650px;
+  overflow-y: scroll;
+}
+.addScheduleModal-readPlace {
+  margin: 15px;
+  padding: 1rem 0rem 1rem 1rem;
+}
+
+.addScheduleModal-readPlace button {
+  float: right;
+  margin: 2rem 0.5rem 1rem 0.5rem;
+}
+
+.addScheduleModal-selectOption {
+  padding: 0.5rem 0.7rem 0 0.7rem;
+}
+
+.selectOption #connectApi {
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+}
+
+.addScheduleModal-place {
+  border: solid 1px #ccc;
+  border-radius: 10px;
+  margin: 10px 20px;
+  padding: 0.3rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.addScheduleModal-placeImg {
+  border: solid 1px #ccc;
+  border-radius: 10px;
+  margin: 10px;
+  width: 6rem;
+  height: 6rem;
+}
+
+.addScheduleModal-placeContent {
+  width: 400px;
+  padding: 0.2rem;
+  margin: 0 0.3rem;
+  display: flex;
+  flex-direction: column;
+  ov
+}
+.placeName {
+  font-size: 18px;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.placeAddress {
+  font-size: 13px;
+}
+.placeCategory {
+  padding: 5px;
+  width: 80px;
+}
+
+#connectApi {
+  margin: 0.5rem;
+}
+
+.addScheduleModal-mapView {
+  border: solid 0.1rem;
+  margin: 0.5rem 0.5rem;
+}
+
+/* 스케쥴 상세 모달 */
+#viewScheduleModal {
+  margin: 0;
+  border: solid 0.1rem;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
