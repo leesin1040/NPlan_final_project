@@ -3,15 +3,20 @@ import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { MoveScheduleDto } from './dto/move-schedule.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('스케쥴')
 @Controller('api/schedule')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  // 스케줄 생성
+  /**
+   * 스케쥴 생성
+   * @param createScheduleDto
+   * @returns
+   */
   @ApiOperation({ summary: '스케줄 생성' })
+  @ApiBearerAuth()
   @Post()
   async create(@Body() createScheduleDto: CreateScheduleDto) {
     const data = await this.scheduleService.create(createScheduleDto);
