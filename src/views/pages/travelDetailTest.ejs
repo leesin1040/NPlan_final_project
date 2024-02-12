@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%-include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/css/testModal.css" />
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e892dc4fbde45212004f1d658cecdb6f&libraries=services"></script>
+  </head>
+  <body>
+    <%-include('../partials/header.ejs') %>
+    <div class="container">
+      <!-- 본문 -->
+      <div class="row" style="overflow-x: auto; white-space: nowrap;">
+        <h1><%= oneTravel.title %></h1>
+        <h4><%= oneTravel.theme %> / <%= oneTravel.region %> <button type="button" class="btn btn-secondary updateModalBtn" data-bs-toggle="modal" data-bs-target="#boardModal">수정하기</button></h4>
+      </div>
+      <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
+        <% days.forEach(day => {
+        const startDate = new Date(oneTravel.start_date);
+        startDate.setDate(startDate.getDate() + day.day - 1);
+        const dateString = startDate.toISOString().split('T')[0];
+        %>
+          <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
+            <div class="oneDatListTitle justify-content-between align-items-center mb-1" >
+              <h5><%= dateString %></h5>
+              <% 
+              // 여기서 daySchedules와 해당 일자의 스케줄 개수를 확인
+              const daySchedules = schedulesResults.find(s => s.dayId === day.id);
+              if (daySchedules && daySchedules.schedules.length > 1) { // 스케줄이 2개 이상일 때만 버튼 렌더링
+              %>
+              <button type="button" class="btn btn-outline-dark btn-sm text-end me-2 viewPathButton" id="viewDayPath<%= day.id %>" data-column-id="<%= day.id %>">경로보기</button>
+              <% } %>
+            </div>
+            <!-- 해당 일자의 스케줄 목록 렌더링 -->
+            <div class="scheduleListBox">
+              <% 
+              if (daySchedules && daySchedules.schedules.length > 0) {
+                daySchedules.schedules.forEach(schedule => {
+              %>
+            <div class="scheduleBox">
+                <!-- 스케줄 내용 렌더링 -->
+                <div
+                class="schedule"
+                draggable="true"
+                data-id="<%= schedule.id %>"
+              >
+                <p><button type="button" class="btn btn-info btn-sm me-1" disabled><%= schedule.place.category %></button><span><%= schedule.place.name %></span></p>
+                <p class="schedulePlaceAdress"><%= schedule.place.address %></p>
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  type="button"
+                  id="scheduleDetail<%= schedule.id %>"
+                >
+                  상세보기
+                </button>
+              </div>
+            </div>
+            <% }); } else { %>
+              <p>스케줄을 추가하세요!</p>
+            <% } %>
+          </div>
+            <div class="scheduleAddButton pt-2 d-flex justify-content-end me-2" style="background-color: <%= oneTravel.color %>;">
+              <button type="button" class="btn btn-secondary scheduleAddBtn" id="addScheduleBtnId<%= day.id %>">+ 스케쥴 추가</button>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+      <!-- 본문 -->
+    </div>
+    <%-include('../partials/test.ejs') %>
+<script src="/script/travelDetail.js"></script>
+<script src="/script/schedule.js"></script>
+ <%-include('../partials/script.ejs') %>
+ <script>
+
+  window.onload = function () {
+ const realTravelId = '<%= oneTravel.id %>'
+  // console.log(realTravelId);
+  // getDays(travelId);
+
+  // 버튼에 이벤트리스트할당
+  document.addEventListener('click', function (event) {
+    // 경로 보기 버튼
+    if (event.target.id.startsWith('viewDayPath')) {
+      const dayId = event.target.id.replace('viewDayPath', '');
+      viewDayPath(dayId);
+    }
+    // Add Schedule 버튼
+    else if (event.target.id.startsWith('addScheduleBtnId')) {
+      const dayId = event.target.id.replace('addScheduleBtnId', '');
+      document.getElementById('addScheduleModal').style.display = 'flex';
+      addSchedule(dayId);
+    }
+    // 상세보기 버튼
+    else if (event.target.id.startsWith('scheduleDetail')) {
+      const scheduleId = event.target.id.replace('scheduleDetail', '');
+      document.getElementById('viewScheduleModal').style.display = 'flex';
+      // console.log(scheduleId);
+      viewScheduleDetail(scheduleId);
+    }
+  });
+};
+const viewPathButtons = document.querySelectorAll('.viewPathButton');
+
+const viewPathModal = document.getElementById('viewPathModal');
+
+const closePathModal = document.getElementById('closePathModal');
+
+closePathModal.addEventListener('click', () => {
+  viewPathModal.style.display = 'none';
+});
+
+viewPathButtons.forEach((viewPathButton) => {
+  viewPathButton.addEventListener('click', () => {
+    viewPathModal.style.display = 'flex';
+  });
+});
+
+
+ </script>
+  </body>
