@@ -57,6 +57,10 @@ export class Place {
   @Column({ name: 'cat2', nullable: true })
   cat2: string;
 
+  // 소분류코드
+  @Column({ name: 'cat3', nullable: true })
+  cat3: string;
+
   // 장소 이미지 ex. http://~~.jpg
   @Column({ name: 'img_url', nullable: true, default: null })
   imgUrl: string;
@@ -79,6 +83,19 @@ export class Place {
   })
   status: PlaceStatus;
 
+  // 관광지 고유 Id
   @Column({ name: 'place_id', type: 'int', nullable: true })
   placeId: number;
+
+  //   등록일
+  @Column({ name: 'createdTime', type: 'int', nullable: true })
+  createdTime: number;
+
+  //   수정일
+  @Column({ name: 'modifiedTime', type: 'int', nullable: true })
+  modifiedTime: number;
+
+  //  관광지,숙박 등등
+  @Column({ name: 'content_type_id', type: 'int', nullable: true })
+  contentTypeId: number;
 }

@@ -58,5 +58,3 @@ Get {{domain}}/recommendationPlace
 
 
 
-### place 업데이트 한번만 오래걸림
-PATCH {{domain}}/updateplace

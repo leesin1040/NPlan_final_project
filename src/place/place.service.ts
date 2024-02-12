@@ -45,9 +45,10 @@ export class PlaceService {
   }
 
   async getMainRegion(areaCode: string) {
+    console.log(areaCode);
     const getMainRegion = await this.placeRepository.find({
       where: {
-        areaCode,
+        areaCode: areaCode,
         user: IsNull(),
       },
       order: { rank: 'DESC' },
@@ -59,7 +60,7 @@ export class PlaceService {
   async getContent(areaCode: string, category: string) {
     const getContent = await this.placeRepository.find({
       where: {
-        areaCode,
+        areaCode: areaCode,
         cat1: category,
         user: IsNull(),
       },
