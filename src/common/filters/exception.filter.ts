@@ -9,8 +9,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    // console.error(`[${request.method}] ${request.url}`);
-
+    if (request.url !== '/favicon.ico') {
+      console.error(`에러가 난 페이지=================[${request.method}] ${request.url}`);
+    }
     const redirectUrl = `/error-page?errorUrl=${encodeURIComponent(request.url)}`;
     response.status(status).redirect(redirectUrl);
   }
