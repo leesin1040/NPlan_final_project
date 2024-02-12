@@ -63,9 +63,7 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02', 'A03'] })
-        .andWhere('place.category NOT IN (:category)', { category: '테마공원' })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
       const oneFirstTouristSpot =
@@ -77,12 +75,12 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 =:restaurant', { restaurant: 'A05' })
-        .andWhere('place.category NOT IN (:cafe)', { cafe: '카페/찻집' })
+        .andWhere('place.cat3 NOT IN (:cafe)', { cafe: 'A05020900' })
         .andWhere('ST_Distance_Sphere(place.placePoint, ST_GeomFromText(:beforePoint))<= :radius', {
           beforePoint: oneFirstTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -93,8 +91,7 @@ export class RecommendationService {
       const oneThirdTouristSpots = await this.placeRepository
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
-        .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02'] })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
+        .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02', 'A04'] })
         .andWhere('CASE WHEN place.id = :firstPlaceId THEN 0 ELSE 1 END = 1', {
           firstPlaceId: oneFirstTouristSpot.id,
         })
@@ -102,7 +99,7 @@ export class RecommendationService {
           beforePoint: oneSecondTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -113,8 +110,7 @@ export class RecommendationService {
       const oneFourthTouristSpots = await this.placeRepository
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
-        .andWhere('place.cat1 NOT IN (:place)', { place: ['B02', 'A05'] })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
+        .andWhere('place.cat1 NOT IN (:place)', { place: ['B02', 'A05', 'A04'] })
         .andWhere(
           'CASE WHEN place.id = :firstPlaceId OR place.id =:secondPlaceId OR place.id = :thirdPlaceId THEN 0 ELSE 1 END = 1',
           {
@@ -127,7 +123,7 @@ export class RecommendationService {
           beforePoint: oneThirdTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -139,7 +135,7 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 =:restaurant', { restaurant: 'A05' })
-        .andWhere('place.category NOT IN (:cafe)', { cafe: '카페/찻집' })
+        .andWhere('place.cat3 NOT IN (:cafe)', { cafe: 'A05020900' })
         .andWhere(
           'CASE WHEN place.id = :firstPlaceId OR place.id =:secondPlaceId OR place.id = :thirdPlaceId OR place.id = :fourthPlaceId   THEN 0 ELSE 1 END = 1',
           {
@@ -153,7 +149,7 @@ export class RecommendationService {
           beforePoint: oneFourthTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -169,7 +165,7 @@ export class RecommendationService {
           beforePoint: oneFifthTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -226,81 +222,114 @@ export class RecommendationService {
   // }
 
   async createRecommendationPlace(userId: number, region: string) {
-    const oneHotCategories = ['A01', 'A02', 'A03', 'A04'];
-    const places = await this.placeRepository.find({
-      where: { areaCode: region },
-      order: { rank: 'DESC' },
-      take: 400,
-    });
-    const placesWithOneHot = places.map((place) => {
-      const extractedInfo = {
-        cat1: place.cat1,
-      };
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-      const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-      const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+      const places = await this.placeRepository
+        .createQueryBuilder('place')
+        .where({ areaCode: region, cat1: 'A05' })
+        .getMany();
 
-      if (cat1Index !== -1) {
-        oneHotEncoded[cat1Index] = 1;
-      }
+      const placeCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      });
 
-      return {
-        cat1: extractedInfo.cat1,
-        oneHotEncoded: oneHotEncoded,
-      };
-    });
+      console.log(placeCatCounts);
 
-    console.log(placesWithOneHot);
-    // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
-    const myPlaces = await this.travelRepository.find({
-      where: { userId: userId },
-      relations: ['day.schedule.place'],
-    });
-    const myVector = [];
-    const placeVector = [];
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where({ userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .andWhere('place.cat1 = :cat1', { cat1: 'A05' })
+        .getMany();
 
-    // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
-    for (const myPlace of myPlaces) {
-      for (const day of myPlace.day) {
-        for (const schedule of day.schedule) {
-          const placeInfo = schedule.place;
-          const extractedInfo = {
-            cat1: placeInfo.cat1,
-          };
+      const userCat3Counts: Record<string, number> = {};
+      userPlaces.forEach((userPlace) => {
+        userPlace.day.forEach((day) => {
+          day.schedule.forEach((schedule) => {
+            const cat3Value = schedule.place.cat3;
+            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+          });
+        });
+      });
+      console.log(userCat3Counts);
+    } catch (error) {}
 
-          const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-          const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
-          if (cat1Index !== -1) {
-            oneHotEncoded[cat1Index] = 1;
-          }
+    // const placesWithOneHot = places.map((place) => {
+    //   const extractedInfo = {
+    //     cat3: place.cat3,
+    //   };
 
-          myVector.push(...oneHotEncoded);
-        }
-      }
-    }
+    //   const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+    //   const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
 
-    // 추천하려는 지역의 장소 정보를 하나의 벡터로 합치기
-    for (const placeWithOneHot of placesWithOneHot) {
-      placeVector.push(...placeWithOneHot.oneHotEncoded);
-    }
+    //   if (cat1Index !== -1) {
+    //     oneHotEncoded[cat1Index] = 1;
+    //   }
 
-    console.log('User Vector:', myVector);
-    console.log('Place Vector2:', placeVector);
+    //   return {
+    //     cat1: extractedInfo.cat1,
+    //     oneHotEncoded: oneHotEncoded,
+    //   };
+    // });
 
-    function cosineSimilarity(myVector, placeVector) {
-      // 벡터의 내적 계산
-      const dotProduct = myVector.reduce((acc, val, i) => acc + val * myVector[i], 0);
+    // console.log(placesWithOneHot);
+    // // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
+    // const myPlaces = await this.travelRepository.find({
+    //   where: { userId: userId },
+    //   relations: ['day.schedule.place'],
+    // });
+    // const myVector = [];
+    // const placeVector = [];
 
-      // 벡터의 크기계산
-      const magnitudeA = Math.sqrt(myVector.reduce((acc, val) => acc + val ** 2, 0));
-      const magnitudeB = Math.sqrt(placeVector.reduce((acc, val) => acc + val ** 2, 0));
+    // // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
+    // for (const myPlace of myPlaces) {
+    //   for (const day of myPlace.day) {
+    //     for (const schedule of day.schedule) {
+    //       const placeInfo = schedule.place;
+    //       const extractedInfo = {
+    //         cat1: placeInfo.cat1,
+    //       };
 
-      // 코사인 유사도 계산
-      return dotProduct / (magnitudeA * magnitudeB);
-    }
+    //       const oneHotEncoded = Array(oneHotCategories.length).fill(0);
+    //       const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+    //       if (cat1Index !== -1) {
+    //         oneHotEncoded[cat1Index] = 1;
+    //       }
 
-    // 유사도 계산
-    const similarity = cosineSimilarity(myVector, placeVector);
-    console.log(`코사인 유사도: ${similarity}`);
+    //       myVector.push(...oneHotEncoded);
+    //     }
+    //   }
+    // }
+
+    // // 추천하려는 지역의 장소 정보를 하나의 벡터로 합치기
+    // for (const placeWithOneHot of placesWithOneHot) {
+    //   placeVector.push(...placeWithOneHot.oneHotEncoded);
+    // }
+
+    // console.log('User Vector:', myVector);
+    // console.log('Place Vector2:', placeVector);
+
+    // function cosineSimilarity(myVector, placeVector) {
+    //   // 벡터의 내적 계산
+    //   const dotProduct = myVector.reduce((acc, val, i) => acc + val * myVector[i], 0);
+
+    //   // 벡터의 크기계산
+    //   const magnitudeA = Math.sqrt(myVector.reduce((acc, val) => acc + val ** 2, 0));
+    //   const magnitudeB = Math.sqrt(placeVector.reduce((acc, val) => acc + val ** 2, 0));
+
+    //   // 코사인 유사도 계산
+    //   return dotProduct / (magnitudeA * magnitudeB);
+    // }
+
+    // // 유사도 계산
+    // const similarity = cosineSimilarity(myVector, placeVector);
+    // console.log(`코사인 유사도: ${similarity}`);
   }
 }
