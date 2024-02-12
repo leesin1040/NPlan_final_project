@@ -136,81 +136,87 @@
 <!-- 경로보기 모달 -->
 
 <!-- schedule 추가 모달 -->
-<section id="addScheduleModal" class="modal">
-  <div class="modal-content addScheduleModalContent">
-    <header class="addScheduleModal-header">
-      <h1 id="tavelTitle"><%= oneTravel.title %></h1>
-      <h2 id="dayTitle">n일차</h2>
-      <p onclick="closeModalPage()">X</p>
-    </header>
-    <div class="addScheduleModal-container">
-      <!-- placeInfo, mapView 가로배열로 보여지게 -->
-      <div class="addScheduleModal-placeInfo">
-        <div class="addScheduleModal-selectOption">
-          <form action="#">
-            <label for="areaCode">지역: </label>
-            <select name="지역" id="areaCode">
-              <option value="1">서울</option>
-              <option value="2">인천</option>
-              <option value="3">대전</option>
-              <option value="4">대구</option>
-              <option value="5">광주</option>
-              <option value="6">부산</option>
-              <option value="7">울산</option>
-              <option value="8">세종</option>
-              <option value="31">경기</option>
-              <option value="32">강원</option>
-              <option value="33">충북</option>
-              <option value="34">충남</option>
-              <option value="35">경북</option>
-              <option value="36">경남</option>
-              <option value="37">전북</option>
-              <option value="38">전남</option>
-              <option value="39">제주</option>
-            </select>
-            <label for="category">카테고리: </label>
-            <select name="카테고리" id="category">
-              <option value="O00">전체</option>
-              <option value="A01">자연</option>
-              <option value="A02">인문(문화/예술/역사)</option>
-              <option value="A04">쇼핑</option>
-              <option value="A05">음식</option>
-              <option value="B02">숙박</option>
-            </select>
-            <!-- <input type="submit" value="Submit" id="submit" /> -->
-            <button id="addScheduleModal-submit">찾기</button>
-          </form>
+<div id="addScheduleModal" class="modal">
+  <div class="modal-content addScheduleModalContent my-3 mx-4">
+    <div class="addScheduleModal-header">
+      <div class="row mx-2 mt-3">
+        <div class="col-8">
+          <h4 id="travelTitle"><%= oneTravel.title %></h4>
+          <h2 id="dayTitle">n일차</h2>
         </div>
-        <div class="addScheduleModal-placeList" id="addScheduleModal-placeList">
-          <div
-            class="addScheduleModal-place"
-            id="134"
-            data-mapx="35.9181953"
-            data-mapy="123.0626361"
-          >
-            <div class="addScheduleModal-imgUrl">
-              <img
-                class="addScheduleModal-placeImg"
-                src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg"
-              />
-            </div>
-            <div class="addScheduleModal-placeContent">
-              <p class="placeName">장소 이름</p>
-              <p class="placeAddress">장소 주소</p>
-              <p class="placeCategory" data-cat1="A02">카테고리</p>
-            </div>
-            <button class="addScheduleModal-select">선택</button>
-          </div>
+        <div class="col text-end me-3">
+          <button
+            type="button"
+            class="btn-close"
+            onclick="closeModalPage()"
+            aria-label="Close"
+          ></button>
         </div>
-        <button id="connectApi">더 많은 장소 보기</button>
-      </div>
-      <!-- <div class="addScheduleModal-mapView"> -->
-        <!-- selectOption으로 선택된 지역 중심으로 지도 보여지게 -->
       </div>
     </div>
+    <div class="addScheduleModal-body">
+      <div class="addScheduleModal-form mx-4">
+        <form class="form-inline" action="#">
+          <div class="row">
+            <div class="col-5">
+              <div class="form-group">
+                <label for="areaCode">지역</label>
+                <select class="form-select" name="지역" id="areaCode">
+                  <option value="1">서울</option>
+                  <option value="2">인천</option>
+                  <option value="3">대전</option>
+                  <option value="4">대구</option>
+                  <option value="5">광주</option>
+                  <option value="6">부산</option>
+                  <option value="7">울산</option>
+                  <option value="8">세종</option>
+                  <option value="31">경기</option>
+                  <option value="32">강원</option>
+                  <option value="33">충북</option>
+                  <option value="34">충남</option>
+                  <option value="35">경북</option>
+                  <option value="36">경남</option>
+                  <option value="37">전북</option>
+                  <option value="38">전남</option>
+                  <option value="39">제주</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="form-group">
+                <label for="category">카테고리</label>
+                <select class="form-select" name="카테고리" id="category">
+                  <option value="O00">전체</option>
+                  <option value="A01">자연</option>
+                  <option value="A02">인문(문화/예술/역사)</option>
+                  <option value="A03">레포츠</option>
+                  <option value="A04">쇼핑</option>
+                  <option value="A05">음식</option>
+                  <option value="B02">숙박</option>
+                  <option value="C01">추천코스</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-2">
+              <button type="button" id="addScheduleModal-submit" class="btn btn-primary mt-4">
+                찾기
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="addScheduleModal-results">
+        <div class="addScheduleModal-placeList" id="addScheduleModal-placeList">
+          <!-- 장소 리스트 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="connectApi" class="btn btn-secondary">더 많은 장소 보기</button>
+      </div>
+    </div>
+    <!-- addScheduleModal-mapView 구현 예정 -->
   </div>
-</section>
-<!-- schedule 추가 모달 -->
+</div>
 
 <!-- schedule 상세보기 모달 -->
 <section id="viewScheduleModal" class="modal">

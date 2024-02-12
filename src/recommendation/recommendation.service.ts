@@ -185,43 +185,9 @@ export class RecommendationService {
       // await this.createRecommendation(region);
     }
   }
-  // async createRecommendationPlace(userId: number, region: string) {
-  //   const myPlaceData = ['A01', 'A02', 'A03', 'A04', 'B02', 'A05'];
-  //   const myMatCategories = ['한식', '양식', '일식', '중식'];
-  //   // const myMat = ['한식', '양식', '일식', '중식'];
-  //   const places = await this.placeRepository.find({
-  //     where: { areaCode: region },
-  //   });
 
-  //   // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
-  //   const myPlaces = await this.travelRepository.find({
-  //     where: { userId: userId },
-  //     relations: ['day.schedule.place'],
-  //   });
-  //   const myPlaceCounts: { [key: string]: number } = {};
-  //   const myMatCounts: { [key: string]: number } = {};
-  //   for (const matCategory of myMatCategories) {
-  //     myMatCounts[matCategory] = 0; // 초기화
-  //   }
-  //   for (const myPlace of myPlaces) {
-  //     for (const day of myPlace.day) {
-  //       for (const schedule of day.schedule) {
-  //         const placeInfo = schedule.place.cat1;
-  //         myPlaceCounts[placeInfo] = (myPlaceCounts[placeInfo] || 0) + 1;
-
-  //         const matInfo = schedule.place.category;
-  //         if (myMatCategories.includes(matInfo)) {
-  //           myMatCounts[matInfo] = (myMatCounts[matInfo] || 0) + 1;
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   console.log(myPlaceCounts);
-  //   console.log(myMatCounts);
-  // }
-
-  async createRecommendationPlace(userId: number, region: string) {
+  // 음식점추천
+  async recommendationRestaurants(userId: number, region: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       await queryRunner.connect();
@@ -260,76 +226,88 @@ export class RecommendationService {
       });
       console.log(userCat3Counts);
     } catch (error) {}
+  }
+  // 관광지 추천
+  async recommendationAttractions(userId: number, region: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-    // const placesWithOneHot = places.map((place) => {
-    //   const extractedInfo = {
-    //     cat3: place.cat3,
-    //   };
+      const places = await this.placeRepository
+        .createQueryBuilder('place')
+        .where('place.areaCode = :region', { region })
+        .andWhere('place.cat1 IN (:...cat1)', { cat1: ['A01', 'A02', 'A04'] })
+        .getMany();
 
-    //   const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-    //   const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+      const placeCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      });
 
-    //   if (cat1Index !== -1) {
-    //     oneHotEncoded[cat1Index] = 1;
-    //   }
+      console.log(placeCatCounts);
 
-    //   return {
-    //     cat1: extractedInfo.cat1,
-    //     oneHotEncoded: oneHotEncoded,
-    //   };
-    // });
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where({ userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .where('place.cat1 IN (:...cat1)', { cat1: ['A01', 'A02', 'A04'] })
+        .getMany();
 
-    // console.log(placesWithOneHot);
-    // // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
-    // const myPlaces = await this.travelRepository.find({
-    //   where: { userId: userId },
-    //   relations: ['day.schedule.place'],
-    // });
-    // const myVector = [];
-    // const placeVector = [];
+      const userCat3Counts: Record<string, number> = {};
+      userPlaces.forEach((userPlace) => {
+        userPlace.day.forEach((day) => {
+          day.schedule.forEach((schedule) => {
+            const cat3Value = schedule.place.cat3;
+            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+          });
+        });
+      });
+      console.log(userCat3Counts);
+    } catch (error) {}
+  }
+  // 숙박 추천
+  async recommendationAccommodations(userId: number, region: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-    // // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
-    // for (const myPlace of myPlaces) {
-    //   for (const day of myPlace.day) {
-    //     for (const schedule of day.schedule) {
-    //       const placeInfo = schedule.place;
-    //       const extractedInfo = {
-    //         cat1: placeInfo.cat1,
-    //       };
+      const places = await this.placeRepository
+        .createQueryBuilder('place')
+        .where({ areaCode: region, cat1: 'B02' })
+        .getMany();
 
-    //       const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-    //       const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
-    //       if (cat1Index !== -1) {
-    //         oneHotEncoded[cat1Index] = 1;
-    //       }
+      const placeCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      });
 
-    //       myVector.push(...oneHotEncoded);
-    //     }
-    //   }
-    // }
+      console.log(placeCatCounts);
 
-    // // 추천하려는 지역의 장소 정보를 하나의 벡터로 합치기
-    // for (const placeWithOneHot of placesWithOneHot) {
-    //   placeVector.push(...placeWithOneHot.oneHotEncoded);
-    // }
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where({ userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .andWhere('place.cat1 = :cat1', { cat1: 'B02' })
+        .getMany();
 
-    // console.log('User Vector:', myVector);
-    // console.log('Place Vector2:', placeVector);
-
-    // function cosineSimilarity(myVector, placeVector) {
-    //   // 벡터의 내적 계산
-    //   const dotProduct = myVector.reduce((acc, val, i) => acc + val * myVector[i], 0);
-
-    //   // 벡터의 크기계산
-    //   const magnitudeA = Math.sqrt(myVector.reduce((acc, val) => acc + val ** 2, 0));
-    //   const magnitudeB = Math.sqrt(placeVector.reduce((acc, val) => acc + val ** 2, 0));
-
-    //   // 코사인 유사도 계산
-    //   return dotProduct / (magnitudeA * magnitudeB);
-    // }
-
-    // // 유사도 계산
-    // const similarity = cosineSimilarity(myVector, placeVector);
-    // console.log(`코사인 유사도: ${similarity}`);
+      const userCat3Counts: Record<string, number> = {};
+      userPlaces.forEach((userPlace) => {
+        userPlace.day.forEach((day) => {
+          day.schedule.forEach((schedule) => {
+            const cat3Value = schedule.place.cat3;
+            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+          });
+        });
+      });
+      console.log(userCat3Counts);
+    } catch (error) {}
   }
 }
