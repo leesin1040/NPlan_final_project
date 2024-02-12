@@ -39,9 +39,9 @@
           <div class="col-12">
             <div class="text-center">
               <h2 class="d-flex justify-content-center align-items-center gap-2 mb-4">
-                <span class="display-1 fw-bold">4</span>
-                <i class="bi bi-exclamation-circle-fill text-danger display-4"></i>
-                <span class="display-1 fw-bold">4</span>
+                <span class="display-1 fw-bold">?</span>
+                <i class="bi bi-exclamation-circle-fill display-4" style="color: #6892d5"></i>
+                <span class="display-1 fw-bold">?</span>
               </h2>
               <h3 class="h2 mb-2">에러 페이지</h3>
               <p>죄송합니다. 해당 페이지를 찾을 수 없습니다.</p>
@@ -79,9 +79,10 @@
         </div>
       </div>
     </section>
-    <%-include('../partials/script.ejs') %>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+      const serverErrorUrl = '<%= errorUrl %>';
+
       document.getElementById('notify-team').addEventListener('click', function (event) {
         event.preventDefault();
         let hideInputDiv = document.querySelector('.hideInput');
@@ -95,19 +96,26 @@
       document.getElementById('sendMessageBtn').addEventListener('click', function (event) {
         event.preventDefault();
         const messageInput = document.getElementById('messageInput').value;
+        let messageTotal;
+        if (serverErrorUrl === '') {
+          messageTotal = `에러페이지에 직접 방문한 유저의 피드백: ${messageInput}`;
+        } else {
+          messageTotal = `'${serverErrorUrl}'로 에러 페이지 방문한 유저의 피드백: ${messageInput}`;
+        }
         if (!messageInput) {
           alert('보낼 메시지가 없어요!');
           return;
         }
         sendMessageBtn.disabled = true;
         axios
-          .post('/api/err-msg', { message: messageInput })
+          .post('/api/err-msg', { message: messageTotal })
           .then((response) => {
             alert('메시지를 성공적으로 전달했습니다!');
+            sendMessageBtn.disabled = false;
           })
           .catch((error) => {
-            alert('메시지 전달에 실패했습니다.');
-            sendMessageBtn.disabled = false;
+            alert('메시지 전달에 실패했습니다. 다시 시도해주세요.');
+            sendMessageBtn.disabled = true;
           });
       });
     </script>

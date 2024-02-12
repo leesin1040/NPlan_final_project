@@ -176,11 +176,14 @@ export class AppController {
     return { user, pageTitle, data };
   }
 
-  @Page('error')
   @Get('/error-page')
-  getErr() {
-    const pageTitle = '에러페이지';
-    return { pageTitle };
+  @Page('error')
+  getErrorPage(@Query('errorUrl') errorUrl: string) {
+    const pageTitle = '에러 페이지';
+    if (errorUrl === '/favicon.ico') {
+      return { pageTitle, errorUrl: '' };
+    }
+    return { pageTitle, errorUrl: decodeURIComponent(errorUrl) };
   }
 
   @Post('/api/err-msg')
