@@ -19,7 +19,15 @@ export class CommentService {
     return { newComment };
   }
 
-  //   async update()
+  async update(userId: number, commentId: number) {
+    const comment = await this.commentRepository.findOne({ where: { id: commentId } });
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    const updatedComment = await this.commentRepository.update(commentId, { userId });
+    return { comment: updatedComment };
+  }
 
   async deleteComment(userId: number, commentId: number) {
     const comment = await this.commentRepository.findOne({ where: { id: commentId } });

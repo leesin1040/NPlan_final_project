@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -19,6 +30,22 @@ export class CommentController {
     return {
       statusCode: HttpStatus.CREATED,
       message: '댓글 등록에 성공하였습니다!',
+      data,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':commentId')
+  update(@Param('userId') userId: number, @Param('commentId') commentId: number, @Req() req) {
+    const authenticatedUserId = req.user.id;
+    if (userId !== authenticatedUserId) {
+      throw new UnauthorizedException('댓글을 수정할 권한이 없습니다.');
+    }
+
+    const data = this.commentService.update(userId, commentId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: '댓글 수정에 성공했습니다.',
       data,
     };
   }
