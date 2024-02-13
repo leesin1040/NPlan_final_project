@@ -64,35 +64,37 @@
           </div>
           <hr class="my-4" style="color: #ccc" />
           <!-- 코멘트 영역 -->
-          <div class="oneComment">
-            <div class="row mb-2">
-              <div class="col d-block">
-                <img
-                  class="rounded-circle"
-                  src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=170667a&w=0&k=20&c=m-F9Doa2ecNYEEjeplkFCmZBlc5tm1pl1F7cBCh9ZzM="
-                  alt="프로필사진"
-                  width="20"
-                  height="20"
-                />
-                <span>작성자 이름</span>
-              </div>
-              <div class="col text-end writeDate">
-                <p>작성일자 2024-02-08 01:23</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col mx-2">
-                <p>코멘트 내용</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col text-end">
-                <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
-                <button type="button" class="btn btn-outline-danger btn-sm">삭제</button>
-              </div>
-            </div>
-          </div>
-          <!-- 코멘트 영역 -->
+<% data.comments.forEach(comment => { %>
+  <div class="oneComment">
+    <div class="row mb-2">
+      <div class="col d-block">
+        <img
+          class="rounded-circle"
+          src="https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=170667a&w=0&k=20&c=m-F9Doa2ecNYEEjeplkFCmZBlc5tm1pl1F7cBCh9ZzM="
+          alt="프로필사진"
+          width="20"
+          height="20"
+        />
+        <span><%= comment.userName %></span> <!-- 작성자 이름 혹은 아이디 -->
+      </div>
+      <div class="col text-end writeDate">
+        <p>작성일자 <%= comment.createdAt %></p> <!-- 작성일자 -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-2">
+        <p><%= comment.comment %></p> <!-- 코멘트 내용 -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-end">
+        <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
+        <button type="button" class="btn btn-outline-danger btn-sm">삭제</button>
+      </div>
+    </div>
+  </div>
+<% }); %>
+<!-- 코멘트 영역 -->
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
-import { log } from 'console';
 
 @Injectable()
 export class CommentService {
@@ -18,6 +17,27 @@ export class CommentService {
       comment,
     });
     return { newComment };
+  }
+
+  async getAllComment(articleId: number) {
+    const comments = await this.commentRepository.find({
+      where: { articleId: articleId },
+      relations: ['user'],
+    });
+
+    // 댓글의 작성자 이름 추가
+    const commentsWithUsernames = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await comment.user;
+        const userName = user ? user.name : null;
+        return {
+          ...comment,
+          userName,
+        };
+      }),
+    );
+
+    return { comments: commentsWithUsernames };
   }
 
   async update(userId: number, commentId: number, comment: string) {
