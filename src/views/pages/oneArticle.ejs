@@ -41,13 +41,29 @@
         <hr />
         <div style="overflow: hidden"><%- article.editorContent %></div>
         <div class="col d-flex justify-content-center align-items-center my-5">
-          <div
-            class="text-center rounded-circle border border-secondary-subtle"
-            style="width: 100px; height: 100px"
-          >
-            <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: red"></i>
-            <p class="mt-2"><%= article.likesCount %></p>
+          <div id="likeButtonContainer">
+            <% if (user !== null && isLikedArticle) { %>
+              <!-- 좋아요 취소 버튼 -->
+              <div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="unlikeArticle(<%= article.id %>)">
+                <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: red"></i>
+                <p class="mt-2"><%= article.likesCount %></p>
+              </div>
+            <% } else if (user !== null) { %>
+              <!-- 좋아요 버튼 -->
+              <div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="likeArticle(<%= article.id %>)">
+                <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: rgb(151, 151, 151)"></i>
+                <p class="mt-2"><%= article.likesCount %></p>
+              </div>
+            <% } else { %>
+              <!-- 로그인 요청 버튼 -->
+              <div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="requestLogin()">
+                <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: rgb(151, 151, 151)"></i>
+                <p class="mt-2"><%= article.likesCount %></p>
+              </div>
+            <% } %>
           </div>
+          
+            
         </div>
         <hr class="my-5" />
         <div class="row">
@@ -122,6 +138,48 @@
             });
         }
       });
+// 전역 변수로 articleId 설정 (페이지에 따라 적절한 값으로 설정 필요)
+var articleId = <%= article.id %>;
+
+// 좋아요 요청 함수
+async function likeArticle(articleId) {
+  try {
+    const response = await axios.post(`/api/like/${articleId}`);
+    updateLikeButton(response.data.likesCount, true, articleId); // articleId를 인자로 추가
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+}
+
+// 좋아요 취소 요청 함수
+async function unlikeArticle(articleId) {
+  try {
+    const response = await axios.delete(`/api/like/${articleId}`);
+    updateLikeButton(response.data.likesCount, false, articleId); // articleId를 인자로 추가
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+}
+
+// 좋아요 버튼 업데이트 함수
+function updateLikeButton(likesCount, isLiked, articleId) { // articleId 파라미터 추가
+  const likeButtonHTML = isLiked ?
+    `<div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="unlikeArticle(${articleId})">
+      <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: red"></i>
+      <p class="mt-2">${likesCount}</p>
+    </div>` :
+    `<div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="likeArticle(${articleId})">
+      <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: rgb(151, 151, 151)"></i>
+      <p class="mt-2">${likesCount}</p>
+    </div>`;
+
+  document.getElementById('likeButtonContainer').innerHTML = likeButtonHTML;
+}
+
+function requestLogin() {
+  alert('로그인이 필요한 기능입니다.');
+}
+
     </script>
     <%-include('../partials/script.ejs') %>
   </body>

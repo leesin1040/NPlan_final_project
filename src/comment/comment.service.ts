@@ -56,10 +56,13 @@ export class CommentService {
 
   async deleteComment(userId: number, commentId: number) {
     const comment = await this.commentRepository.findOne({ where: { id: commentId } });
+    console.log(comment);
 
     if (!comment) {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
+    console.log(comment.userId, '========댓글 쓴사람 아이디');
+    console.log(userId, '========댓글 쓴사람 아이디');
 
     if (comment.userId !== userId) {
       throw new UnauthorizedException('댓글을 삭제할 권한이 없습니다.');
