@@ -54,6 +54,7 @@ export class AuthService {
   // }
   /* 로그인 핫픽스 */
   async login(userId: number) {
+    console.log('로그인 입장 4');
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '7h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });

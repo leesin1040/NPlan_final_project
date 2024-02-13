@@ -112,17 +112,13 @@
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
-    try {
-      let response = await axios
-        .post('/api/auth/login', { email: loginEmail, password: loginPassword })
-        .then((response) => {
-          location.href = '/';
-        })
-        .catch((error) => {
-          alert(error.response.data.message);
-        });
-    } catch (err) {
-      alert(err);
-    }
+    let response = await axios
+      .post('/api/auth/login', { email: loginEmail, password: loginPassword })
+      .then((response) => {
+        location.href = '/';
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
   }
 </script>
