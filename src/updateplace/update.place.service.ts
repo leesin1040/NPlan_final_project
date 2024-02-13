@@ -7,7 +7,6 @@ import { Place } from 'src/place/entities/place.entity';
 import { UpdatePlace } from './entitiy/update.place.entity';
 import { HttpService } from '@nestjs/axios';
 import { Observable, catchError, throwError } from 'rxjs';
-
 import { cat3Mapping } from 'src/place/utils/category.mapping';
 
 @Injectable()
@@ -44,6 +43,7 @@ export class UpdatePlaceService {
       this.logger.error(`에러: ${error.message}`);
     }
   }
+
   //   const queryRunner = this.dataSource.createQueryRunner();
   //   const key = this.configService.get<string>('UPDATE_KEY');
   //   const contentTypeIdList = [32, 38, 12, 39];
@@ -137,5 +137,4 @@ export class UpdatePlaceService {
   //   } catch (error) {
   //     await queryRunner.rollbackTransaction();
   //     console.error(`여행지 정보 업로드 중 오류 발생: ${error.message}`);
-  //   }
 }
