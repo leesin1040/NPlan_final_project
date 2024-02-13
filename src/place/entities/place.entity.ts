@@ -2,12 +2,6 @@ import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
-export enum PlaceStatus {
-  rejected = 'rejected',
-  approved = 'approved',
-  pending = 'pending',
-}
-
 @Entity('place')
 export class Place {
   @PrimaryGeneratedColumn()
@@ -67,21 +61,6 @@ export class Place {
 
   @Column({ name: 'place_point', type: 'point', nullable: true })
   placePoint: string;
-
-  // User가 등록한 장소인지 확인하는 컬럼
-  @ManyToOne(() => User, (user) => user.place, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  // place를 User에게 보여지는 기준
-  @Column({
-    name: 'status',
-    type: 'enum',
-    enum: PlaceStatus,
-    default: PlaceStatus.pending,
-    nullable: true,
-  })
-  status: PlaceStatus;
 
   // 관광지 고유 Id
   @Column({ name: 'place_id', type: 'int', nullable: true })

@@ -11,45 +11,11 @@ export class PlaceService {
     private readonly placeRepository: Repository<Place>,
   ) {}
 
-  // place 생성
-  // [ ]: 추후 place entity에 따른 저장값 변경 or 사용하지 않는다면 폐기
-  async createPlace(
-    createPlaceDto: CreatePlaceDto,
-    userId: number,
-    sigunguCode: string,
-    areaCode: string,
-    cat1: string,
-  ) {
-    const existingPlace = await this.placeRepository.findOne({
-      where: {
-        user: { id: userId },
-        name: createPlaceDto.name,
-        address: createPlaceDto.address,
-      },
-    });
-    if (existingPlace) {
-      throw new ConflictException('중복된 값입니다');
-    }
-    const createdUserPlace = this.placeRepository.create({
-      name: createPlaceDto.name,
-      address: createPlaceDto.address,
-      mapX: createPlaceDto.mapX,
-      mapY: createPlaceDto.mapY,
-      cat1: cat1,
-      sigunguCode: sigunguCode,
-      areaCode: areaCode,
-      user: { id: userId },
-      placePoint: `POINT(${createPlaceDto.mapX} ${createPlaceDto.mapY})`,
-    });
-    return await this.placeRepository.save(createdUserPlace);
-  }
-
   async getMainRegion(region: string) {
     console.log(region);
     const getMainRegion = await this.placeRepository.find({
       where: {
         areaCode: region,
-        user: IsNull(),
       },
       order: { rank: 'DESC' },
       take: 10,

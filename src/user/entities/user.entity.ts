@@ -92,9 +92,6 @@ export class User {
   @OneToMany(() => Article, (article) => article.user)
   article: Article[];
 
-  @OneToMany(() => Place, (place) => place.user)
-  place: Place[];
-
   // Like 1:N
   @OneToMany(() => Like, (like) => like.user)
   like: Like[];

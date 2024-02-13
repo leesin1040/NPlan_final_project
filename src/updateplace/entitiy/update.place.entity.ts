@@ -1,9 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-export enum PlaceStatus {
-  rejected = 'rejected',
-  approved = 'approved',
-  pending = 'pending',
-}
+import { Schedule } from 'src/schedule/entities/schedule.entity';
+import { User } from 'src/user/entities/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+
 @Entity('place')
 export class UpdatePlace {
   @PrimaryGeneratedColumn()
@@ -49,22 +47,31 @@ export class UpdatePlace {
   @Column({ name: 'cat2', nullable: true })
   cat2: string;
 
+  // 소분류코드
+  @Column({ name: 'cat3', nullable: true })
+  cat3: string;
+
   // 장소 이미지 ex. http://~~.jpg
-  @Column({ name: 'img_url', nullable: true })
+  @Column({ name: 'img_url', nullable: true, default: null })
   imgUrl: string;
 
   @Column({ name: 'place_point', type: 'point', nullable: true })
   placePoint: string;
 
-  @Column({ name: 'place_id', type: 'int' })
+  // 관광지 고유 Id
+  @Column({ name: 'place_id', type: 'int', nullable: true })
   placeId: number;
-  // place를 User에게 보여지는 기준
-  @Column({
-    name: 'status',
-    type: 'enum',
-    enum: PlaceStatus,
-    default: PlaceStatus.pending,
-    nullable: true,
-  })
-  status: PlaceStatus;
+
+  //   등록일
+  @Column({ name: 'createdTime', type: 'int', nullable: true })
+  createdTime: number;
+
+  //   수정일
+  @Column({ name: 'modifiedTime', type: 'int', nullable: true })
+  modifiedTime: number;
+
+  //  관광지,숙박 등등
+  @Column({ name: 'content_type_id', type: 'int', nullable: true })
+  contentTypeId: number;
 }
+// http://apis.data.go.kr/B551011/KorService1/areaBasedList1?serviceKey=인증키&pageNo=1&numOfRows=10&MobileApp=AppTest&MobileOS=ETC&arrange=A&contentTypeId=32

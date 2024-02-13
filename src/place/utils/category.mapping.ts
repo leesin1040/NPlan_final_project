@@ -95,7 +95,7 @@ export function cat3Mapping(cat3: string) {
     A05020400: '중식',
     A05020700: '이색음식점',
     A05020900: '카페/전통찻집',
-    A05021000: '클럽',
+    A05021000: '기타음식점',
     B02010100: '관광호텔',
     B02010500: '콘도미니엄',
     B02010600: '유스호스텔',
@@ -108,7 +108,7 @@ export function cat3Mapping(cat3: string) {
     B02011600: '한옥',
   };
   const category = ca3Map[cat3];
-  return { category };
+  return category;
 }
 
 export function cat2Mapping(cat2: string) {

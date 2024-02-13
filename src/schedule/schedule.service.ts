@@ -136,10 +136,11 @@ export class ScheduleService {
 
   // 스케줄 삭제
   async remove(id: number) {
-    const schedule = await this.findOne(id);
+    const schedule = await this.scheduleRepository.findOne({ where: { id: id } });
+    console.log(schedule);
     if (!schedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
-
-    return await this.scheduleRepository.delete(schedule);
+    await this.scheduleRepository.delete({ id: id });
+    return schedule;
   }
 
   // 스케줄 복사
