@@ -21,8 +21,8 @@ export class RecommendationService {
     // private readonly travelRepository: Repository<Travel>,
     // @InjectRepository(Day)
     // private readonly dayRepository: Repository<Day>,
-    // @InjectRepository(Schedule)
-    // private readonly scheduleRepository: Repository<Schedule>,
+    @InjectRepository(Schedule)
+    private readonly scheduleRepository: Repository<Schedule>,
     private dataSource: DataSource,
   ) {}
   //   추천한 장소 주변 반경 몇km안에 다음장소 추천 이런식
@@ -42,11 +42,6 @@ export class RecommendationService {
   //   관광지같은 경우 10:00~16:00이라고 가정//안할수도
   //   요금은 아몰랑
 
-  // 다익스트라 알고리즘
-  //
-
-  // 벨만-포드 알고리즘
-  // 사이클이 없는 방향성
   async createRecommendation(region: string) {
     // 1일차 place에서 areaCode(region)
     // cat(B02제외 쇼핑몰,백화점 제외) -> region내에 1순위 관광지 10:00 ~ 12:00
@@ -68,9 +63,7 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02', 'A03'] })
-        .andWhere('place.category NOT IN (:category)', { category: '테마공원' })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
       const oneFirstTouristSpot =
@@ -82,12 +75,12 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 =:restaurant', { restaurant: 'A05' })
-        .andWhere('place.category NOT IN (:cafe)', { cafe: '카페/찻집' })
+        .andWhere('place.cat3 NOT IN (:cafe)', { cafe: 'A05020900' })
         .andWhere('ST_Distance_Sphere(place.placePoint, ST_GeomFromText(:beforePoint))<= :radius', {
           beforePoint: oneFirstTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -98,8 +91,7 @@ export class RecommendationService {
       const oneThirdTouristSpots = await this.placeRepository
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
-        .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02'] })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
+        .andWhere('place.cat1 NOT IN (:place)', { place: ['A05', 'B02', 'A04'] })
         .andWhere('CASE WHEN place.id = :firstPlaceId THEN 0 ELSE 1 END = 1', {
           firstPlaceId: oneFirstTouristSpot.id,
         })
@@ -107,7 +99,7 @@ export class RecommendationService {
           beforePoint: oneSecondTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -118,8 +110,7 @@ export class RecommendationService {
       const oneFourthTouristSpots = await this.placeRepository
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
-        .andWhere('place.cat1 NOT IN (:place)', { place: ['B02', 'A05'] })
-        .andWhere('place.category NOT IN (:shopping)', { shopping: ['쇼핑몰', '백화점'] })
+        .andWhere('place.cat1 NOT IN (:place)', { place: ['B02', 'A05', 'A04'] })
         .andWhere(
           'CASE WHEN place.id = :firstPlaceId OR place.id =:secondPlaceId OR place.id = :thirdPlaceId THEN 0 ELSE 1 END = 1',
           {
@@ -132,7 +123,7 @@ export class RecommendationService {
           beforePoint: oneThirdTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -144,7 +135,7 @@ export class RecommendationService {
         .createQueryBuilder('place')
         .where('place.areaCode = :region', { region: region })
         .andWhere('place.cat1 =:restaurant', { restaurant: 'A05' })
-        .andWhere('place.category NOT IN (:cafe)', { cafe: '카페/찻집' })
+        .andWhere('place.cat3 NOT IN (:cafe)', { cafe: 'A05020900' })
         .andWhere(
           'CASE WHEN place.id = :firstPlaceId OR place.id =:secondPlaceId OR place.id = :thirdPlaceId OR place.id = :fourthPlaceId   THEN 0 ELSE 1 END = 1',
           {
@@ -158,7 +149,7 @@ export class RecommendationService {
           beforePoint: oneFourthTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -174,7 +165,7 @@ export class RecommendationService {
           beforePoint: oneFifthTouristSpot.placePoint,
           radius: radius,
         })
-        .orderBy('place.rank', 'DESC')
+        .orderBy('RAND()')
         .limit(10)
         .getMany();
 
@@ -194,199 +185,220 @@ export class RecommendationService {
       // await this.createRecommendation(region);
     }
   }
-  async createRecommendationPlace(userId: number, region: string) {
-    const myPlaceData = ['A01', 'A02', 'A03', 'A04', 'B02', 'A05'];
-    const myMatCategories = ['한식', '양식', '일식', '중식'];
-    // const myMat = ['한식', '양식', '일식', '중식'];
-    const places = await this.placeRepository.find({
-      where: { areaCode: region },
-    });
 
-    // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
-    const myPlaces = await this.travelRepository.find({
-      where: { userId: userId },
-      relations: ['day.schedule.place'],
-    });
-    const myPlaceCounts: { [key: string]: number } = {};
-    const myMatCounts: { [key: string]: number } = {};
-    for (const matCategory of myMatCategories) {
-      myMatCounts[matCategory] = 0; // 초기화
-    }
-    for (const myPlace of myPlaces) {
-      for (const day of myPlace.day) {
-        for (const schedule of day.schedule) {
-          const placeInfo = schedule.place.cat1;
-          myPlaceCounts[placeInfo] = (myPlaceCounts[placeInfo] || 0) + 1;
+  // 음식점추천
+  async recommendationRestaurants(userId: number, region: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-          const matInfo = schedule.place.category;
-          if (myMatCategories.includes(matInfo)) {
-            myMatCounts[matInfo] = (myMatCounts[matInfo] || 0) + 1;
-          }
-        }
+      // region지역에 등록된 place들
+      // placesInRegion를 돌면서 place.cat3와 place.id가져오자
+      const placesInRegionSchedules = await this.scheduleRepository
+        .createQueryBuilder('schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .where('place.areaCode = :region', { region: region })
+        .andWhere('place.cat1=:cat1', { cat1: 'A05' })
+        .getMany();
+      const placesInRegion = placesInRegionSchedules.map((schedule) => schedule.place);
+
+      // user가 등록한 place들
+      // userPlaces 돌고 day돌면서 schedule의place들
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where('travel.userId=:userId', { userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .andWhere('place.areaCode = :region', { region: region })
+        .andWhere('place.cat1=:cat1', { cat1: 'A05' })
+        .getMany();
+      const allSchedules = userPlaces.flatMap((travel) =>
+        travel.day.flatMap((day) => day.schedule),
+      );
+      const places = allSchedules.map((schedule) => schedule.place);
+
+      // // user가 like한 travel의 place들
+      // const userLikePlaces = await this.likeRepository
+      //   .createQueryBuilder('like')
+      //   .where('like.userId=:userId', { userId: userId })
+      //   .leftJoinAndSelect('like.article', 'article')
+      //   .leftJoinAndSelect('article.travel', 'travel')
+      //   .leftJoinAndSelect('travel.day', 'day')
+      //   .leftJoinAndSelect('day.schedule', 'schedule')
+      //   .leftJoinAndSelect('schedule.place', 'place')
+      //   .andWhere('place.areaCode = :region', { region: region })
+      //   .andWhere('place.cat1=:cat1', { cat1: 'A05' })
+      //   .getMany();
+
+      // console.log(userLikePlaces);
+
+      const countByCat3InRegion = countByCat3(placesInRegion);
+      const countByCat3InUserPlaces = countByCat3(places);
+
+      const sortedCountByCat3InRegion = sortObjectByValue(countByCat3InRegion);
+      const sortedCountByCat3InUserPlaces = sortObjectByValue(countByCat3InUserPlaces);
+
+      console.log(sortedCountByCat3InRegion);
+      console.log(sortedCountByCat3InUserPlaces);
+
+      function countByCat3(places: any[]) {
+        const countByCat3: Record<string, number> = {};
+        places.forEach((place) => {
+          const cat3 = place.cat3;
+          countByCat3[cat3] = (countByCat3[cat3] || 0) + 1;
+        });
+        return countByCat3;
       }
-    }
+      function sortObjectByValue(obj: Record<string, number>) {
+        return Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]));
+      }
+      // console.log(userPlaces);
 
-    console.log(myPlaceCounts);
-    console.log(myMatCounts);
+      // const places = await this.placeRepository
+      //   .createQueryBuilder('place')
+      //   .where({ areaCode: region, cat1: 'A05' })
+      //   .getMany();
+
+      // let minRank = 0;
+      // let maxRank = 0;
+
+      // places.forEach((place) => {
+      //   const rank = place.rank;
+      //   if (rank < minRank) minRank = rank;
+      //   if (rank > maxRank) maxRank = rank;
+      // });
+
+      // const placeCatCounts: Record<string, number> = {};
+
+      // const rankPlaceCatCounts: Record<string, number> = {};
+      // places.forEach((place) => {
+      //   const cat3Value = place.cat3;
+
+      //   // 정규화된 가중치 계산
+      //   // (해당값-최소값) /(최대값-최소값)
+      //   const normalizedWeight = (place.rank - minRank) / (maxRank - minRank);
+      //   const weightedRank = place.rank * normalizedWeight;
+      //   placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      //   rankPlaceCatCounts[cat3Value] = (rankPlaceCatCounts[cat3Value] || 0) + weightedRank;
+      // });
+      // console.log(placeCatCounts);
+      // console.log(rankPlaceCatCounts);
+      // // 가중치의 총 합을 계산
+      // const totalWeight = Object.values(rankPlaceCatCounts).reduce(
+      //   (sum, weight) => sum + weight,
+      //   0,
+      // );
+
+      // // 각 카테고리의 가중치를 비율로 변환
+      // const weightRatios = {};
+      // for (const [category, weight] of Object.entries(rankPlaceCatCounts)) {
+      //   weightRatios[category] = weight / totalWeight;
+      // }
+
+      // console.log(weightRatios);
+      // const userPlaces = await this.travelRepository
+      //   .createQueryBuilder('travel')
+      //   .where({ userId: userId })
+      //   .leftJoinAndSelect('travel.day', 'day')
+      //   .leftJoinAndSelect('day.schedule', 'schedule')
+      //   .leftJoinAndSelect('schedule.place', 'place')
+      //   .andWhere('place.cat1 = :cat1', { cat1: 'A05' })
+      //   .getMany();
+      // const userCat3Counts: Record<string, number> = {};
+      // userPlaces.forEach((userPlace) => {
+      //   userPlace.day.forEach((day) => {
+      //     day.schedule.forEach((schedule) => {
+      //       const cat3Value = schedule.place.cat3;
+      //       userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+      //     });
+      //   });
+      // });
+      // console.log(userCat3Counts);
+    } catch (error) {}
   }
+  // 관광지 추천
+  async recommendationAttractions(userId: number, region: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-  // async createRecommendationPlace(userId: number, region: string) {
-  //   const oneHotCategories = ['A01', 'A02', 'A03', 'A04'];
-  //   const places = await this.placeRepository.find({
-  //     where: { areaCode: region },
-  //     order: { rank: 'DESC' },
-  //     take: 200,
-  //   });
-  //   const placesWithOneHot = places.map((place) => {
-  //     const extractedInfo = {
-  //       cat1: place.cat1,
-  //     };
+      const places = await this.placeRepository
+        .createQueryBuilder('place')
+        .where('place.areaCode = :region', { region })
+        .andWhere('place.cat1 IN (:...cat1)', { cat1: ['A01', 'A02', 'A04'] })
+        .getMany();
 
-  //     const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-  //     const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
+      const placeCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      });
 
-  //     if (cat1Index !== -1) {
-  //       oneHotEncoded[cat1Index] = 1;
-  //     }
+      console.log(placeCatCounts);
 
-  //     return {
-  //       cat1: extractedInfo.cat1,
-  //       oneHotEncoded: oneHotEncoded,
-  //     };
-  //   });
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where({ userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .where('place.cat1 IN (:...cat1)', { cat1: ['A01', 'A02', 'A04'] })
+        .getMany();
 
-  //   console.log(placesWithOneHot);
-  //   // const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
-  //   const myPlaces = await this.travelRepository.find({
-  //     where: { userId: userId },
-  //     relations: ['day.schedule.place'],
-  //   });
-  //   const myVector = [];
-  //   const placeVector = [];
+      const userCat3Counts: Record<string, number> = {};
+      userPlaces.forEach((userPlace) => {
+        userPlace.day.forEach((day) => {
+          day.schedule.forEach((schedule) => {
+            const cat3Value = schedule.place.cat3;
+            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+          });
+        });
+      });
+      console.log(userCat3Counts);
+    } catch (error) {}
+  }
+  // 숙박 추천
+  async recommendationAccommodations(userId: number, region: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-  //   // 사용자의 여행 장소 정보를 하나의 벡터로 합치기
-  //   for (const myPlace of myPlaces) {
-  //     for (const day of myPlace.day) {
-  //       for (const schedule of day.schedule) {
-  //         const placeInfo = schedule.place;
-  //         const extractedInfo = {
-  //           cat1: placeInfo.cat1,
-  //         };
+      const places = await this.placeRepository
+        .createQueryBuilder('place')
+        .where({ areaCode: region, cat1: 'B02' })
+        .getMany();
 
-  //         const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-  //         const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
-  //         if (cat1Index !== -1) {
-  //           oneHotEncoded[cat1Index] = 1;
-  //         }
+      const placeCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      });
 
-  //         myVector.push(...oneHotEncoded);
-  //       }
-  //     }
-  //   }
+      console.log(placeCatCounts);
 
-  //   // 추천하려는 지역의 장소 정보를 하나의 벡터로 합치기
-  //   for (const placeWithOneHot of placesWithOneHot) {
-  //     placeVector.push(...placeWithOneHot.oneHotEncoded);
-  //   }
+      const userPlaces = await this.travelRepository
+        .createQueryBuilder('travel')
+        .where({ userId: userId })
+        .leftJoinAndSelect('travel.day', 'day')
+        .leftJoinAndSelect('day.schedule', 'schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .andWhere('place.cat1 = :cat1', { cat1: 'B02' })
+        .getMany();
 
-  //   console.log('User Vector:', myVector);
-  //   console.log('Place Vector:', placeVector);
-
-  //   function cosineSimilarity(vectorA, vectorB) {
-  //     // 벡터의 내적 계산
-  //     const dotProduct = vectorA.reduce((acc, val, i) => acc + val * vectorB[i], 0);
-
-  //     // 벡터의 크기(노름) 계산
-  //     const magnitudeA = Math.sqrt(vectorA.reduce((acc, val) => acc + val ** 2, 0));
-  //     const magnitudeB = Math.sqrt(vectorB.reduce((acc, val) => acc + val ** 2, 0));
-
-  //     // 코사인 유사도 계산
-  //     return dotProduct / (magnitudeA * magnitudeB);
-  //   }
-
-  //   // 유사도 계산
-  //   const similarity = cosineSimilarity(myVector, placeVector);
-  //   console.log(`Cosine Similarity between User Vector and Place Vector: ${similarity}`);
-  // }
-
-  // async createRecommendationPlace(userId: number, region: string) {
-  //   const oneHotCategories = ['A01', 'A02', 'A03', 'A04'];
-  //   const places = await this.placeRepository.find({ where: { areaCode: region } });
-  //   const placesWithOneHot = places.map((place) => {
-  //     const extractedInfo = {
-  //       cat1: place.cat1,
-  //     };
-
-  //     const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-  //     const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
-
-  //     if (cat1Index !== -1) {
-  //       oneHotEncoded[cat1Index] = 1;
-  //     }
-
-  //     return {
-  //       oneHotEncoded: oneHotEncoded,
-  //     };
-  //   });
-
-  //   console.log(placesWithOneHot);
-  //   const likePlaces = await this.likeRepository.find({ where: { userId: userId } });
-
-  //   const matchingPlaces = [];
-  //   const myPlaces = await this.travelRepository.find({
-  //     where: { userId: userId },
-  //     relations: ['day.schedule.place'],
-  //   });
-
-  //   for (const myPlace of myPlaces) {
-  //     for (const day of myPlace.day) {
-  //       for (const schedule of day.schedule) {
-  //         const placeInfo = schedule.place;
-  //         const extractedInfo = {
-  //           cat1: placeInfo.cat1,
-  //         };
-
-  //         // 원핫인코딩 배열 초기화
-  //         const oneHotEncoded = Array(oneHotCategories.length).fill(0);
-
-  //         // 원핫인코딩 수행
-  //         const cat1Index = oneHotCategories.indexOf(extractedInfo.cat1);
-  //         if (cat1Index !== -1) {
-  //           oneHotEncoded[cat1Index] = 1;
-  //         }
-
-  //         // 결과를 matchingPlaces에 추가
-  //         matchingPlaces.push({
-  //           oneHotEncoded: oneHotEncoded,
-  //         });
-  //       }
-  //     }
-  //   }
-  //   console.log(matchingPlaces);
-
-  //   function cosineSimilarity(vectorA, vectorB) {
-  //     // 벡터의 내적 계산
-  //     const dotProduct = vectorA.reduce((acc, val, i) => acc + val * vectorB[i], 0);
-
-  //     // 벡터의 크기(노름) 계산
-  //     const magnitudeA = Math.sqrt(vectorA.reduce((acc, val) => acc + val ** 2, 0));
-  //     const magnitudeB = Math.sqrt(vectorB.reduce((acc, val) => acc + val ** 2, 0));
-
-  //     // 코사인 유사도 계산
-  //     return dotProduct / (magnitudeA * magnitudeB);
-  //   }
-
-  //   // matchingPlaces와 placesWithOneHot 배열 간의 코사인 유사도 계산
-  //   for (const matchingPlace of matchingPlaces) {
-  //     for (const placeWithOneHot of placesWithOneHot) {
-  //       const similarity = cosineSimilarity(
-  //         matchingPlace.oneHotEncoded,
-  //         placeWithOneHot.oneHotEncoded,
-  //       );
-  //       console.log(
-  //         `Similarity between ${matchingPlace.cat1} and ${placeWithOneHot.cat1}: ${similarity}`,
-  //       );
-  //     }
-  //   }
-  // }
+      const userCat3Counts: Record<string, number> = {};
+      userPlaces.forEach((userPlace) => {
+        userPlace.day.forEach((day) => {
+          day.schedule.forEach((schedule) => {
+            const cat3Value = schedule.place.cat3;
+            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+          });
+        });
+      });
+      console.log(userCat3Counts);
+    } catch (error) {}
+  }
 }
