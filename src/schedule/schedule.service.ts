@@ -141,6 +141,8 @@ export class ScheduleService {
     if (!schedule) throw new NotFoundException('해당하는 스케줄을 찾을 수 없습니다.');
     await this.scheduleRepository.delete({ id: id });
     return schedule;
+    await this.scheduleRepository.delete({ id: id });
+    return schedule;
   }
 
   // 스케줄 복사
