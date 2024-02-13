@@ -141,41 +141,17 @@ export class AppController {
   //포스트 상세보기
   @UseGuards(LoginOrNotGuard)
   @Page('oneArticle')
-  @Get('article/:articleId')
+  @Get('/article/:articleId')
   async getOnePost(@UserInfo() user: User, @Param('articleId') articleId: number) {
     const article = await this.articleService.getArticleById(articleId);
     const pageTitle = '상세보기';
     return { user, pageTitle, article };
   }
 
-  // //테스트용
-  // @UseGuards(LoginOrNotGuard)
-  // @Page('travelDetailTest')
-  // @Get('modal-test/:travelId')
-  // async getTestTravel(@UserInfo() user: User, @Param('travelId') travelId: number) {
-  //   const userId = user.id;
-  //   const { oneTravel } = await this.travelService.findOneTravel(travelId, userId);
-  //   const days = await this.dayService.getDays(travelId);
-  //   const schedulesPromises = days.map(async (day) => {
-  //     const dayId = day.id;
-  //     const schedules = await this.scheduleService.findAllByDayId(dayId);
-  //     return { dayId, schedules };
-  //   });
-  //   const schedulesResults = await Promise.all(schedulesPromises);
-  //   const pageTitle = oneTravel.title;
-  //   return {
-  //     user,
-  //     oneTravel: oneTravel,
-  //     days,
-  //     schedulesResults: schedulesResults,
-  //     pageTitle,
-  //   };
-  // }
-
   //포스트 수정
   @UseGuards(LoginOrNotGuard)
   @Page('updateArticle')
-  @Get('update/:articleId')
+  @Get('/update/:articleId')
   async updateOneTravel(@UserInfo() user: User, @Param('articleId') articleId: number) {
     const article = await this.articleService.getArticleById(articleId);
     const pageTitle = '포스트 수정';
@@ -184,7 +160,7 @@ export class AppController {
   // 검색
   @UseGuards(LoginOrNotGuard)
   @Page('search')
-  @Get('search')
+  @Get('/search')
   async search(@UserInfo() user: User, @Query('title') title: string) {
     const query = {
       query: {
