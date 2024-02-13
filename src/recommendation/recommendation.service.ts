@@ -198,14 +198,43 @@ export class RecommendationService {
         .where({ areaCode: region, cat1: 'A05' })
         .getMany();
 
-      const placeCatCounts: Record<string, number> = {};
+      let minRank = 0;
+      let maxRank = 0;
+
       places.forEach((place) => {
-        const cat3Value = place.cat3;
-        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+        const rank = place.rank;
+        if (rank < minRank) minRank = rank;
+        if (rank > maxRank) maxRank = rank;
       });
 
-      console.log(placeCatCounts);
+      const placeCatCounts: Record<string, number> = {};
 
+      const rankPlaceCatCounts: Record<string, number> = {};
+      places.forEach((place) => {
+        const cat3Value = place.cat3;
+
+        // 정규화된 가중치 계산
+        // (해당값-최소값) /(최대값-최소값)
+        const normalizedWeight = (place.rank - minRank) / (maxRank - minRank);
+        const weightedRank = place.rank * normalizedWeight;
+        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+        rankPlaceCatCounts[cat3Value] = (rankPlaceCatCounts[cat3Value] || 0) + weightedRank;
+      });
+      console.log(placeCatCounts);
+      console.log(rankPlaceCatCounts);
+      // 가중치의 총 합을 계산
+      const totalWeight = Object.values(rankPlaceCatCounts).reduce(
+        (sum, weight) => sum + weight,
+        0,
+      );
+
+      // 각 카테고리의 가중치를 비율로 변환
+      const weightRatios = {};
+      for (const [category, weight] of Object.entries(rankPlaceCatCounts)) {
+        weightRatios[category] = weight / totalWeight;
+      }
+
+      console.log(weightRatios);
       const userPlaces = await this.travelRepository
         .createQueryBuilder('travel')
         .where({ userId: userId })
