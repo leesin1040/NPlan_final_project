@@ -50,8 +50,8 @@ Content-Type: application/json
 
 
 
-### 추천
-POST {{domain}}/recommendationTravel
+###  장소 한번만
+PATCH  {{domain}}/uploadplace
 
 
 
