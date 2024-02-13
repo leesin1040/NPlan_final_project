@@ -54,7 +54,6 @@ export class Article {
   like: Like[];
 
   @OneToMany(() => Comment, (comment) => comment.article)
-  @JoinColumn({ name: 'article_id' })
   comment: Comment[];
 
   @CreateDateColumn()
