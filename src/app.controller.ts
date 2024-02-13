@@ -184,7 +184,7 @@ export class AppController {
   // 검색
   @UseGuards(LoginOrNotGuard)
   @Page('search')
-  @Get('search')
+  @Get('/search')
   async search(@UserInfo() user: User, @Query('title') title: string) {
     const query = {
       query: {
