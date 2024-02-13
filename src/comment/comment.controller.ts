@@ -18,7 +18,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':articleId')
+  @Post(':commentId')
   async createComment(
     @Req() req,
     @Param('articleId') articleId: number,
