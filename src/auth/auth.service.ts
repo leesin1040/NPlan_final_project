@@ -55,15 +55,10 @@ export class AuthService {
   /* 로그인 핫픽스 */
   async login(userId: number) {
     const payload = { id: userId };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload);
-
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    // user.refreshToken = this.jwtService.sign(payload);
-    await this.userRepository.update({ id: user.id }, { refreshToken });
-
-    return { accessToken: accessToken };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '7h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    await this.userRepository.update({ id: userId }, { refreshToken });
+    return { accessToken };
   }
 
   /* 유저 확인 */
