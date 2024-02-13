@@ -104,7 +104,7 @@
   });
 
   // 로그인 엑시오스
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault();
     const loginEmail = document.getElementById('loginEmail').value;
     const loginPassword = document.getElementById('loginPassword').value;
@@ -112,19 +112,13 @@
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
-    try {
-      let response = axios
-        .post('api/auth/login', { email: loginEmail, password: loginPassword })
-        .then((response) => {
-          const { accessToken } = response.data.data.accessToken;
-          localStorage.setItem('accessToken', accessToken);
-          location.href = '/';
-        })
-        .catch((error) => {
-          alert(error.response.data.message);
-        });
-    } catch (err) {
-      alert(err);
-    }
+    let response = await axios
+      .post('/api/auth/login', { email: loginEmail, password: loginPassword })
+      .then((response) => {
+        location.href = '/';
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
   }
 </script>

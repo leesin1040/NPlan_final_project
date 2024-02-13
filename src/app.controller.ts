@@ -107,6 +107,7 @@ export class AppController {
       pageTitle,
     };
   }
+
   //내 article 조회
   @UseGuards(LoginOrNotGuard)
   @Get('/my-articles')
@@ -146,6 +147,30 @@ export class AppController {
     const pageTitle = '상세보기';
     return { user, pageTitle, article };
   }
+
+  // //테스트용
+  // @UseGuards(LoginOrNotGuard)
+  // @Page('travelDetailTest')
+  // @Get('modal-test/:travelId')
+  // async getTestTravel(@UserInfo() user: User, @Param('travelId') travelId: number) {
+  //   const userId = user.id;
+  //   const { oneTravel } = await this.travelService.findOneTravel(travelId, userId);
+  //   const days = await this.dayService.getDays(travelId);
+  //   const schedulesPromises = days.map(async (day) => {
+  //     const dayId = day.id;
+  //     const schedules = await this.scheduleService.findAllByDayId(dayId);
+  //     return { dayId, schedules };
+  //   });
+  //   const schedulesResults = await Promise.all(schedulesPromises);
+  //   const pageTitle = oneTravel.title;
+  //   return {
+  //     user,
+  //     oneTravel: oneTravel,
+  //     days,
+  //     schedulesResults: schedulesResults,
+  //     pageTitle,
+  //   };
+  // }
 
   //포스트 수정
   @UseGuards(LoginOrNotGuard)
