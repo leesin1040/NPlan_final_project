@@ -21,8 +21,8 @@ export class RecommendationService {
     // private readonly travelRepository: Repository<Travel>,
     // @InjectRepository(Day)
     // private readonly dayRepository: Repository<Day>,
-    // @InjectRepository(Schedule)
-    // private readonly scheduleRepository: Repository<Schedule>,
+    @InjectRepository(Schedule)
+    private readonly scheduleRepository: Repository<Schedule>,
     private dataSource: DataSource,
   ) {}
   //   추천한 장소 주변 반경 몇km안에 다음장소 추천 이런식
@@ -193,67 +193,129 @@ export class RecommendationService {
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
-      const places = await this.placeRepository
-        .createQueryBuilder('place')
-        .where({ areaCode: region, cat1: 'A05' })
+      // region지역에 등록된 place들
+      // placesInRegion를 돌면서 place.cat3와 place.id가져오자
+      const placesInRegionSchedules = await this.scheduleRepository
+        .createQueryBuilder('schedule')
+        .leftJoinAndSelect('schedule.place', 'place')
+        .where('place.areaCode = :region', { region: region })
+        .andWhere('place.cat1=:cat1', { cat1: 'A05' })
         .getMany();
+      const placesInRegion = placesInRegionSchedules.map((schedule) => schedule.place);
 
-      let minRank = 0;
-      let maxRank = 0;
-
-      places.forEach((place) => {
-        const rank = place.rank;
-        if (rank < minRank) minRank = rank;
-        if (rank > maxRank) maxRank = rank;
-      });
-
-      const placeCatCounts: Record<string, number> = {};
-
-      const rankPlaceCatCounts: Record<string, number> = {};
-      places.forEach((place) => {
-        const cat3Value = place.cat3;
-
-        // 정규화된 가중치 계산
-        // (해당값-최소값) /(최대값-최소값)
-        const normalizedWeight = (place.rank - minRank) / (maxRank - minRank);
-        const weightedRank = place.rank * normalizedWeight;
-        placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
-        rankPlaceCatCounts[cat3Value] = (rankPlaceCatCounts[cat3Value] || 0) + weightedRank;
-      });
-      console.log(placeCatCounts);
-      console.log(rankPlaceCatCounts);
-      // 가중치의 총 합을 계산
-      const totalWeight = Object.values(rankPlaceCatCounts).reduce(
-        (sum, weight) => sum + weight,
-        0,
-      );
-
-      // 각 카테고리의 가중치를 비율로 변환
-      const weightRatios = {};
-      for (const [category, weight] of Object.entries(rankPlaceCatCounts)) {
-        weightRatios[category] = weight / totalWeight;
-      }
-
-      console.log(weightRatios);
+      // user가 등록한 place들
+      // userPlaces 돌고 day돌면서 schedule의place들
       const userPlaces = await this.travelRepository
         .createQueryBuilder('travel')
-        .where({ userId: userId })
+        .where('travel.userId=:userId', { userId: userId })
         .leftJoinAndSelect('travel.day', 'day')
         .leftJoinAndSelect('day.schedule', 'schedule')
         .leftJoinAndSelect('schedule.place', 'place')
-        .andWhere('place.cat1 = :cat1', { cat1: 'A05' })
+        .andWhere('place.areaCode = :region', { region: region })
+        .andWhere('place.cat1=:cat1', { cat1: 'A05' })
         .getMany();
+      const allSchedules = userPlaces.flatMap((travel) =>
+        travel.day.flatMap((day) => day.schedule),
+      );
+      const places = allSchedules.map((schedule) => schedule.place);
 
-      const userCat3Counts: Record<string, number> = {};
-      userPlaces.forEach((userPlace) => {
-        userPlace.day.forEach((day) => {
-          day.schedule.forEach((schedule) => {
-            const cat3Value = schedule.place.cat3;
-            userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
-          });
+      // // user가 like한 travel의 place들
+      // const userLikePlaces = await this.likeRepository
+      //   .createQueryBuilder('like')
+      //   .where('like.userId=:userId', { userId: userId })
+      //   .leftJoinAndSelect('like.article', 'article')
+      //   .leftJoinAndSelect('article.travel', 'travel')
+      //   .leftJoinAndSelect('travel.day', 'day')
+      //   .leftJoinAndSelect('day.schedule', 'schedule')
+      //   .leftJoinAndSelect('schedule.place', 'place')
+      //   .andWhere('place.areaCode = :region', { region: region })
+      //   .andWhere('place.cat1=:cat1', { cat1: 'A05' })
+      //   .getMany();
+
+      // console.log(userLikePlaces);
+
+      const countByCat3InRegion = countByCat3(placesInRegion);
+      const countByCat3InUserPlaces = countByCat3(places);
+
+      const sortedCountByCat3InRegion = sortObjectByValue(countByCat3InRegion);
+      const sortedCountByCat3InUserPlaces = sortObjectByValue(countByCat3InUserPlaces);
+
+      console.log(sortedCountByCat3InRegion);
+      console.log(sortedCountByCat3InUserPlaces);
+
+      function countByCat3(places: any[]) {
+        const countByCat3: Record<string, number> = {};
+        places.forEach((place) => {
+          const cat3 = place.cat3;
+          countByCat3[cat3] = (countByCat3[cat3] || 0) + 1;
         });
-      });
-      console.log(userCat3Counts);
+        return countByCat3;
+      }
+      function sortObjectByValue(obj: Record<string, number>) {
+        return Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]));
+      }
+      // console.log(userPlaces);
+
+      // const places = await this.placeRepository
+      //   .createQueryBuilder('place')
+      //   .where({ areaCode: region, cat1: 'A05' })
+      //   .getMany();
+
+      // let minRank = 0;
+      // let maxRank = 0;
+
+      // places.forEach((place) => {
+      //   const rank = place.rank;
+      //   if (rank < minRank) minRank = rank;
+      //   if (rank > maxRank) maxRank = rank;
+      // });
+
+      // const placeCatCounts: Record<string, number> = {};
+
+      // const rankPlaceCatCounts: Record<string, number> = {};
+      // places.forEach((place) => {
+      //   const cat3Value = place.cat3;
+
+      //   // 정규화된 가중치 계산
+      //   // (해당값-최소값) /(최대값-최소값)
+      //   const normalizedWeight = (place.rank - minRank) / (maxRank - minRank);
+      //   const weightedRank = place.rank * normalizedWeight;
+      //   placeCatCounts[cat3Value] = (placeCatCounts[cat3Value] || 0) + 1;
+      //   rankPlaceCatCounts[cat3Value] = (rankPlaceCatCounts[cat3Value] || 0) + weightedRank;
+      // });
+      // console.log(placeCatCounts);
+      // console.log(rankPlaceCatCounts);
+      // // 가중치의 총 합을 계산
+      // const totalWeight = Object.values(rankPlaceCatCounts).reduce(
+      //   (sum, weight) => sum + weight,
+      //   0,
+      // );
+
+      // // 각 카테고리의 가중치를 비율로 변환
+      // const weightRatios = {};
+      // for (const [category, weight] of Object.entries(rankPlaceCatCounts)) {
+      //   weightRatios[category] = weight / totalWeight;
+      // }
+
+      // console.log(weightRatios);
+      // const userPlaces = await this.travelRepository
+      //   .createQueryBuilder('travel')
+      //   .where({ userId: userId })
+      //   .leftJoinAndSelect('travel.day', 'day')
+      //   .leftJoinAndSelect('day.schedule', 'schedule')
+      //   .leftJoinAndSelect('schedule.place', 'place')
+      //   .andWhere('place.cat1 = :cat1', { cat1: 'A05' })
+      //   .getMany();
+      // const userCat3Counts: Record<string, number> = {};
+      // userPlaces.forEach((userPlace) => {
+      //   userPlace.day.forEach((day) => {
+      //     day.schedule.forEach((schedule) => {
+      //       const cat3Value = schedule.place.cat3;
+      //       userCat3Counts[cat3Value] = (userCat3Counts[cat3Value] || 0) + 1;
+      //     });
+      //   });
+      // });
+      // console.log(userCat3Counts);
     } catch (error) {}
   }
   // 관광지 추천
