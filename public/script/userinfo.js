@@ -1,7 +1,45 @@
 window.onload = function () {
   document.getElementById('updateProfileForm').addEventListener('submit', updateProfile);
   document.getElementById('delete-profile-button').addEventListener('click', deleteUserProfile);
+  document.getElementById('changeUserImgBtn').addEventListener('click', getProfileImg);
 };
+
+// 프로필이미지 수정
+function getProfileImg(event) {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.click();
+  fileInput.onchange = (changeEvent) => {
+    const file = changeEvent.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      axios
+        .post('/api/user/upload-img', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          if (response.data && response.data.message) {
+            alert(response.data.message);
+          } else {
+            alert('이미지 업로드 성공!');
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error('업로드 실패:', error);
+          if (error.response && error.response.data && error.response.data.message) {
+            alert('업로드 실패: ' + error.response.data.message);
+          } else {
+            alert('업로드 실패: 서버 오류');
+          }
+        });
+    }
+  };
+}
 
 //회원 정보 수정 요청 함수
 async function updateProfile(e) {

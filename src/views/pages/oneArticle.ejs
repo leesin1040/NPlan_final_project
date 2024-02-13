@@ -18,6 +18,7 @@
             <div>
               <p><span class="small text-end">게시물 번호 </span> &ensp; <%= article.id %></p>
               <p><span class="small text-end">조회수 </span> &ensp;<%= article.views %></p>
+              <% if (user !== null && article.userId === user.id) { %>
               <button
                 type="button"
                 onclick="window.location.href='/update/<%= article.id %>'"
@@ -33,12 +34,12 @@
               >
                 삭제
               </button>
+              <% } %>
             </div>
           </div>
         </div>
         <hr />
         <div style="overflow: hidden"><%- article.editorContent %></div>
-        <div></div>
         <div class="col d-flex justify-content-center align-items-center my-5">
           <div
             class="text-center rounded-circle border border-secondary-subtle"

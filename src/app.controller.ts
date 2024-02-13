@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { AppService } from './app.service';
+import { Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { LoginOrNotGuard } from './auth/guards/optional.guard';
 import { TravelService } from './travel/travel.service';
 import { UserService } from './user/user.service';
@@ -9,16 +9,18 @@ import { ConfigService } from '@nestjs/config/dist/config.service';
 import { MemberService } from './member/member.service';
 import { DayService } from './day/day.service';
 import { CommentService } from './comment/comment.service';
-import { Page } from './decorators/page.decorator';
-import { UserInfo } from './decorators/userInfo.decorator';
 import { User } from './user/entities/user.entity';
 import { ArticleService } from './article/article.service';
 import { LikeService } from './like/articlelike.service';
+import { SearchService } from './elasticsearch/elasticsearch.service';
+import { UserInfo } from './common/decorators/userInfo.decorator';
+import { Page } from './common/decorators/page.decorator';
 
 @Controller()
 export class AppController {
   constructor(
     private configService: ConfigService,
+    private readonly appService: AppService,
     private readonly articleService: ArticleService,
     private readonly userService: UserService,
     private readonly memberService: MemberService,
@@ -28,6 +30,7 @@ export class AppController {
     private readonly placeService: PlaceService,
     private readonly likeService: LikeService,
     private readonly commentService: CommentService,
+    private readonly searchService: SearchService,
   ) {}
 
   // 메인페이지
@@ -35,10 +38,12 @@ export class AppController {
   @Get()
   @Page('main')
   async hello(@UserInfo() user: User) {
+    const data = await this.articleService.getByLikeArticles();
     const pageTitle = '홈';
     return {
       user,
       pageTitle,
+      data,
     };
   }
 
@@ -46,7 +51,7 @@ export class AppController {
   @UseGuards(LoginOrNotGuard)
   @Get('sign-up')
   @Page('signup')
-  getSignUp(@UserInfo() user: User) {
+  async getSignUp(@UserInfo() user: User) {
     const pageTitle = '회원가입';
     return {
       user,
@@ -103,11 +108,22 @@ export class AppController {
     };
   }
 
-  //article 전체 조회 - 완
+  //내 article 조회
+  @UseGuards(LoginOrNotGuard)
+  @Get('/my-articles')
+  @Page('articleList')
+  async getMyArticles(@UserInfo() user: User) {
+    const userId = user.id;
+    const data = await this.articleService.getArticlesByUser(userId);
+    const pageTitle = '내 후기 목록';
+    return { user, data, pageTitle };
+  }
+
+  //article 전체 조회
   @UseGuards(LoginOrNotGuard)
   @Get('/articles')
   @Page('articleList')
-  async getArticles(@UserInfo() user: User, @Res() res: Response) {
+  async getArticles(@UserInfo() user: User) {
     const data = await this.articleService.getAllArticles();
     const pageTitle = '후기 게시판';
     return { user, data, pageTitle };
@@ -132,6 +148,30 @@ export class AppController {
     return { user, pageTitle, article };
   }
 
+  // //테스트용
+  // @UseGuards(LoginOrNotGuard)
+  // @Page('travelDetailTest')
+  // @Get('modal-test/:travelId')
+  // async getTestTravel(@UserInfo() user: User, @Param('travelId') travelId: number) {
+  //   const userId = user.id;
+  //   const { oneTravel } = await this.travelService.findOneTravel(travelId, userId);
+  //   const days = await this.dayService.getDays(travelId);
+  //   const schedulesPromises = days.map(async (day) => {
+  //     const dayId = day.id;
+  //     const schedules = await this.scheduleService.findAllByDayId(dayId);
+  //     return { dayId, schedules };
+  //   });
+  //   const schedulesResults = await Promise.all(schedulesPromises);
+  //   const pageTitle = oneTravel.title;
+  //   return {
+  //     user,
+  //     oneTravel: oneTravel,
+  //     days,
+  //     schedulesResults: schedulesResults,
+  //     pageTitle,
+  //   };
+  // }
+
   //포스트 수정
   @UseGuards(LoginOrNotGuard)
   @Page('updateArticle')
@@ -140,5 +180,41 @@ export class AppController {
     const article = await this.articleService.getArticleById(articleId);
     const pageTitle = '포스트 수정';
     return { user, pageTitle, article };
+  }
+  // 검색
+  @UseGuards(LoginOrNotGuard)
+  @Page('search')
+  @Get('search')
+  async search(@UserInfo() user: User, @Query('title') title: string) {
+    const query = {
+      query: {
+        match: {
+          title: {
+            query: title,
+            fuzziness: 1,
+          },
+        },
+      },
+    };
+    const pageTitle = `검색:${title}`;
+    const data = await this.searchService.searchTitle('articles', query);
+    return { user, pageTitle, data };
+  }
+
+  @Get('/error-page')
+  @Page('error')
+  getErrorPage(@Query('errorUrl') errorUrl: string) {
+    const pageTitle = '에러 페이지';
+    if (errorUrl === '/favicon.ico') {
+      return { pageTitle, errorUrl: '' };
+    }
+    return { pageTitle, errorUrl: decodeURIComponent(errorUrl) };
+  }
+
+  @Post('/api/err-msg')
+  async sendErrToTeam(@Body() body: { message: string }) {
+    const { message } = body;
+    const data = await this.appService.sendNotification(message);
+    return { data };
   }
 }

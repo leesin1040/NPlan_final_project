@@ -78,7 +78,7 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @Column()
+  @Column({ type: 'varchar', default: '0' })
   refreshToken: string;
 
   // Travel 1:N

@@ -1,0 +1,4 @@
+@domain = http://localhost:3000/api
+
+### 엘라스틱서치 title= 다음 검색어
+GET {{domain}}/es/search?title=매력

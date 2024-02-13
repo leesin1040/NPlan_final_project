@@ -103,18 +103,18 @@ async function addSchedule(dayId) {
       placeContent.appendChild(placeName);
 
       const placeAddress = document.createElement('p');
-      placeAddress.className = 'placeAddress';
+      placeAddress.className = 'placeAddress ';
       placeAddress.innerText = data.address;
       placeContent.appendChild(placeAddress);
 
       const placeCategory = document.createElement('p');
-      placeCategory.className = 'placeCategory';
+      placeCategory.className = 'placeCategory btn btn-primary btn-sm disabled';
       placeCategory.dataset.cat1 = data.cat1;
       placeCategory.innerText = data.category;
       placeContent.appendChild(placeCategory);
 
       const selectBtn = document.createElement('button');
-      selectBtn.className = 'addScheduleModal-select';
+      selectBtn.className = 'addScheduleModal-select btn btn-outline-success';
       selectBtn.id = `selectPlace${data.id}`;
       selectBtn.innerText = '선택';
       place.appendChild(selectBtn);

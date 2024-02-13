@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>N-plan : <%= pageTitle %></title>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bs-brain@2.0.3/components/error-404s/error-404-1/assets/css/error-404-1.css"
+    />
+  </head>
+  <style>
+    .hideInput {
+      width: 700px;
+      justify-content: center;
+      align-items: center;
+    }
+    .hideInput > div {
+      display: flex;
+      align-items: center;
+    }
+    .input-text-comment {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .btn-secondary {
+      flex-shrink: 0;
+    }
+  </style>
+  <body>
+    <section class="py-3 py-md-5 min-vh-100 d-flex justify-content-center align-items-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="text-center">
+              <h2 class="d-flex justify-content-center align-items-center gap-2 mb-4">
+                <span class="display-1 fw-bold">?</span>
+                <i class="bi bi-exclamation-circle-fill display-4" style="color: #6892d5"></i>
+                <span class="display-1 fw-bold">?</span>
+              </h2>
+              <h3 class="h2 mb-2">에러 페이지</h3>
+              <p>죄송합니다. 해당 페이지를 찾을 수 없습니다.</p>
+              <p class="mb-5">
+                해당 페이지가 지속적으로 나타날 경우 팀에게 알려주세요!
+                <a href="#" id="notify-team">팀에게 알리기</a>
+              </p>
+              <div class="hideInput" style="display: none">
+                <form class="hideInput mb-5" style="display: flex" id="sendMessageForm">
+                  <input
+                    type="text"
+                    name="message"
+                    id="messageInput"
+                    class="form-control"
+                    placeholder="팀에게 전달할 말을 작성해주세요"
+                  />
+                  <input
+                    type="button"
+                    class="btn btn-secondary ms-2"
+                    value="보내기"
+                    id="sendMessageBtn"
+                  />
+                </form>
+              </div>
+              <div>
+                <a
+                  class="btn bsb-btn-5xl btn-dark rounded-pill px-5 fs-6 m-0"
+                  href="/"
+                  role="button"
+                  >홈으로</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const serverErrorUrl = '<%= errorUrl %>';
+
+      document.getElementById('notify-team').addEventListener('click', function (event) {
+        event.preventDefault();
+        let hideInputDiv = document.querySelector('.hideInput');
+        if (hideInputDiv.style.display === 'none') {
+          hideInputDiv.style.display = 'inline-block';
+        } else {
+          hideInputDiv.style.display = 'none';
+        }
+      });
+
+      document.getElementById('sendMessageBtn').addEventListener('click', function (event) {
+        event.preventDefault();
+        const messageInput = document.getElementById('messageInput').value;
+        let messageTotal;
+        if (serverErrorUrl === '') {
+          messageTotal = `에러페이지에 직접 방문한 유저의 피드백: ${messageInput}`;
+        } else {
+          messageTotal = `'${serverErrorUrl}'로 에러 페이지 방문한 유저의 피드백: ${messageInput}`;
+        }
+        if (!messageInput) {
+          alert('보낼 메시지가 없어요!');
+          return;
+        }
+        sendMessageBtn.disabled = true;
+        axios
+          .post('/api/err-msg', { message: messageTotal })
+          .then((response) => {
+            alert('메시지를 성공적으로 전달했습니다!');
+            sendMessageBtn.disabled = false;
+          })
+          .catch((error) => {
+            alert('메시지 전달에 실패했습니다. 다시 시도해주세요.');
+            sendMessageBtn.disabled = true;
+          });
+      });
+    </script>
+  </body>
+</html>

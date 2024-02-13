@@ -9,11 +9,13 @@ import FormData from 'form-data';
 import { ConfigService } from '@nestjs/config';
 import cheerio from 'cheerio';
 import sharp from 'sharp';
+import { SearchService } from 'src/elasticsearch/elasticsearch.service';
 
 @Injectable()
 export class ArticleService {
   constructor(
     private readonly configService: ConfigService,
+    private esService: SearchService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Article)
@@ -28,7 +30,13 @@ export class ArticleService {
       editorContent,
       userId: userId,
     });
-
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    await this.esService.indexData('articles', {
+      id: createdArticle.id,
+      title: createdArticle.articleTitle,
+      writer: user.name,
+    });
     return createdArticle;
   }
 
@@ -52,8 +60,32 @@ export class ArticleService {
         };
       }),
     );
-
     return articleOne;
+  }
+
+  async getByLikeArticles() {
+    const articles = await this.articleRepository.find();
+    const articleOne = await Promise.all(
+      articles.map(async (article) => {
+        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
+        const $ = cheerio.load(article.editorContent);
+        const imgUrl = $('img').first().attr('src');
+        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
+        const textContent = fullTextContent.slice(0, 100);
+        const user = await this.userRepository.findOne({ where: { id: article.userId } });
+        const userName = user ? user.name : null;
+        return {
+          ...article,
+          editorContent: textContent,
+          imgUrl,
+          userName,
+        };
+      }),
+    );
+    // likeCount를 기준으로 포스트를 정렬
+    const sortedArticles = articleOne.sort((a, b) => b.likesCount - a.likesCount);
+    const topFourArticles = sortedArticles.slice(0, 4);
+    return topFourArticles;
   }
 
   //포스트 상세조회
@@ -76,7 +108,24 @@ export class ArticleService {
   //내 포스트 전체 조회
   async getArticlesByUser(userId: number) {
     const articles = await this.articleRepository.find({ where: { userId: userId } });
-    return articles;
+    const articleOne = await Promise.all(
+      articles.map(async (article) => {
+        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
+        const $ = cheerio.load(article.editorContent);
+        const imgUrl = $('img').first().attr('src');
+        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
+        const textContent = fullTextContent.slice(0, 100);
+        const user = await this.userRepository.findOne({ where: { id: article.userId } });
+        const userName = user ? user.name : null;
+        return {
+          ...article,
+          editorContent: textContent,
+          imgUrl,
+          userName,
+        };
+      }),
+    );
+    return articleOne;
   }
 
   // 포스트 수정
@@ -92,6 +141,9 @@ export class ArticleService {
     article.articleTitle = articleTitle;
     article.editorContent = editorContent;
     const updatedArticle = await this.articleRepository.save(article);
+    await this.esService.updateData('articles', updatedArticle.id.toString(), {
+      title: updatedArticle.articleTitle,
+    });
     return updatedArticle;
   }
 
@@ -100,12 +152,13 @@ export class ArticleService {
     const article = await this.articleRepository.findOne({ where: { id: articleId } });
 
     if (!article) {
-      throw new NotFoundException('게시글을 찾을 수 없습니다.');
+      throw new NotFoundException('포스트를 찾을 수 없습니다.');
     }
     if (article.userId !== userId) {
-      throw new UnauthorizedException('게시글을 삭제할 권한이 없습니다.');
+      throw new UnauthorizedException('포스트를 삭제할 권한이 없습니다.');
     }
     const deleteArticle = await this.articleRepository.delete(article.id);
+    await this.esService.deleteData('articles', article.id.toString());
     return deleteArticle;
   }
 
@@ -127,7 +180,7 @@ export class ArticleService {
       const imageUrl = response.data.result.variants;
       return imageUrl;
     } else {
-      console.error('Error uploading image:', response.data); // 에러 로깅 추가
+      console.error('이미지 업로드 실패:', response.data); // 에러 로깅 추가
       throw new Error(`이미지 업로드 실패: 상태 코드 ${response.status}`);
     }
   }

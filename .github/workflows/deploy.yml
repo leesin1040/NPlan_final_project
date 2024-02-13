@@ -1,0 +1,76 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: leesin1040/nplan-final-project
+          stage: main
+          yaml: >
+            name: nplan-final-project
+
+            app: dockerfile
+
+            options:
+              ports: 3000
+              dockerfile: Dockerfile
+              env:
+                - name: SERVER_PORT
+                  value: 3000
+                - name: DB_HOST
+                  value: ${{ secrets.DB_HOST }}
+                - name: DB_PORT
+                  value: ${{ secrets.DB_PORT }}
+                - name: DB_USERNAME
+                  value: ${{ secrets.DB_USERNAME }}
+                - name: DB_PASSWORD
+                  value: ${{ secrets.DB_PASSWORD }}
+                - name: DB_NAME
+                  value: ${{ secrets.DB_NAME }}
+                - name: DB_SYNC
+                  value: ${{ secrets.DB_SYNC }}
+                - name: PASSWORD_HASH_ROUNDS
+                  value: ${{ secrets.PASSWORD_HASH_ROUNDS }}
+                - name: JWT_SECRET
+                  value: ${{ secrets.JWT_SECRET }}
+                - name: TOUR_API_KEY
+                  value: ${{ secrets.TOUR_API_KEY }}
+                - name: YOUR_EMAIL
+                  value: ${{ secrets.YOUR_EMAIL }}
+                - name: YOUR_APP_PASSWORD
+                  value: ${{ secrets.YOUR_APP_PASSWORD }}
+                - name: DB_PLACE_HOST
+                  value: ${{ secrets.DB_PLACE_HOST }}
+                - name: DB_PLACE_PORT
+                  value: ${{ secrets.DB_PLACE_PORT }}
+                - name: DB_PLACE_USERNAME
+                  value: ${{ secrets.DB_PLACE_USERNAME }}
+                - name: DB_PLACE_PASSWORD
+                  value: ${{ secrets.DB_PLACE_PASSWORD }}
+                - name: DB_PLACE_NAME
+                  value: ${{ secrets.DB_PLACE_NAME }}
+                - name: DB_PLACE_SYNC
+                  value: ${{ secrets.DB_PLACE_SYNC }}
+                - name: CLOUDFLARE_IMG
+                  value: ${{ secrets.CLOUDFLARE_IMG }}
+                - name: CLOUDFLARE_API
+                  value: ${{ secrets.CLOUDFLARE_API }}
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
+              preset: dockerfile
