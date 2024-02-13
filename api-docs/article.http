@@ -78,7 +78,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### 댓글 수정
-PATCH {{domain}}/comment/3
+PATCH {{domain}}/comment/1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -87,6 +87,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### 댓글 삭제
-DELETE {{domain}}/comment/3
+DELETE {{domain}}/comment/2
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
