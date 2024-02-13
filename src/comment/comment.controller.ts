@@ -18,7 +18,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':articleId')
+  @Post('/:articleId')
   async createComment(
     @Req() req,
     @Param('articleId') articleId: number,
@@ -35,14 +35,14 @@ export class CommentController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch(':commentId')
-  update(@Param('userId') userId: number, @Param('commentId') commentId: number, @Req() req) {
-    const authenticatedUserId = req.user.id;
-    if (userId !== authenticatedUserId) {
-      throw new UnauthorizedException('댓글을 수정할 권한이 없습니다.');
-    }
-
-    const data = this.commentService.update(userId, commentId);
+  @Patch('/:commentId')
+  async update(
+    @Param('commentId') commentId: number,
+    @Req() req,
+    @Body('comment') comment: string,
+  ) {
+    const userId = req.user.id;
+    const data = await this.commentService.update(userId, commentId, comment);
     return {
       statusCode: HttpStatus.OK,
       message: '댓글 수정에 성공했습니다.',
@@ -50,9 +50,11 @@ export class CommentController {
     };
   }
 
-  @Delete(':commentId')
-  async deleteComment(@Param('commentId') userid: number, commentId: number) {
-    const data = await this.commentService.deleteComment(userid, commentId);
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:commentId')
+  async deleteComment(@Param('commentId') commentId: number, @Req() req) {
+    const userId = req.user.id;
+    const data = await this.commentService.deleteComment(userId, commentId);
     return {
       statusCode: HttpStatus.OK,
       message: '댓글 삭제에 성공하였습니다!',

@@ -67,3 +67,26 @@ Authorization: Bearer {{accessToken}}
 DELETE {{domain}}/like/3
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+###아티클 댓글 생성
+POST {{domain}}/comment/3
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "comment": "형이야."
+}
+
+### 댓글 수정
+PATCH {{domain}}/comment/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "comment": "사실 동생이야."
+}
+
+### 댓글 삭제
+DELETE {{domain}}/comment/2
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}

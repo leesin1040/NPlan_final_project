@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
+import { log } from 'console';
 
 @Injectable()
 export class CommentService {
@@ -19,14 +20,18 @@ export class CommentService {
     return { newComment };
   }
 
-  async update(userId: number, commentId: number) {
-    const comment = await this.commentRepository.findOne({ where: { id: commentId } });
-    if (!comment) {
+  async update(userId: number, commentId: number, comment: string) {
+    const getComment = await this.commentRepository.findOne({ where: { id: commentId } });
+    if (!getComment) {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
 
-    const updatedComment = await this.commentRepository.update(commentId, { userId });
-    return { comment: updatedComment };
+    if (getComment.userId !== userId) {
+      throw new UnauthorizedException('댓글을 수정할 권한이 없습니다.');
+    }
+
+    const updatedComment = await this.commentRepository.update(commentId, { comment });
+    return { updatedComment };
   }
 
   async deleteComment(userId: number, commentId: number) {
