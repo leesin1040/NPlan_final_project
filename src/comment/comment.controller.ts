@@ -2,12 +2,12 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
   Patch,
   Post,
   Req,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
@@ -30,6 +30,17 @@ export class CommentController {
     return {
       statusCode: HttpStatus.CREATED,
       message: '댓글 등록에 성공하였습니다!',
+      data,
+    };
+  }
+
+  @Get('/:articleId')
+  async getComment(@Param('articleId') articleId: number) {
+    const data = await this.commentService.getAllComment(articleId);
+
+    return {
+      statusCode: HttpStatus.FOUND,
+      message: '댓글 전체 조회에 성공했습니다.',
       data,
     };
   }

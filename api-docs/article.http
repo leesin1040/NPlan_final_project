@@ -74,8 +74,14 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "comment": "형이야."
+  "comment": "포항항 ꉂꉂ(ᵔᗜᵔ*)포항항 ꉂꉂ(ᵔᗜᵔ*)"
 }
+
+###아티클 댓글 조회
+GET  {{domain}}/comment/3
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
 
 ### 댓글 수정
 PATCH {{domain}}/comment/1

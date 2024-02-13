@@ -144,8 +144,11 @@ export class AppController {
   @Get('/article/:articleId')
   async getOnePost(@UserInfo() user: User, @Param('articleId') articleId: number) {
     const article = await this.articleService.getArticleById(articleId);
+    const data = await this.commentService.getAllComment(articleId);
+    console.log(data);
+
     const pageTitle = '상세보기';
-    return { user, pageTitle, article };
+    return { user, pageTitle, article, data };
   }
 
   //포스트 수정
