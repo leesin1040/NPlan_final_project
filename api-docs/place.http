@@ -50,13 +50,22 @@ Content-Type: application/json
 
 
 
-### 추천
-POST {{domain}}/recommendationTravel
-
-### 추천장소
-Get {{domain}}/recommendationPlace
+###  장소 한번만
+PATCH  {{domain}}/uploadplace
 
 
 
-### place 업데이트 한번만 오래걸림
-PATCH {{domain}}/updateplace
+### 관광지 추천
+Get {{domain}}/recommendation/attractions
+
+
+
+### 음식점 추천
+Get {{domain}}/recommendation/restaurant
+
+
+
+### 숙박 추천
+Get {{domain}}/recommendation/accommodation
+
+

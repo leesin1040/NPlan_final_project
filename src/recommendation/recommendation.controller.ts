@@ -20,17 +20,37 @@ export class RecommendationController {
     }
   }
 
-  // 컨텐츠 기반 추천 시스템
-  // 사용자가 이전에 구매한 상품중에서 좋아하는 상품들과 유사한 상품들을 추천
-  // 사용자의 선호도 관광지,음식점(like누른travel들의 place들,자신이 등록한place들 각각 가중치 다르게) 각각 벡터 생성
-  // 전체 관광지,음식점 (rank의 표준편차를 구해 가중치로 적용) 각각 벡터 생성
-  // 2개의 코사인유사도로 여행지 추출 -> 유사한것들부터 추천
+  // 1. 선택한 지역에 등록된 place들의 cat3값들 싹다가져와
+  // 2. 내가 like누른 place , 내가등록한 place들의 카테고리 가중치 높게
+  // 3. 내가 like누른 place는 무조건상위권
+  // 4. 다녀온여행목록은 재외
+  // 음식점 추천
   @UseGuards(AuthGuard('jwt'))
-  @Get('api/recommendationPlace')
-  async createRecommendationPlace(@Req() req, @Body() region: string) {
+  @Get('api/recommendation/restaurant')
+  async recommendationRestaurants(@Req() req, @Body() region: string) {
     region = '1';
     const userId = req.user.id;
-    const data = await this.recommendationService.createRecommendationPlace(userId, region);
+    const data = await this.recommendationService.recommendationRestaurants(userId, region);
+    try {
+    } catch (error) {}
+  }
+  // 관광지 추천
+  @UseGuards(AuthGuard('jwt'))
+  @Get('api/recommendation/attractions')
+  async recommendationAttractions(@Req() req, @Body() region: string) {
+    region = '1';
+    const userId = req.user.id;
+    const data = await this.recommendationService.recommendationAttractions(userId, region);
+    try {
+    } catch (error) {}
+  }
+  // 숙박 추천
+  @UseGuards(AuthGuard('jwt'))
+  @Get('api/recommendation/accommodation')
+  async recommendationAccommodations(@Req() req, @Body() region: string) {
+    region = '1';
+    const userId = req.user.id;
+    const data = await this.recommendationService.recommendationAccommodations(userId, region);
     try {
     } catch (error) {}
   }

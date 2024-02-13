@@ -20,10 +20,6 @@ export class Comment {
   @Column({ type: 'int', unsigned: true })
   articleId: number;
 
-  @ManyToOne(() => Travel, (travel) => travel.comment)
-  @JoinColumn({ name: 'travel_id' })
-  travel: Travel[];
-
   /**유저에서 닉네임 불러오기 */
   @ManyToOne(() => User, (user) => user.comment, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })

@@ -68,10 +68,8 @@ export class AuthService {
       where: { email },
       select: { id: true, password: true },
     });
-
     const passwordMatch = bcrypt.compareSync(password, user?.password ?? '');
     if (!user || !passwordMatch) return null;
-
     return { id: user.id };
   }
 

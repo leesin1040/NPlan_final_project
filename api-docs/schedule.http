@@ -55,5 +55,5 @@ Content-Type: application/json
 ###
 # 해당 스케줄 삭제
 # parameter: id
-DELETE {{domain}}/schedule/delete/1
+DELETE {{domain}}/schedule/1
 Content-Type: application/json

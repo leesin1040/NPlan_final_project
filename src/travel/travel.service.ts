@@ -38,8 +38,9 @@ export class TravelService {
   }
 
   /**여행 복제 */
-  copy() {
+  async copy(id: number, userId: number, createTravelDto: CreateTravelDto) {
     //트레블, 데이, 스케쥴값을 travel_id로 조회해서 다 가져온 다음
+    const travel = await this.findOneTravel(id, userId);
     //데이터를 복제해서 새로 save 한다.
   }
 

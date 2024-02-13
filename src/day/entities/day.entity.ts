@@ -22,6 +22,6 @@ export class Day {
   @Column({ type: 'longtext', nullable: true })
   directions: string;
 
-  @Column({ type: 'json', nullable: true, name: 'place_path' })
-  placePath: number[];
+  @Column({ type: 'longtext', nullable: true, name: 'place_path' })
+  placePath: string;
 }
