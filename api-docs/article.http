@@ -7,10 +7,28 @@ POST  {{domain}}/auth/login
 Content-Type: application/json
 
 {
-  "email":"expample@email.com",
+  "email":"hmalbebe@hal.be",
+  "password":"halbebe"
+}
+
+
+###로그인 - 완료
+POST  http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email":"example@email.com",
   "password":"123123"
 }
 
+###로그인 - 완료
+POST  http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email":"halmeme@hal.me",
+  "password":"123123"
+}
 
 ###아티클 생성 - 인섬니아 등에서 테스트 요
 POST  {{domain}}/article/posting
@@ -38,18 +56,14 @@ GET   {{domain}}/article
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-###아티클 수정
-Put   {{domain}}/article/1
+
+###아티클 좋아요
+POST {{domain}}/like/3
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "articleTitle": "경주로 가는 여행",
-  "articleContent": "글을 쓸 수 있나용",
-  "file":"파일올릴수있음"
-}
 
-###아티클 수정
-DELETE  {{domain}}/article/1
+###아티클 좋아요 취소
+DELETE {{domain}}/like/3
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
