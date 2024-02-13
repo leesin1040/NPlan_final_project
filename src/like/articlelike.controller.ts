@@ -1,13 +1,16 @@
-import { Controller, Delete, HttpStatus, Param, Post, Req } from '@nestjs/common';
+import { Controller, Delete, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { LikeService } from './articlelike.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/like')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post(':articleId')
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/:articleId')
   likePost(@Req() req, @Param('articleId') articleId: number) {
     const userId = req.user.id;
+    console.log(userId);
     const data = this.likeService.likePost(userId, articleId);
     return {
       statusCode: HttpStatus.CREATED,
@@ -16,6 +19,7 @@ export class LikeController {
     };
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':articleId')
   unlikePost(@Req() req, @Param('articleId') articleId: number) {
     const userId = req.user.id;

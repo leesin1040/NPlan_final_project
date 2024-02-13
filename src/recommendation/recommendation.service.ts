@@ -5,7 +5,7 @@ import { DataSource, In, Not, Repository } from 'typeorm';
 import { Place } from 'src/place/entities/place.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { Day } from 'src/day/entities/day.entity';
-import { Like } from 'src/like/entities/like.entity';
+import { Like } from 'src/like/entities/articlelike.entity';
 
 @Injectable()
 export class RecommendationService {

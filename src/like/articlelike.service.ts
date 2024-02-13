@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Like } from './entities/articlelike.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,7 +19,7 @@ export class LikeService {
     });
 
     if (existingLike) {
-      throw new NotFoundException('이미 좋아요를 누른 게시글 입니다.');
+      throw new BadRequestException('이미 좋아요를 누른 게시글 입니다.');
     }
 
     const newLike = this.likeRepository.create({ userId, articleId });
@@ -59,6 +59,9 @@ export class LikeService {
 
     if (decrease) {
       likesCount--; // 좋아요를 취소했으므로 좋아요 수 감소
+      if (likesCount < 0) {
+        likesCount = 0; // 좋아요 수가 0보다 작으면 0으로 유지
+      }
     }
 
     post.likesCount = likesCount;

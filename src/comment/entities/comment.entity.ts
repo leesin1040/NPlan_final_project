@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Article } from 'src/article/entities/article.entity';
+import { Travel } from 'src/travel/entities/travel.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -18,6 +19,10 @@ export class Comment {
   article: Article;
   @Column({ type: 'int', unsigned: true })
   articleId: number;
+
+  @ManyToOne(() => Travel, (travel) => travel.comment)
+  @JoinColumn({ name: 'travel_id' })
+  travel: Travel[];
 
   /**유저에서 닉네임 불러오기 */
   @ManyToOne(() => User, (user) => user.comment, { onDelete: 'CASCADE' })
