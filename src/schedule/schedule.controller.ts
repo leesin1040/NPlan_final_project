@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -70,13 +80,18 @@ export class ScheduleController {
   // 스케줄 삭제
   @ApiOperation({ summary: '스케줄 삭제' })
   @Delete(':id')
-  async remove(@Param('id') id: number) {
-    await this.scheduleService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const data = await this.scheduleService.remove(id);
 
-    return {
-      statusCode: HttpStatus.OK,
-      message: `스케줄 삭제에 성공했습니다.`,
-    };
+      return {
+        statusCode: HttpStatus.OK,
+        message: `스케줄 삭제에 성공했습니다.`,
+        data,
+      };
+    } catch (error) {
+      return error.message;
+    }
   }
 
   // 스케줄 복사

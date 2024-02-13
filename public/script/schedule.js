@@ -110,7 +110,7 @@ async function addSchedule(dayId) {
       const placeCategory = document.createElement('p');
       placeCategory.className = 'placeCategory btn btn-primary btn-sm disabled';
       placeCategory.dataset.cat1 = data.cat1;
-      placeCategory.innerText = data.category;
+      placeCategory.innerText = data.cat3;
       placeContent.appendChild(placeCategory);
 
       const selectBtn = document.createElement('button');
