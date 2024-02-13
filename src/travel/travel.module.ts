@@ -4,7 +4,7 @@ import { TravelController } from './travel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Travel } from './entities/travel.entity';
-import { Like } from 'src/like/entities/like.entity';
+import { Like } from 'src/like/entities/articlelike.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Member } from 'src/member/entities/member.entity';
 import { Day } from 'src/day/entities/day.entity';

@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { Article } from 'src/article/entities/article.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Day } from 'src/day/entities/day.entity';
-import { Like } from 'src/like/entities/like.entity';
+import { Like } from 'src/like/entities/articlelike.entity';
 import { Member } from 'src/member/entities/member.entity';
 import { User } from 'src/user/entities/user.entity';
 import {

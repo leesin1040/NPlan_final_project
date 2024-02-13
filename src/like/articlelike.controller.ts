@@ -1,0 +1,33 @@
+import { Controller, Delete, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { LikeService } from './articlelike.service';
+import { AuthGuard } from '@nestjs/passport';
+
+@Controller('api/like')
+export class LikeController {
+  constructor(private readonly likeService: LikeService) {}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/:articleId')
+  likePost(@Req() req, @Param('articleId') articleId: number) {
+    const userId = req.user.id;
+    console.log(userId);
+    const data = this.likeService.likePost(userId, articleId);
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: '좋아요!',
+      data,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':articleId')
+  unlikePost(@Req() req, @Param('articleId') articleId: number) {
+    const userId = req.user.id;
+    const deletedData = this.likeService.unlikePost(userId, articleId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: '좋아요 취소!',
+      deletedData,
+    };
+  }
+}

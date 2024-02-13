@@ -8,10 +8,10 @@ import { Schedule } from 'src/schedule/entities/schedule.entity';
 import { Day } from 'src/day/entities/day.entity';
 import { RecommendationService } from './recommendation.service';
 import { RecommendationController } from './recommendation.controller';
-import { Like } from 'src/like/entities/like.entity';
-import { LikeModule } from 'src/like/like.module';
+import { LikeModule } from 'src/like/articlelike.module';
 import { PlaceModule } from 'src/place/place.module';
 import { Repository } from 'typeorm';
+import { Like } from 'src/like/entities/articlelike.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Place, Travel, Schedule, Day, Like])],
