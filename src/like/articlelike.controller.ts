@@ -8,26 +8,26 @@ export class LikeController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/:articleId')
-  likePost(@Req() req, @Param('articleId') articleId: number) {
+  async likePost(@Req() req, @Param('articleId') articleId: number) {
     const userId = req.user.id;
     console.log(userId);
-    const data = this.likeService.likePost(userId, articleId);
+    const { likesCount } = await this.likeService.likePost(userId, articleId);
     return {
       statusCode: HttpStatus.CREATED,
       message: '좋아요!',
-      data,
+      likesCount,
     };
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':articleId')
-  unlikePost(@Req() req, @Param('articleId') articleId: number) {
+  async unlikePost(@Req() req, @Param('articleId') articleId: number) {
     const userId = req.user.id;
-    const deletedData = this.likeService.unlikePost(userId, articleId);
+    const { likesCount } = await this.likeService.unlikePost(userId, articleId);
     return {
       statusCode: HttpStatus.OK,
       message: '좋아요 취소!',
-      deletedData,
+      likesCount,
     };
   }
 }

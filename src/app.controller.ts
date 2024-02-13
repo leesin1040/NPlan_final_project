@@ -143,12 +143,15 @@ export class AppController {
   @Page('oneArticle')
   @Get('/article/:articleId')
   async getOnePost(@UserInfo() user: User, @Param('articleId') articleId: number) {
+    const pageTitle = '상세보기';
     const article = await this.articleService.getArticleById(articleId);
     const data = await this.commentService.getAllComment(articleId);
-    console.log(data);
-
-    const pageTitle = '상세보기';
-    return { user, pageTitle, article, data };
+    if (user !== null) {
+      const userId = user.id;
+      const isLikedArticle = await this.likeService.likeByArticle(userId, articleId);
+      return { user, pageTitle, article, data, isLikedArticle };
+    }
+    return { user, pageTitle, article, data, isLikedArticle: false };
   }
 
   //포스트 수정
