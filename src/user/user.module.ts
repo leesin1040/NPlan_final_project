@@ -7,7 +7,6 @@ import { AuthModule } from 'src/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
-import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
@@ -28,7 +27,6 @@ import { RedisModule } from 'src/redis/redis.module';
         },
       }),
     }),
-    RedisModule,
   ],
   controllers: [UserController],
   providers: [UserService],

@@ -11,27 +11,16 @@
     // header.html 로드 후 로그아웃 버튼 설정
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-      logoutButton.addEventListener('click', async () => {
-        let response = await axios
-          .post('/api/auth/logout')
-          .then((response) => {
-            const data = response.data;
-            console.log(data);
-
-            const cookieName = 'Authorization';
-            const deleteCookie = (name) => {
-              document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            };
-            localStorage.removeItem('Authorization'); // 로컬 스토리지에서 엑세스 토큰 제거
-            deleteCookie(cookieName); // 쿠키에서 엑세스 토큰 삭제
-            window.location.href = '/'; // 메인 페이지로 리디렉션
-          })
-          .catch((error) => {
-            alert(error.response.data.message);
-          });
+      logoutButton.addEventListener('click', () => {
+        const cookieName = 'Authorization';
+        const deleteCookie = (name) => {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        };
+        localStorage.removeItem('Authorization'); // 로컬 스토리지에서 엑세스 토큰 제거
+        deleteCookie(cookieName); // 쿠키에서 엑세스 토큰 삭제
+        window.location.href = '/'; // 메인 페이지로 리디렉션
       });
     }
-
     // 로그인 엑시오스 불러오기
     const realLoginBtn = document.getElementById('realLoginBtn');
     realLoginBtn.addEventListener('click', handleLogin);
