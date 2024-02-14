@@ -8,12 +8,14 @@ import { RegisterDto } from './dtos/register.dto';
 import bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly mailerService: MailerService,
   ) {}
@@ -52,13 +54,16 @@ export class AuthService {
 
   //   return { accessToken: accessToken };
   // }
+
   /* 로그인 핫픽스 */
   async login(userId: number) {
     console.log('로그인 입장 4');
     const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '7h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-    await this.userRepository.update({ id: userId }, { refreshToken });
+
+    await this.redisService.setRefreshToken(userId, refreshToken);
+
     return { accessToken };
   }
 
@@ -79,15 +84,13 @@ export class AuthService {
   }
 
   // 토큰 갱신
-  async refresh(refreshToken: string) {
-    const user = await this.userRepository.findOne({
-      where: { refreshToken },
-    });
+  async refresh(userId: number) {
+    const refreshToken = await this.redisService.getRefreshToken(userId);
 
-    if (!user.refreshToken) {
-      throw new BadRequestException('유효하지 않은 토큰입니다.');
+    if (!refreshToken) {
+      throw new BadRequestException('유효하지 않은 토큰입니다. 다시 로그인을 진행해주세요.');
     }
-    const payload = { id: user.id };
+    const payload = { id: userId };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }

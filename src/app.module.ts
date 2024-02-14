@@ -25,6 +25,7 @@ import { RecommendateionModule } from './recommendation/recommendation.module';
 import { SearchModule } from './elasticsearch/elasticsearch.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/exception.filter';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { HttpExceptionFilter } from './common/filters/exception.filter';
       }),
     }),
     SearchModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],

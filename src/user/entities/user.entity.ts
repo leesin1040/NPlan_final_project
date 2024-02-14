@@ -78,9 +78,6 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @Column({ type: 'varchar', default: '0' })
-  refreshToken: string;
-
   // Travel 1:N
   @OneToMany(() => Travel, (travel) => travel.user)
   travel: Travel[];
