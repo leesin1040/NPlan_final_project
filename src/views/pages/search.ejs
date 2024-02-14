@@ -5,10 +5,11 @@
   </head>
   <body>
     <%-include('../partials/header.ejs') %>
-    <div class="container">
+    <div class="container" style="width: 900px;">
       <!-- 본문 -->
       <div class="row my-4">
         <div class="col-md-6">
+          <h5>검색어 🔍 &ensp; "<%= searchedWord %>"</h5>
           <!-- <p><a href="">인기순</a> / <a href="">최신순</a></p> -->
         </div>
         <% if(user===null){ %>
@@ -22,27 +23,80 @@
             <% } %>
       </div>
       <div class="row">
+        <h5>제목 검색</h5>
         <!-- 여행 포스트 카드 반복문-->
-        <% data.forEach(function(articleOne) { %>
-        <div class="my-1">
-          <a href="/article/<%= articleOne.id %>">
-          <div class="card">
-            <div class="card-body">
-              <p>게시물 ID : <%= articleOne.id %></p>
-              <h5 class="card-title"><%= articleOne.title %></h5>
-              <div class="text-end">
-                <p>작성자 : <%= articleOne.writer %></p>
+        <% searchByTitle.forEach(function(articleOne) { %>
+          <div class="my-1">
+            <a href="/article/<%= articleOne.id %>" class="card-link">
+              <div class="searchedResult">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-muted small"><%= articleOne.id %></span>
+                  <h5 class="card-title mb-0"><%= articleOne.title %></h5>
+                  <span class="text-muted small">작성자: <%= articleOne.writer %></span>
+                </div>
               </div>
-              
-            </div>
+            </a>
           </div>
-        </a>
-        </div>
         <% }); %>
+        <h5 class="mt-5">내용 검색</h5>
+        <% searchByContent.forEach(function(articleOne, index) { %>
+          <div class="my-1">
+            <a href="/article/<%= articleOne.id %>">
+              <div class="searchedResult">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-muted small"><%= articleOne.id %></span>
+                  <h5 class="card-title mb-0"><%= articleOne.title %></h5>
+                  <span class="text-muted small">작성자: <%= articleOne.writer %></span>
+                </div>
+                <p class="article-content small mt-4 text-center"><%= articleOne.content %></p>
+              </div>
+            </a>
+          </div>
+        <% }); %>
+        
         <!-- 여행 포스트 카드 끝 -->
       </div>
       <!-- 본문 -->
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const searchText = "<%= searchedWord %>";
+        const snippetLength = 100; // 하이라이팅된 텍스트 주변으로 포함할 문자열의 길이
+    
+        if(searchText) {
+          const contents = document.querySelectorAll(".article-content");
+    
+          contents.forEach(content => {
+            const originalText = content.textContent || content.innerText;
+            const lowerOriginalText = originalText.toLowerCase();
+            const searchTextLower = searchText.toLowerCase();
+    
+            // 검색어 위치 찾기
+            const index = lowerOriginalText.indexOf(searchTextLower);
+    
+            if(index !== -1) {
+              // 검색어 주변의 텍스트 추출
+              let start = index - snippetLength / 2;
+              let end = index + searchTextLower.length + snippetLength / 2;
+              start = start < 0 ? 0 : start;
+              end = end > originalText.length ? originalText.length : end;
+    
+              // 하이라이팅된 텍스트와 주변 텍스트 추출
+              let snippet = originalText.slice(start, end);
+              if (start > 0) snippet = "..." + snippet;
+              if (end < originalText.length) snippet += "...";
+    
+              // 검색어 하이라이팅
+              snippet = snippet.replace(new RegExp(searchText, "gi"), `<span style="color:red;">${searchText}</span>`);
+    
+              // 내용 업데이트
+              content.innerHTML = snippet;
+            }
+          });
+        }
+      });
+    </script>
+    
     <%-include('../partials/script.ejs') %>
   </body>
 </html>

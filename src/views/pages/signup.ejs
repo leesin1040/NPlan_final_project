@@ -66,10 +66,6 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        console.log('하이');
-      });
-
       document.getElementById('signup').addEventListener('click', async function (event) {
         event.preventDefault();
         try {
@@ -97,17 +93,13 @@
       let authNumber = 0;
 
       document.getElementById('auth-submit').addEventListener('click', async function () {
-        console.log('이메일 인증 들어옴 - 브라우저');
         try {
           const email = document.getElementById('signupEmail').value;
-
           const result = await axios.post('/api/auth/email-check', {
             email,
           });
-
           console.log('인증번호:', result.data.authNumber);
           authNumber = result.data.authNumber;
-
           alert('메일함을 확인해 주세요');
         } catch (error) {
           console.error(error.response.data.message);
@@ -126,18 +118,13 @@
             enteredNumber,
             authNumber,
           });
-
           const success = result.data.success;
           console.log(success, result.data.message);
-
           const signupBtn = document.getElementById('signup');
           console.log(signupBtn.id, success == true);
-
           if (success == true) {
-            console.log('야야야야');
             signupBtn.disabled = false;
           } else if (success == false) {
-            console.log('호호호호');
             signupBtn.disabled = true;
           }
 

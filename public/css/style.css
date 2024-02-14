@@ -87,7 +87,11 @@ p {
 .schedulePlaceAdress {
   font-size: 13px;
 }
-
+.articleImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
 /* 트레블 보드 생성 모달 */
 .color-box {
   width: 30px;
@@ -135,4 +139,10 @@ p {
 
 .hideInput {
   display: none;
+}
+/* 검색 */
+.searchedResult {
+  padding: 10px 20px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }

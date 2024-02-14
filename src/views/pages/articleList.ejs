@@ -29,11 +29,11 @@
           <div class="card h-100">
             <% if(articleOne.imgUrl) { %>
               <div class="image-wrapper">
-                <img src="<%= articleOne.imgUrl %>" class="card-img-top" alt="Article Image" />
+                <img src="<%= articleOne.imgUrl %>" class="card-img-top articleImg" alt="Article Image" />
               </div>
             <% } else { %>
               <!-- 기본 이미지 또는 대체 이미지 -->
-              <img src="https://geojecci.korcham.net/images/no-image01.gif" class="card-img-top" />
+              <img src="https://geojecci.korcham.net/images/no-image01.gif" class="card-img-top articleImg" />
             <% } %>
             <div class="card-body">
               <h5 class="card-title"><%= articleOne.articleTitle %></h5>
@@ -43,8 +43,8 @@
                 </p>
               </div>
               <div class="text-end mt-2">
-                <i class="fa-regular fa-comment cardIcons me-2">&ensp;20</i
-                ><i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&ensp;<%= articleOne.likesCount %></span></i>
+                <i class="fa-regular fa-comment cardIcons me-2">&nbsp; <%= articleOne.commentCount %> </i
+                >&ensp;<i class="fa-solid fa-heart likeHeart"><span class="cardIcons">&nbsp; <%= articleOne.likesCount %></span></i>
               </div>
             </div>
           </div>
