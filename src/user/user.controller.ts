@@ -16,11 +16,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dtos/changepassword.dto';
 import { Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RedisService } from 'src/redis/redis.service';
 
 @ApiTags('사용자')
 @Controller('api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly redisService: RedisService,
+  ) {}
 
   /**
    * 내 정보 조회
@@ -90,6 +94,7 @@ export class UserController {
   async deleteUser(@Request() req) {
     const userId = req.user.id;
     const data = await this.userService.deleteUser(userId);
+    await this.redisService.removeRefreshToken(req.user.id); // 리프레시 토큰 삭제
     return {
       statusCode: HttpStatus.ACCEPTED,
       message: '회원탈퇴 되었습니다.',
