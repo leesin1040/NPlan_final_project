@@ -167,20 +167,12 @@ export class AppController {
   @UseGuards(LoginOrNotGuard)
   @Page('search')
   @Get('/search')
-  async search(@UserInfo() user: User, @Query('title') title: string) {
-    const query = {
-      query: {
-        match: {
-          title: {
-            query: title,
-            fuzziness: 1,
-          },
-        },
-      },
-    };
-    const pageTitle = `검색:${title}`;
-    const data = await this.searchService.searchTitle('articles', query);
-    return { user, pageTitle, data };
+  async search(@UserInfo() user: User, @Query('word') word: string) {
+    const pageTitle = `검색:${word}`;
+    const searchByTitle = await this.searchService.searchByTitle('articles', word);
+    const searchByContent = await this.searchService.searchByContent('articles', word);
+    const searchedWord = word;
+    return { user, pageTitle, searchByTitle, searchByContent, searchedWord };
   }
 
   @Get('/error-page')

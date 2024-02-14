@@ -24,7 +24,6 @@ export class CommentService {
       where: { articleId: articleId },
       relations: ['user'],
     });
-
     // 댓글의 작성자 이름 추가
     const commentsWithUsernames = await Promise.all(
       comments.map(async (comment) => {
@@ -36,7 +35,6 @@ export class CommentService {
         };
       }),
     );
-
     return { comments: commentsWithUsernames };
   }
 
@@ -45,11 +43,9 @@ export class CommentService {
     if (!getComment) {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
-
     if (getComment.userId !== userId) {
       throw new UnauthorizedException('댓글을 수정할 권한이 없습니다.');
     }
-
     const updatedComment = await this.commentRepository.update(commentId, { comment });
     return { updatedComment };
   }
@@ -57,13 +53,11 @@ export class CommentService {
   async deleteComment(userId: number, commentId: number) {
     const comment = await this.commentRepository.findOne({ where: { id: commentId } });
     console.log(comment);
-
     if (!comment) {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
     console.log(comment.userId, '========댓글 쓴사람 아이디');
     console.log(userId, '========댓글 쓴사람 아이디');
-
     if (comment.userId !== userId) {
       throw new UnauthorizedException('댓글을 삭제할 권한이 없습니다.');
     }

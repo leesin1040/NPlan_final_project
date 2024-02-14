@@ -49,7 +49,6 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Request() req, @Body() loginDto: LoginDto, @Res() res: Response) {
-    console.log('로그인 입장 3');
     const data = await this.authService.login(req.user.id);
     res.cookie('Authorization', data.accessToken);
     res.status(HttpStatus.OK).json({
@@ -64,7 +63,6 @@ export class AuthController {
   @Post('/logout')
   async logout(@Request() req, @Res() res: Response) {
     await this.redisService.removeRefreshToken(req.user.id); // 리프레시 토큰 삭제
-
     res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       message: '로그아웃 성공',

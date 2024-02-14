@@ -1,15 +1,16 @@
+import { ConfigService } from '@nestjs/config';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { ArticleDto } from './dto/article.dto';
+import { SearchService } from 'src/elasticsearch/elasticsearch.service';
+import { User } from 'src/user/entities/user.entity';
 import { Article } from './entities/article.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 import axios from 'axios';
 import FormData from 'form-data';
-import { ConfigService } from '@nestjs/config';
 import cheerio from 'cheerio';
 import sharp from 'sharp';
-import { SearchService } from 'src/elasticsearch/elasticsearch.service';
 
 @Injectable()
 export class ArticleService {
@@ -20,11 +21,35 @@ export class ArticleService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+    @InjectRepository(Comment)
+    private commentRepository: Repository<Comment>,
   ) {}
+
+  //article에서 이미지와 텍스트 분리
+  private extractContent(editorContent: string) {
+    const $ = cheerio.load(editorContent);
+    const imgUrl = $('img').first().attr('src');
+    const textContent = $('body').text() || $('html').text() || $.root().text();
+    return { imgUrl, textContent: textContent.trim() };
+  }
+
+  // 사용자 ID로 사용자 이름찾기
+  private async fetchUserName(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    return user ? user.name : null;
+  }
+
+  // articleId로 코멘트 갯수 찾기
+  private async fetchCommentCount(articleId: number) {
+    return await this.commentRepository.count({
+      where: { articleId: articleId },
+    });
+  }
 
   //포스트 만들기
   async createArticle(userId: number, articleDto: ArticleDto) {
     const { articleTitle, editorContent } = articleDto;
+    const { textContent } = this.extractContent(editorContent);
     const createdArticle = await this.articleRepository.save({
       articleTitle,
       editorContent,
@@ -36,53 +61,54 @@ export class ArticleService {
       id: createdArticle.id,
       title: createdArticle.articleTitle,
       writer: user.name,
+      content: textContent,
     });
     return createdArticle;
   }
 
   //포스트 전체 조회
   async getAllArticles() {
-    const articles = await this.articleRepository.find();
+    // 필요한 컬럼만 선택하여 가져오기
+    const articles = await this.articleRepository.find({
+      select: ['id', 'articleTitle', 'editorContent', 'userId', 'likesCount'],
+    });
     const articleOne = await Promise.all(
       articles.map(async (article) => {
-        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
-        const $ = cheerio.load(article.editorContent);
-        const imgUrl = $('img').first().attr('src');
-        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
-        const textContent = fullTextContent.slice(0, 100);
-        const user = await this.userRepository.findOne({ where: { id: article.userId } });
-        const userName = user ? user.name : null;
+        const { imgUrl, textContent } = this.extractContent(article.editorContent);
+        const userName = await this.fetchUserName(article.userId);
+        const commentCount = await this.fetchCommentCount(article.id);
         return {
           ...article,
           editorContent: textContent,
           imgUrl,
           userName,
+          commentCount,
         };
       }),
     );
     return articleOne;
   }
 
+  // 인기 게시글
   async getByLikeArticles() {
-    const articles = await this.articleRepository.find();
+    const articles = await this.articleRepository.find({
+      select: ['id', 'articleTitle', 'editorContent', 'userId', 'likesCount'],
+    });
     const articleOne = await Promise.all(
       articles.map(async (article) => {
-        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
-        const $ = cheerio.load(article.editorContent);
-        const imgUrl = $('img').first().attr('src');
-        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
-        const textContent = fullTextContent.slice(0, 100);
-        const user = await this.userRepository.findOne({ where: { id: article.userId } });
-        const userName = user ? user.name : null;
+        const { imgUrl, textContent } = this.extractContent(article.editorContent);
+        const userName = await this.fetchUserName(article.userId);
+        const commentCount = await this.fetchCommentCount(article.id);
         return {
           ...article,
           editorContent: textContent,
           imgUrl,
           userName,
+          commentCount,
         };
       }),
     );
-    // likeCount를 기준으로 포스트를 정렬
+    // likeCount를 기준으로 포스트를 정렬하고 상위 4개 선택
     const sortedArticles = articleOne.sort((a, b) => b.likesCount - a.likesCount);
     const topFourArticles = sortedArticles.slice(0, 4);
     return topFourArticles;
@@ -90,38 +116,40 @@ export class ArticleService {
 
   //포스트 상세조회
   async getArticleById(id: number) {
-    const getArticle = await this.articleRepository.findOne({ where: { id } });
-    if (!getArticle) {
-      throw new NotFoundException('포스트를 찾을 수 없습니다.');
-    }
-    getArticle.views += 1;
-    await this.articleRepository.save(getArticle);
-    const author = await this.userRepository.findOne({ where: { id: getArticle.userId } });
-    const writer = author.name;
-    const article = {
-      ...getArticle,
-      writer,
+    // 필요한 컬럼만 선택하여 조회
+    const article = await this.articleRepository.findOne({
+      where: { id },
+      select: ['id', 'articleTitle', 'editorContent', 'userId', 'views'],
+    });
+    if (!article) throw new NotFoundException('포스트를 찾을 수 없습니다.');
+    article.views += 1; // 조회수 증가
+    await this.articleRepository.save(article);
+    const userName = await this.fetchUserName(article.userId); // 작성자 이름 조회
+    return {
+      ...article,
+      writer: userName, // 작성자 이름 추가
     };
-    return article;
   }
 
   //내 포스트 전체 조회
   async getArticlesByUser(userId: number) {
-    const articles = await this.articleRepository.find({ where: { userId: userId } });
+    const articles = await this.articleRepository.find({
+      where: { userId: userId },
+      select: ['id', 'articleTitle', 'editorContent', 'userId', 'likesCount'],
+    });
     const articleOne = await Promise.all(
       articles.map(async (article) => {
-        // Cheerio를 사용하여 editorContent에서 첫 번째 이미지 URL 추출
-        const $ = cheerio.load(article.editorContent);
-        const imgUrl = $('img').first().attr('src');
-        const fullTextContent = $('body').text() || $('html').text() || $.root().text();
-        const textContent = fullTextContent.slice(0, 100);
-        const user = await this.userRepository.findOne({ where: { id: article.userId } });
-        const userName = user ? user.name : null;
+        const { imgUrl, textContent } = this.extractContent(article.editorContent);
+        const userName = await this.fetchUserName(article.userId);
+        const commentCount = await this.commentRepository.count({
+          where: { articleId: article.id },
+        });
         return {
           ...article,
           editorContent: textContent,
           imgUrl,
           userName,
+          commentCount,
         };
       }),
     );
@@ -131,6 +159,7 @@ export class ArticleService {
   // 포스트 수정
   async updateArticle(id: number, userId: number, articleDto: ArticleDto) {
     const { articleTitle, editorContent } = articleDto;
+    const { textContent } = this.extractContent(editorContent);
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('포스트를 찾을 수 없습니다.');
@@ -143,6 +172,7 @@ export class ArticleService {
     const updatedArticle = await this.articleRepository.save(article);
     await this.esService.updateData('articles', updatedArticle.id.toString(), {
       title: updatedArticle.articleTitle,
+      content: textContent,
     });
     return updatedArticle;
   }

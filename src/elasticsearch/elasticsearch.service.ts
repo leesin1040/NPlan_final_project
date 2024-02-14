@@ -1,11 +1,10 @@
-import { query } from 'express';
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from 'src/article/entities/article.entity';
-import { data } from 'cheerio/lib/api/attributes';
 import { Place } from 'src/place/entities/place.entity';
+import cheerio from 'cheerio';
 
 @Injectable()
 export class SearchService {
@@ -17,14 +16,46 @@ export class SearchService {
     private readonly esService: ElasticsearchService,
   ) {}
 
-  async searchTitle(index: string, query: any) {
+  // 제목으로 검색
+  async searchByTitle(index: string, searchText: string) {
+    const query = {
+      query: {
+        match: {
+          title: {
+            query: searchText,
+            fuzziness: 1,
+          },
+        },
+      },
+    };
     const hits = await this.esService.search({
       index,
       body: query,
     });
     const result = hits.body.hits.hits.map((hit) => ({
       id: hit._id,
-      ...hit._source, // 여기서 writer 포함 확인
+      ...hit._source,
+    }));
+    return result;
+  }
+
+  // 내용으로 검색
+  async searchByContent(index: string, searchText: string) {
+    const query = {
+      query: {
+        match: {
+          content: searchText,
+        },
+      },
+    };
+    const hits = await this.esService.search({
+      index,
+      body: query,
+    });
+    const result = hits.body.hits.hits.map((hit) => ({
+      id: hit._id,
+      content: hit._source.content.substring(0, 100),
+      ...hit._source,
     }));
     return result;
   }
@@ -90,17 +121,20 @@ export class SearchService {
       await this.esService.indices.delete({ index: indexName });
     }
   }
-  //기존에 있는 인덱스(테이블)를 삭제하고 새로 생성한 뒤 데이터를 넣는다.
   async indexAllArticle() {
     const indexName = 'articles';
-    await this.deleteIndex(indexName);
-    await this.createIndex(indexName);
+    // await this.deleteIndex(indexName);
+    // await this.createIndex(indexName);
+    // 관계된 'user' 데이터를 포함하여 모든 기사를 조회
     const articles = await this.articleRepository.find({ relations: ['user'] });
     const indexPromises = articles.map((article) => {
+      const $ = cheerio.load(article.editorContent);
+      const textContent = $('body').text() || $('html').text() || $.root().text();
       const articleToIndex = {
         id: article.id,
         title: article.articleTitle,
         writer: article.user.name,
+        content: textContent.trim(),
       };
       return this.indexData(indexName, articleToIndex);
     });

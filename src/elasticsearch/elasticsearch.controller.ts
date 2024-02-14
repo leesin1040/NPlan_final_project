@@ -8,18 +8,10 @@ export class SearchController {
   //최종 경로 http://localhost:3000/api/es/search?title=경주
   //article을 타이틀 기준으로 검색
   @Get('search')
-  async search(@Query('title') title: string) {
-    const query = {
-      query: {
-        match: {
-          title: {
-            query: title,
-            fuzziness: 1,
-          },
-        },
-      },
-    };
-    return await this.searchService.searchTitle('articles', query);
+  async search(@Query('word') word: string) {
+    const searchByTitle = await this.searchService.searchByTitle('articles', word);
+    const searchByContent = await this.searchService.searchByContent('articles', word);
+    return { searchByTitle, searchByContent };
   }
 
   @Get('/article')
