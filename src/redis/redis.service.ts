@@ -45,4 +45,27 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   async removeRefreshToken(userId: number): Promise<void> {
     await this.client.del(`refresh_token:${userId}`);
   }
+
+  // add user to blacklist
+  async addToBlacklist(userId: number) {
+    const addSuccessfully = await this.client.sadd('blacklist', userId);
+
+    return addSuccessfully; // 성공 1, 실패 0 반환
+  }
+
+  // find user in blacklist
+  async findInBlacklist(userId: number) {
+    const isBlacklistMember = await this.client.sismember('blacklist', userId, (error) =>
+      console.error(`Redis Error: ${error}`),
+    );
+
+    return isBlacklistMember; // 성공 1, 실패 0 반환
+  }
+
+  // remove user from blacklist
+  async removeFromBlacklist(userId: number) {
+    const removeSuccessfully = await this.client.srm('blacklist', userId);
+
+    return removeSuccessfully; // 성공 1, 실패 0 반환
+  }
 }
