@@ -226,15 +226,19 @@ window.onload = function() {
 }
 
 
-//댓글 수정함수 
-// async function editComment(commentId) {
-//   try {
-//     const response = await axios.patch(`/api/comment/${commentId}`, { comment});
-//     updateCommentButton(response.data.comment, commentId);
-//   } catch (error) {
-//     alert(error.response.data.message);
-//   }
-// }
+// 댓글 수정 함수
+async function editComment(commentId) {
+  try {
+    const comment = prompt("댓글을 수정하세요:"); // 수정할 내용 입력 받기
+    if (comment !== null) { // 사용자가 취소하지 않은 경우
+      const response = await axios.patch(`/api/comment/${commentId}`, { comment });
+      alert("댓글이 성공적으로 수정되었습니다.");
+      window.location.reload();
+    }
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+}
 
 
 
