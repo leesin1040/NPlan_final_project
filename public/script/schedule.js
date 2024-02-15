@@ -7,18 +7,18 @@ async function addSchedule(dayId) {
   const dayTitle = document.getElementById('dayTitle');
   dayTitle.innerText = '';
 
-  await axios
-    .get(`/api/travel/${travelId}/day/${dayId}`, {})
-    .then((response) => {
-      const data = response.data.data[0];
+  // await axios
+  //   .get(`/api/travel/${travelId}/day/${dayId}`, {})
+  //   .then((response) => {
+  //     const data = response.data.data[0];
 
-      // console.log(`${data.day}일차`);
-      dayTitle.innerText = `${data.day}일차`;
-    })
-    .catch((error) => {
-      // alert(error.response.data.message);
-      console.error('Error:', error);
-    });
+  //     // console.log(`${data.day}일차`);
+  //     dayTitle.innerText = `${data.day}일차`;
+  //   })
+  //   .catch((error) => {
+  //     // alert(error.response.data.message);
+  //     console.error('Error:', error);
+  //   });
 
   // 지역 및 카테고리 선택
   const submit = document.getElementById('addScheduleModal-submit');
@@ -121,31 +121,31 @@ async function addSchedule(dayId) {
     });
   }
 
-  document.addEventListener('click', (event) => {
-    if (event.target.id.startsWith('selectPlace')) {
-      const placeId = event.target.id.replace('selectPlace', '');
+  // 장소 선택하면 해당 장소를 schedule에 등록
+  document.addEventListener(
+    'click',
+    async (event) => {
+      if (event.target.id.startsWith('selectPlace')) {
+        const placeId = event.target.id.replace('selectPlace', '');
 
-      selectPlace(placeId, dayId);
-    }
-  });
-}
-
-// 장소 선택하면 해당 장소를 schedule에 등록
-async function selectPlace(placeId, dayId) {
-  // schedule 생성
-  await axios
-    .post('/api/schedule', {
-      placeId,
-      dayId,
-    })
-    .then((response) => {
-      const data = response.data;
-      window.location.reload();
-    })
-    .catch((error) => {
-      // alert(error.response.data.message);
-      console.error('Error:', error);
-    });
+        // schedule 생성
+        await axios
+          .post('/api/schedule', {
+            placeId,
+            dayId,
+          })
+          .then((response) => {
+            const data = response.data;
+            window.location.reload();
+          })
+          .catch((error) => {
+            // alert(error.response.data.message);
+            console.error('Error:', error);
+          });
+      }
+    },
+    { once: true },
+  );
 }
 
 // x버튼을 누르면 모달창 닫힘

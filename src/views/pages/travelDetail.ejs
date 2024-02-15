@@ -22,7 +22,7 @@
           <div class="oneDayList" style="background-color: <%= oneTravel.color %>;">
             <div class="oneDatListTitle justify-content-between align-items-center mb-1" >
               <h5><%= dateString %></h5>
-              <% 
+              <%
               // 여기서 daySchedules와 해당 일자의 스케줄 개수를 확인
               const daySchedules = schedulesResults.find(s => s.dayId === day.id);
               if (daySchedules && daySchedules.schedules.length > 1) { // 스케줄이 2개 이상일 때만 버튼 렌더링
@@ -32,7 +32,7 @@
             </div>
             <!-- 해당 일자의 스케줄 목록 렌더링 -->
             <div class="scheduleListBox">
-              <% 
+              <%
               if (daySchedules && daySchedules.schedules.length > 0) {
                 daySchedules.schedules.forEach(schedule => {
               %>
@@ -69,6 +69,7 @@
     <%-include('../partials/travelDetailPageModals.ejs') %>
 <script src="/script/travelDetail.js"></script>
 <script src="/script/schedule.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
  <%-include('../partials/script.ejs') %>
  <script>
 

@@ -19,6 +19,7 @@ export class ScheduleService {
     @InjectRepository(Place)
     private placeRepository: Repository<Place>,
   ) {}
+
   // 스케줄 생성
   async create(createScheduleDto: CreateScheduleDto) {
     const day = await this.dayRepository.find({ where: { id: createScheduleDto.dayId } });
