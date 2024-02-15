@@ -3,7 +3,7 @@
   <head>
     <%-include('../partials/head.ejs') %>
     <link rel="stylesheet" href="/css/schedule.css" />
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e892dc4fbde45212004f1d658cecdb6f&libraries=services"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1b28118b7440fb00baddccf0c7e4abb1&libraries=services"></script>
   </head>
   <body>
     <%-include('../partials/header.ejs') %>
@@ -43,15 +43,15 @@
                 draggable="true"
                 data-id="<%= schedule.id %>"
               >
-                <p><button type="button" class="btn btn-info btn-sm me-1" disabled><%= schedule.place.cat3 %></button><span><%= schedule.place.name %></span></p>
+                <p><button type="button" class="btn btn-info btn-sm me-1" disabled><%= schedule.place.category %></button><span><%= schedule.place.name %></span></p>
                 <p class="schedulePlaceAdress"><%= schedule.place.address %></p>
-                <!-- <button
+                <button
                   class="btn btn-outline-secondary btn-sm"
                   type="button"
                   id="scheduleDetail<%= schedule.id %>"
                 >
                   상세보기
-                </button> -->
+                </button>
               </div>
             </div>
             <% }); } else { %>
@@ -90,11 +90,10 @@
       document.getElementById('addScheduleModal').style.display = 'flex';
       addSchedule(dayId);
     }
-    // 상세보기 버튼
+    // 위치보기 버튼
     else if (event.target.id.startsWith('scheduleDetail')) {
       const scheduleId = event.target.id.replace('scheduleDetail', '');
       document.getElementById('viewScheduleModal').style.display = 'flex';
-      // console.log(scheduleId);
       viewScheduleDetail(scheduleId);
     }
   });

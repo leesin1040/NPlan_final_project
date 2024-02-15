@@ -25,6 +25,8 @@
 .addScheduleModal-readPlace {
   margin: 15px;
   padding: 1rem 0rem 1rem 1rem;
+  text-align: center;
+  
 }
 
 .addScheduleModal-readPlace button {
@@ -97,4 +99,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
+}
+.scheduleDetailTitle{
+  text-align: center;
 }

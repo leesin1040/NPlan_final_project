@@ -122,14 +122,15 @@
       <div class="modal-header">
         <h2>경로보기 모달</h2>
       </div>
-      <div class="modal-body">
-        <div id="dayMap" style="width: 100%; height: 700px"></div>
-      </div>
       <div class="modal-footer">
         <button type="button" id="closePathModal" class="btn btn-secondary" data-bs-dismiss="modal">
           닫기
         </button>
       </div>
+      <div class="modal-body">
+        <div id="dayMap" style="width: 100%; height: 700px"></div>
+      </div>
+    
     </div>
   </div>
 </div>
@@ -222,34 +223,15 @@
 <section id="viewScheduleModal" class="modal">
   <div class="modal-content">
     <!-- schedule 생성 -->
-    <div>
+    <div class="scheduleDetailTitle">
       <h1 id="tavelTitle"><%= oneTravel.title %></h1>
       <h2 id="dayTitle"></h2>
     </div>
-    <div class="container">
+    <div class="container" >
       <!-- placeInfo, mapView 가로배열로 보여지게 -->
-      <div class="readPlace">
-        <div class="placeName">
-          <p id="">장소 이름</p>
-          <input type="text" id="viewScheduleModal-name" placeholder="" value="" />
-        </div>
-        <div class="placeAddress">
-          <p id="">장소 주소</p>
-          <input type="text" id="viewScheduleModal-address" placeholder="" value="" />
-        </div>
-        <div class="placeCategory">
-          <p id="">장소 카테고리</p>
-          <input type="text" id="viewScheduleModal-category" placeholder="" value="" />
-        </div>
-        <div class="placeTransportation">
-          <p id="">교통편</p>
-          <input type="text" id="viewScheduleModal-transportation" placeholder="" value="" />
-        </div>
-        <div class="placeMemo">
-          <p id="">메모</p>
-          <textarea id="viewScheduleModal-memo" placeholder=""></textarea>
-        </div>
-        <button id="viewScheduleModal-update">수정</button>
+     
+    <div id="scheduleMap" style="width: 100%; height: 700px"></div>
+    <div class="readPlace">
         <button id="viewScheduleModal-delete">삭제</button>
         <button id="closeDetailModal" type="button" onclick="closeDetailModalPage()">닫기</button>
       </div>
