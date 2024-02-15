@@ -75,4 +75,3 @@ export class CommentController {
     };
   }
 }
-//암것도 안나와요
