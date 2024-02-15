@@ -105,8 +105,8 @@
     </div>
     <div class="row">
       <div class="col text-end">
-        <button type="button" id="updateComment" class="btn btn-outline-secondary btn-sm" onclick="editComment(<%= comment.commentId %>)">수정</button>
-        <button type="button" class="btn btn-outline-danger btn-sm delete-comment-button" data-comment-id="<%= comment.commentId %>">삭제</button>
+        <button type="button" id="updateComment" class="btn btn-outline-secondary btn-sm" onclick="editComment(<%= comment.id %>)">수정</button>
+        <button type="button" class="btn btn-outline-danger btn-sm delete-comment-button" data-comment-id="<%= comment.id %>">삭제</button>
       </div>
     </div>
   </div>
@@ -129,10 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
       deleteButtons.forEach(button => {
         button.addEventListener('click', async function(event) {
           const commentId = event.target.dataset.commentId;
-          // if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-          //   await deleteComment(commentId);
-          // }
-          console.log(commentId, "ㅎㅇ");
+          if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+            await deleteComment(commentId);
+          }
         });
       });});
 
