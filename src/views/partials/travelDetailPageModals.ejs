@@ -70,7 +70,7 @@
           <div class="region-box selectBox" data-region="경북">경북</div>
           <div class="region-box selectBox" data-region="경남">경남</div>
           <div class="region-box selectBox" data-region="제주">제주</div>
-        </div> 
+        </div>
         숨겨진 지역 인풋-->
         <input type="hidden" name="region" id="selectedRegion" value="<%= oneTravel.region %>" />
 
@@ -130,7 +130,7 @@
       <div class="modal-body">
         <div id="dayMap" style="width: 100%; height: 700px"></div>
       </div>
-    
+
     </div>
   </div>
 </div>
@@ -163,23 +163,61 @@
               <div class="form-group">
                 <label for="areaCode">지역</label>
                 <select class="form-select" name="지역" id="areaCode">
-                  <option value="1">서울</option>
-                  <option value="2">인천</option>
-                  <option value="3">대전</option>
-                  <option value="4">대구</option>
-                  <option value="5">광주</option>
-                  <option value="6">부산</option>
-                  <option value="7">울산</option>
-                  <option value="8">세종</option>
-                  <option value="31">경기</option>
-                  <option value="32">강원</option>
-                  <option value="33">충북</option>
-                  <option value="34">충남</option>
-                  <option value="35">경북</option>
-                  <option value="36">경남</option>
-                  <option value="37">전북</option>
-                  <option value="38">전남</option>
-                  <option value="39">제주</option>
+                  <% const region = oneTravel.region
+                  const regionArray = region.split(', ');
+                  for(let reg of regionArray) {
+                    if (reg === '서울'){ %>
+                      <option value="1">서울</option>
+                      <% }
+                      else if (reg === '인천') { %>
+                        <option value="2">인천</option>
+                      <% }
+                      else if (reg === '대전') { %>
+                        <option value="3">대전</option>
+                      <% }
+                      else if (reg === '대구') { %>
+                        <option value="4">대구</option>
+                      <% }
+                      else if (reg === '광주') { %>
+                        <option value="5">광주</option>
+                      <% }
+                      else if (reg === '부산') { %>
+                        <option value="6">부산</option>
+                      <% }
+                      else if (reg === '울산') { %>
+                        <option value="7">울산</option>
+                      <% }
+                      else if (reg === '세종') { %>
+                        <option value="8">세종</option>
+                      <% }
+                      else if (reg === '경기') { %>
+                        <option value="31">경기</option>
+                      <% }
+                      else if (reg === '강원') { %>
+                        <option value="32">강원</option>
+                      <% }
+                      else if (reg === '충북') { %>
+                        <option value="33">충북</option>
+                      <% }
+                      else if (reg === '충남') { %>
+                        <option value="34">충남</option>
+                      <% }
+                      else if (reg === '경북') { %>
+                        <option value="35">경북</option>
+                      <% }
+                      else if (reg === '경남') { %>
+                        <option value="36">경남</option>
+                      <% }
+                      else if (reg === '전북') { %>
+                        <option value="37">전북</option>
+                      <% }
+                      else if (reg === '전남') { %>
+                        <option value="38">전남</option>
+                      <% }
+                      else if (reg === '제주') { %>
+                        <option value="39">제주</option>
+                      <% }
+                  } %>
                 </select>
               </div>
             </div>
@@ -187,14 +225,61 @@
               <div class="form-group">
                 <label for="category">카테고리</label>
                 <select class="form-select" name="카테고리" id="category">
-                  <option value="O00">전체</option>
-                  <option value="A01">자연</option>
-                  <option value="A02">인문(문화/예술/역사)</option>
-                  <option value="A03">레포츠</option>
-                  <option value="A04">쇼핑</option>
-                  <option value="A05">음식</option>
-                  <option value="B02">숙박</option>
-                  <option value="C01">추천코스</option>
+                  <% const theme = oneTravel.theme
+                  if (theme === '자연'){ %>
+                    <option value="A01">자연</option>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A03">레포츠</option>
+                    <option value="A04">쇼핑</option>
+                    <option value="A05">음식</option>
+                    <option value="B02">숙박</option>
+                    <option value="O00">전체</option>
+                  <% }
+                  else if (theme === '인문(문화/예술/역사)') { %>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A01">자연</option>
+                    <option value="A03">레포츠</option>
+                    <option value="A04">쇼핑</option>
+                    <option value="A05">음식</option>
+                    <option value="B02">숙박</option>
+                    <option value="O00">전체</option>
+                  <% }
+                  else if (theme === '레포츠') { %>
+                    <option value="A03">레포츠</option>
+                    <option value="A01">자연</option>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A04">쇼핑</option>
+                    <option value="A05">음식</option>
+                    <option value="B02">숙박</option>
+                    <option value="O00">전체</option>
+                  <% }
+                  else if (theme === '쇼핑') { %>
+                    <option value="A04">쇼핑</option>
+                    <option value="A01">자연</option>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A03">레포츠</option>
+                    <option value="A05">음식</option>
+                    <option value="B02">숙박</option>
+                    <option value="O00">전체</option>
+                  <% }
+                  else if (theme === '음식') { %>
+                    <option value="A05">음식</option>
+                    <option value="A01">자연</option>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A03">레포츠</option>
+                    <option value="A04">쇼핑</option>
+                    <option value="B02">숙박</option>
+                    <option value="O00">전체</option>
+                  <% }
+                  else if (theme === '숙박') { %>
+                    <option value="B02">숙박</option>
+                    <option value="A01">자연</option>
+                    <option value="A02">인문(문화/예술/역사)</option>
+                    <option value="A03">레포츠</option>
+                    <option value="A04">쇼핑</option>
+                    <option value="A05">음식</option>
+                    <option value="O00">전체</option>
+                  <% } %>
                 </select>
               </div>
             </div>
@@ -229,7 +314,7 @@
     </div>
     <div class="container" >
       <!-- placeInfo, mapView 가로배열로 보여지게 -->
-     
+
     <div id="scheduleMap" style="width: 100%; height: 700px"></div>
     <div class="readPlace">
         <button id="viewScheduleModal-delete">삭제</button>
