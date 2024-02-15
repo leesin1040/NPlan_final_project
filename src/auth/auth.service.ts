@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -58,6 +63,9 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload, { expiresIn: '7h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
+    const isBlacklistMember = this.redisService.findInBlacklist(userId);
+    if (isBlacklistMember) throw new BadRequestException('로그인을 진행할 수 없습니다.');
+
     await this.redisService.setRefreshToken(userId, refreshToken);
 
     return { accessToken };
@@ -90,4 +98,38 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }
+
+  // // 블랙리스트에 사용자 추가
+  // async addToBlacklist(userId: number) {
+  //   const addSuccessfully = await this.redisService.addToBlacklist(userId);
+
+  //   if (!addSuccessfully)
+  //     throw new RequestTimeoutException('사용자를 블랙리스트에 등록하지 못했습니다.');
+  //   await this.redisService.removeRefreshToken(userId);
+
+  //   const blacklistMember = await this.userRepository.find({ where: { id: userId } });
+  //   return blacklistMember;
+  // }
+
+  // // 사용자가 블랙리스트 내에 있는지 조회
+  // async findInBlacklist(userId: number) {
+  //   const findSuccessfully = await this.redisService.findInBlacklist(userId);
+
+  //   if (!findSuccessfully)
+  //     throw new BadRequestException('사용자가 블랙리스트에 존재하지 않습니다.');
+
+  //   const blacklistMember = await this.userRepository.find({ where: { id: userId } });
+  //   return blacklistMember;
+  // }
+
+  // // 사용자를 블랙리스트에서 삭제
+  // async removeFromBlacklist(userId: number) {
+  //   const removeSuccessfully = await this.redisService.removeFromBlacklist(userId);
+
+  //   if (!removeSuccessfully)
+  //     throw new BadRequestException('사용자가 블랙리스트에 존재하지 않습니다.');
+
+  //   const blacklistMember = await this.userRepository.find({ where: { id: userId } });
+  //   return blacklistMember;
+  // }
 }
