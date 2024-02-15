@@ -93,6 +93,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### 댓글 삭제
-DELETE {{domain}}/comment/2
+DELETE {{domain}}/comment/3
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}

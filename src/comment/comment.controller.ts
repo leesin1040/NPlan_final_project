@@ -65,6 +65,8 @@ export class CommentController {
   @Delete('/:commentId')
   async deleteComment(@Param('commentId') commentId: number, @Req() req) {
     const userId = req.user.id;
+    console.log('댓글삭제');
+
     const data = await this.commentService.deleteComment(userId, commentId);
     return {
       statusCode: HttpStatus.OK,
@@ -73,3 +75,4 @@ export class CommentController {
     };
   }
 }
+//암것도 안나와요
