@@ -14,15 +14,23 @@ export class SearchController {
     return { searchByTitle, searchByContent };
   }
 
-  @Get('/article')
+  @Get('/articles')
   async indexingArticle() {
     try {
-      await this.searchService.indexAllArticle();
-      console.log('article 인덱싱 초기화');
-      return { message: 'article 인덱싱이 성공적으로 완료되었습니다.' };
+      // await this.searchService.indexAllArticle();
+      const count = await this.searchService.countDocuments('articles');
+      console.log(count);
+      console.log(`article 인덱싱 초기화, 총 문서 개수: ${count}`);
+      return { message: `article 인덱싱이 성공적으로 완료되었습니다. 총 문서 개수: ${count}` };
     } catch (error) {
       console.error('article 인덱싱 중 에러 발생:', error);
       return { message: 'article 인덱싱 중 에러가 발생했습니다.', error: error.message };
     }
+  }
+
+  @Get('/places')
+  async indexingPlace() {
+    // places 인덱싱 시작
+    await this.searchService.indexAllPlaces();
   }
 }
