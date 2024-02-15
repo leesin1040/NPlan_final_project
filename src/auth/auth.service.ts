@@ -63,7 +63,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload, { expiresIn: '7h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-    const isBlacklistMember = this.redisService.findInBlacklist(userId);
+    const isBlacklistMember = await this.redisService.findInBlacklist(userId);
     if (isBlacklistMember) throw new BadRequestException('로그인을 진행할 수 없습니다.');
 
     await this.redisService.setRefreshToken(userId, refreshToken);
