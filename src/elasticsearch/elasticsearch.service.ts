@@ -60,6 +60,26 @@ export class SearchService {
     return result;
   }
 
+  // 장소 이름으로 검색
+  async searchByPlace(index: string, searchText: string) {
+    const query = {
+      query: {
+        match: {
+          name: searchText,
+        },
+      },
+    };
+    const hits = await this.esService.search({
+      index,
+      body: query,
+    });
+    const results = hits.body.hits.hits.map((hit) => ({
+      id: hit._id,
+      ...hit._source,
+    }));
+    return results;
+  }
+
   //데이터의 id를 통해 es유니크 아이디 확인
   async searchById(indexName: string, docId: string) {
     const searchResponse = await this.esService.search({
@@ -187,7 +207,6 @@ export class SearchService {
     console.log(`Indexing 소요 시간: ${timeGap / 1000}초`);
     console.log('인덱싱 끝!');
   }
-
   // 인덱싱 개수 확인
   async countDocuments(indexName: string) {
     const response = await this.esService.count({
@@ -195,6 +214,7 @@ export class SearchService {
     });
     return response.body.count;
   }
+
   // 인덱싱 빠르게 하기 위한 place용 세팅
   async createIndexPlace(indexName: string) {
     const { body: indexExists } = await this.esService.indices.exists({ index: indexName });

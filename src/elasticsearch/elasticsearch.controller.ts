@@ -7,11 +7,19 @@ export class SearchController {
 
   //최종 경로 http://localhost:3000/api/es/search?title=경주
   //article을 타이틀 기준으로 검색
-  @Get('search')
+  @Get('/search')
   async search(@Query('word') word: string) {
     const searchByTitle = await this.searchService.searchByTitle('articles', word);
     const searchByContent = await this.searchService.searchByContent('articles', word);
     return { searchByTitle, searchByContent };
+  }
+
+  //최종 경로 http://localhost:3000/api/es/place?name=경주
+  //place 이름 기준으로 검색
+  @Get('/place')
+  async searchPlace(@Query('name') name: string) {
+    const searchByPlace = await this.searchService.searchByPlace('places', name);
+    return { searchByPlace };
   }
 
   @Get('/articles')
