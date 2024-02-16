@@ -146,6 +146,7 @@ export class AppController {
     const pageTitle = '상세보기';
     const article = await this.articleService.getArticleById(articleId);
     const data = await this.commentService.getAllComment(articleId);
+
     if (user !== null) {
       const userId = user.id;
       const isLikedArticle = await this.likeService.likeByArticle(userId, articleId);

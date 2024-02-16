@@ -1,7 +1,15 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Article } from 'src/article/entities/article.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('comments')
 export class Comment {
@@ -25,4 +33,10 @@ export class Comment {
   user: User;
   @Column({ type: 'int', unsigned: true })
   userId: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
