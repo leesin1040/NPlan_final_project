@@ -11,7 +11,7 @@
       <!-- 본문 -->
       <div class="row" style="overflow-x: auto; white-space: nowrap;">
         <h1><%= oneTravel.title %></h1>
-        <h4><%= oneTravel.theme %> / <%= oneTravel.region %> <button type="button" class="btn btn-secondary updateModalBtn" data-bs-toggle="modal" data-bs-target="#boardModal">수정하기</button></h4>
+        <h4> <%= oneTravel.region %> <button type="button" class="btn btn-secondary updateModalBtn" data-bs-toggle="modal" data-bs-target="#boardModal">수정하기</button></h4>
       </div>
       <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
         <% days.forEach(day => {

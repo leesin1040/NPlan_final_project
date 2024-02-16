@@ -2,3 +2,7 @@
 
 ### 엘라스틱서치 title= 다음 검색어
 GET {{domain}}/es/search?title=매력
+
+
+### 엘라스틱서치 title= 다음 검색어
+GET {{domain}}/es/place?title=포덕
