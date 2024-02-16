@@ -2,13 +2,14 @@ import { CreatePlaceDto } from './dto/create-place.dto';
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
-import { In, IsNull, Like, Repository } from 'typeorm';
+import { DataSource, In, IsNull, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
+    private dataSource: DataSource,
   ) {}
 
   // place 지역별 ex)대표지역 전체(인기순)
@@ -40,19 +41,23 @@ export class PlaceService {
   // 이전등록한 place 주변 좌표들
 
   async getAroundRegions(placeId: number, contentTypeId: number) {
-    const beforePlacePoint = await this.placeRepository.findOne({ where: { id: placeId } });
-    console.log(beforePlacePoint.placePoint);
-    const aroundSpots = await this.placeRepository
-      .createQueryBuilder('place')
-      .where('place.contentTypeId = :contentTypeId', { contentTypeId: contentTypeId })
-      // .andWhere('place.placeId != :currentPlaceId', { currentPlaceId: placeId })
-      .andWhere('ST_Distance_Sphere(place.placePoint, ST_GeomFromText(:beforePoint))<= :radius', {
-        beforePoint: beforePlacePoint.placePoint,
-        radius: 5000,
-      })
-      .limit(60)
-      .getMany();
+    try {
+      const beforePlacePoint = await this.placeRepository.findOne({ where: { id: placeId } });
+      console.log(beforePlacePoint.placePoint);
+      const aroundSpots = await this.placeRepository
+        .createQueryBuilder('place')
+        .where('place.contentTypeId = :contentTypeId', { contentTypeId: contentTypeId })
+        .andWhere('ST_Distance_Sphere(place.placePoint, ST_GeomFromText(:beforePoint))<= :radius', {
+          beforePoint: beforePlacePoint.placePoint,
+          radius: 5000,
+        })
+        .limit(60)
+        .getMany();
 
-    return aroundSpots;
+      return aroundSpots;
+    } catch (error) {
+      console.error('Error in getAroundRegions:', error);
+      throw error;
+    }
   }
 }

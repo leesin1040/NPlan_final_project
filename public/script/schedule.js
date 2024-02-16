@@ -49,7 +49,7 @@ async function addSchedule(dayId) {
           .then((response) => {
             const datas = response.data.data;
             showPlaceList(datas, placeId);
-            showPlaceMap(datas, placeId);
+            // showPlaceMap(datas, placeId);
           });
       })
       .catch((error) => {
@@ -57,16 +57,16 @@ async function addSchedule(dayId) {
       });
   }
 
-  function showPlaceMap(datas) {
-    console.log(datas);
-    let mapContainer = document.getElementById('addScheduleModal-mpaView'), // 지도를 표시할 div
-      mapOption = {
-        // 좌표에 카드들 중 첫번쨰의 좌표
-        center: new kakao.maps.LatLng(datas[0].mapY, datas[0].mapX), // 지도의 중심좌표
-        level: 3,
-      };
-    const map = new kakao.maps.Map(mapContainer, mapOption);
-  }
+  // function showPlaceMap(datas) {
+  //   console.log(datas);
+  //   let mapContainer = document.getElementById('addScheduleModal-mapView'), // 지도를 표시할 div
+  //     mapOption = {
+  //       // 좌표에 카드들 중 첫번쨰의 좌표
+  //       center: new kakao.maps.LatLng(datas[0].mapY, datas[0].mapX), // 지도의 중심좌표
+  //       level: 3,
+  //     };
+  //   const map = new kakao.maps.Map(mapContainer, mapOption);
+  // }
   // place table에서 지역별 장소정보 가져오기
   async function getPlaceListAll(areaCode) {
     await axios
