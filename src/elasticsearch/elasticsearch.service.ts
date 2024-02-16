@@ -60,12 +60,13 @@ export class SearchService {
     return result;
   }
 
-  // 장소 이름으로 검색
+  // 장소 이름, 주소, 카테고리로 검색
   async searchByPlace(index: string, searchText: string) {
     const query = {
       query: {
-        match: {
-          name: searchText,
+        multi_match: {
+          query: searchText,
+          fields: ['name', 'address', 'category'],
         },
       },
     };
