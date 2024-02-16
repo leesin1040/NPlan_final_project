@@ -32,7 +32,7 @@ async function addSchedule(dayId) {
   }
   async function getSearchPlace(inputValue) {
     await axios
-      .get(`/api/es/place?name=${inputValue}`)
+      .get(`/api/es/place?word=${inputValue}`)
       .then(async (response) => {
         const placeDatas = response.data.searchByPlace;
         if (placeDatas.length === 0) {
