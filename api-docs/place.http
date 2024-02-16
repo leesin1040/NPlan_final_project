@@ -12,46 +12,28 @@ Content-Type: application/json
 }
 
 
-###place생성
-post {{domain}}/place
-Content-Type: application/json
-
-{
-  "name":"내집",
-  "address":"서울 중구 신당동 308-1",
-  "mapX":127.123,
-  "mapY":38.123,
-  "cat1":"숙박"
-}
-
-
-
 ###place 시,도,군
-GET {{domain}}/place/region
+GET {{domain}}/place/region/1
 Content-Type: application/json
-
-{
-    "region":"경남"
-}
-
-
 
 
 ### place 지역+대분류 조회
 ## region 서울,경기,경남,인천,경북...
 ## content 숙박,관광지,음식점,쇼핑
-GET {{domain}}/place/region/content
+GET {{domain}}/place/region/1/content/32
 Content-Type: application/json
 
-{
-  "region":"서울",
-  "content":"관광지"
-}
+
+###
+## place주변
+GET {{domain}}/place/aroundRegion/42800/contentTypeId/39
+Content-Type: application/json
 
 
 
 ###  장소 한번만
-PATCH  {{domain}}/uploadplace
+POST  {{domain}}/recommendationTravel
+Content-Type: application/json\
 
 
 
