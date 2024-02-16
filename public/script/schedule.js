@@ -88,7 +88,6 @@ async function addSchedule(dayId) {
       .get(`/api/place/region/${areaCode}/content/${cat1}`)
       .then((response) => {
         const datas = response.data.data;
-        console.log(datas);
         showPlaceList(datas);
       })
       .catch((error) => {
