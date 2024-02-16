@@ -178,8 +178,8 @@ export class SearchService {
     console.log(`Indexing 시작 시간: ${startTime}`);
     const indexName = 'places';
     await this.deleteIndex(indexName);
-    await this.createIndex(indexName); // 인덱스가 없으면 생성
-    const batchSize = 10000; // 한 번에 처리할 배치 크기
+    await this.createIndex(indexName);
+    const batchSize = 10000;
     let offset = 0;
     let places;
     do {
@@ -188,12 +188,10 @@ export class SearchService {
         take: batchSize,
         skip: offset,
       });
-      // 벌크 인덱싱을 위한 요청 바디 생성
       const body = places.flatMap((doc) => [
         { index: { _index: indexName, _id: doc.id.toString() } },
         doc,
       ]);
-      // 벌크 인덱싱 실행
       if (body.length > 0) {
         await this.esService.bulk({ refresh: true, body });
       }
