@@ -16,9 +16,37 @@ async function addSchedule(dayId) {
       console.error('Error:', error);
     });
 
+  // 검색
+  const placeSearchBtn = document.getElementById('addScheduleModal-search');
+  placeSearchBtn.addEventListener('click', searchPlaces);
+
+  function searchPlaces(event) {
+    event.preventDefault();
+    const inputValue = document.getElementById('placeInputFlied').value;
+    document.getElementById('addScheduleModal-placeList').innerHTML = '';
+    if (inputValue === '') {
+      alert('검색어를 입력해주세요');
+    } else {
+      getSearchPlace(inputValue);
+    }
+  }
+  async function getSearchPlace(inputValue) {
+    await axios
+      .get(`/api/es/place?name=${inputValue}`)
+      .then(async (response) => {
+        const placeDatas = response.data.searchByPlace;
+        if (placeDatas.length === 0) {
+          alert('검색결과가  없습니다');
+          return;
+        }
+        showPlaceList(placeDatas);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
   // 지역 및 카테고리 선택
   const submit = document.getElementById('addScheduleModal-submit');
-  submit.removeEventListener('click', onSubmitClick);
   submit.addEventListener('click', onSubmitClick);
   function onSubmitClick(event) {
     event.preventDefault();
