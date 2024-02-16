@@ -3,17 +3,13 @@ async function addSchedule(dayId) {
   let path = window.location.pathname;
   let pathParts = path.split('/');
   let travelId = pathParts[pathParts.indexOf('travel') + 1];
-
-  const dayTitle = document.getElementById('dayTitle');
-  dayTitle.innerText = '';
+  const dayTitle = document.getElementById('modaldayTitle');
 
   await axios
     .get(`/api/travel/${travelId}/day/${dayId}`, {})
     .then((response) => {
-      const data = response.data.data[0];
-
       // console.log(`${data.day}일차`);
-      dayTitle.innerText = `${data.day}일차`;
+      dayTitle.innerText = ` - ${response.data.data.day}일차`;
     })
     .catch((error) => {
       // alert(error.response.data.message);
@@ -22,20 +18,55 @@ async function addSchedule(dayId) {
 
   // 지역 및 카테고리 선택
   const submit = document.getElementById('addScheduleModal-submit');
-  submit.addEventListener('click', async (event) => {
+  submit.removeEventListener('click', onSubmitClick);
+  submit.addEventListener('click', onSubmitClick);
+  function onSubmitClick(event) {
     event.preventDefault();
-
+    document.getElementById('addScheduleModal-placeList').innerHTML = '';
     const areaCode = document.getElementById('areaCode').value;
     const category = document.getElementById('category').value;
     console.log(areaCode, category);
 
     if (category === 'O00') {
-      await getPlaceListAll(areaCode);
+      getPlaceListAll(areaCode);
+    } else if (category === '12' || category === '39' || category === '38' || category === '32') {
+      getPlaceListByCategory(areaCode, category);
     } else {
-      await getPlaceListByCategory(areaCode, category);
+      getAroundPlaceList(areaCode, category, dayId, travelId);
     }
-  });
+  }
 
+  // 주변정보
+  async function getAroundPlaceList(areaCode, category, dayId, travelId) {
+    await axios
+      .get(`/api/travel/${travelId}/day/${dayId}`)
+      .then(async (response) => {
+        const places = response.data.data.schedule;
+        const contentTypeId = category.substring(0, 2);
+        const placeId = places[places.length - 1].place.id;
+        await axios
+          .get(`/api/place/aroundRegion/${placeId}/contentTypeId/${contentTypeId}`)
+          .then((response) => {
+            const datas = response.data.data;
+            showPlaceList(datas, placeId);
+            showPlaceMap(datas, placeId);
+          });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  function showPlaceMap(datas) {
+    console.log(datas);
+    let mapContainer = document.getElementById('addScheduleModal-mpaView'), // 지도를 표시할 div
+      mapOption = {
+        // 좌표에 카드들 중 첫번쨰의 좌표
+        center: new kakao.maps.LatLng(datas[0].mapY, datas[0].mapX), // 지도의 중심좌표
+        level: 3,
+      };
+    const map = new kakao.maps.Map(mapContainer, mapOption);
+  }
   // place table에서 지역별 장소정보 가져오기
   async function getPlaceListAll(areaCode) {
     await axios
@@ -43,7 +74,6 @@ async function addSchedule(dayId) {
       .then((response) => {
         const datas = response.data.data;
         console.log(datas);
-
         showPlaceList(datas);
       })
       .catch((error) => {
@@ -58,8 +88,6 @@ async function addSchedule(dayId) {
       .get(`/api/place/region/${areaCode}/content/${cat1}`)
       .then((response) => {
         const datas = response.data.data;
-        console.log(datas);
-
         showPlaceList(datas);
       })
       .catch((error) => {
@@ -69,11 +97,14 @@ async function addSchedule(dayId) {
   }
 
   // place table에서 받아온 place 정보를 html에 띄우기
-  function showPlaceList(datas) {
+  function showPlaceList(datas, placeId) {
     const placeList = document.getElementById('addScheduleModal-placeList');
     placeList.innerHTML = '';
 
     datas.map((data) => {
+      if (data.id === placeId) {
+        return;
+      }
       const place = document.createElement('div');
       place.className = 'addScheduleModal-place';
       place.id = data.id;
@@ -87,7 +118,7 @@ async function addSchedule(dayId) {
 
       const placeImg = document.createElement('img');
       placeImg.className = 'addScheduleModal-placeImg';
-      data.imgUrl === null
+      data.imgUrl === null || data.imgUrl === ''
         ? (placeImg.src =
             'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo-available_87543-11093.jpg')
         : (placeImg.src = data.imgUrl);
@@ -152,4 +183,5 @@ async function selectPlace(placeId, dayId) {
 function closeModalPage() {
   const modal = document.getElementById('addScheduleModal');
   modal.style.display = 'none';
+  window.location.reload();
 }

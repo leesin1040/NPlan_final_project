@@ -103,3 +103,6 @@
 .scheduleDetailTitle{
   text-align: center;
 }
+.addScheduleTitle{
+  display: flex;
+}
