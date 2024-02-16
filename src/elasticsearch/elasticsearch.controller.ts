@@ -14,7 +14,7 @@ export class SearchController {
     return { searchByTitle, searchByContent };
   }
 
-  //최종 경로 http://localhost:3000/api/es/place?name=경주
+  //최종 경로 http://localhost:3000/api/es/place?word=경주
   //place 이름 기준으로 검색
   @Get('/place')
   async searchPlace(@Query('word') name: string) {
