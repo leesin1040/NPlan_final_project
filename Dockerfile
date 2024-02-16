@@ -30,6 +30,7 @@ ARG REDIS_USERNAME
 ARG REDIS_PASSWORD
 ARG REDIS_HOST
 ARG REDIS_PORT
+ARG UPDATE_KEY
 
 COPY package.json package-lock.json ./
 
@@ -62,6 +63,7 @@ RUN echo "REDIS_USERNAME=${REDIS_USERNAME}" >> .env
 RUN echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> .env
 RUN echo "REDIS_HOST=${REDIS_HOST}" >> .env
 RUN echo "REDIS_PORT=${REDIS_PORT}" >> .env
+RUN echo "UPDATE_KEY=${UPDATE_KEY}" >> .env
 
 
 RUN npm ci
