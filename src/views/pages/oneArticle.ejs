@@ -66,6 +66,7 @@
         </div>
         <hr class="my-5" />
         <div class="row">
+          <% if (user !== null) { %>
           <div class="col-2">댓글 작성</div>
           <div class="col-8">
             <input
@@ -78,6 +79,7 @@
           <div class="col">
             <input type="button" id="commentCreatBtn" class="btn btn-secondary" value="작성하기" />
           </div>
+          <% } %>
           <hr class="my-4" style="color: #ccc" />
           <!-- 코멘트 영역 -->
 <% data.comments.forEach(comment => { %>
@@ -241,8 +243,6 @@ async function editComment(commentId) {
     alert(error.response.data.message);
   }
 }
-
-
 
 
  // 댓글 삭제 함수

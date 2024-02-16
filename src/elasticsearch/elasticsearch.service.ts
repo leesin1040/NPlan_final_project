@@ -153,25 +153,26 @@ export class SearchService {
     }
   }
 
-  async indexAllArticle() {
-    const indexName = 'articles';
-    await this.deleteIndex(indexName);
-    await this.createIndex(indexName);
-    // 관계된 'user' 데이터를 포함하여 모든 기사를 조회
-    const articles = await this.articleRepository.find({ relations: ['user'] });
-    const indexPromises = articles.map((article) => {
-      const $ = cheerio.load(article.editorContent);
-      const textContent = $('body').text() || $('html').text() || $.root().text();
-      const articleToIndex = {
-        id: article.id,
-        title: article.articleTitle,
-        writer: article.user.name,
-        content: textContent.trim(),
-      };
-      return this.indexData(indexName, articleToIndex);
-    });
-    return Promise.all(indexPromises);
-  }
+  // 초기 article 인덱싱
+  // async indexAllArticle() {
+  //   const indexName = 'articles';
+  //   await this.deleteIndex(indexName);
+  //   await this.createIndex(indexName);
+  //   // 관계된 'user' 데이터를 포함하여 모든 기사를 조회
+  //   const articles = await this.articleRepository.find({ relations: ['user'] });
+  //   const indexPromises = articles.map((article) => {
+  //     const $ = cheerio.load(article.editorContent);
+  //     const textContent = $('body').text() || $('html').text() || $.root().text();
+  //     const articleToIndex = {
+  //       id: article.id,
+  //       title: article.articleTitle,
+  //       writer: article.user.name,
+  //       content: textContent.trim(),
+  //     };
+  //     return this.indexData(indexName, articleToIndex);
+  //   });
+  //   return Promise.all(indexPromises);
+  // }
 
   async indexAllPlaces() {
     const startTime = new Date(); // 시작 시간 기록
@@ -184,7 +185,7 @@ export class SearchService {
     let places;
     do {
       places = await this.placeRepository.find({
-        select: ['id', 'name'],
+        select: ['id', 'name', 'address', 'imgUrl', 'category', 'placeId'],
         take: batchSize,
         skip: offset,
       });
@@ -205,13 +206,6 @@ export class SearchService {
     console.log(`Indexing 소요 시간: ${timeGap / 1000}초`);
     console.log('인덱싱 끝!');
   }
-  // 인덱싱 개수 확인
-  async countDocuments(indexName: string) {
-    const response = await this.esService.count({
-      index: indexName,
-    });
-    return response.body.count;
-  }
 
   // 인덱싱 빠르게 하기 위한 place용 세팅
   async createIndexPlace(indexName: string) {
@@ -230,6 +224,10 @@ export class SearchService {
             properties: {
               id: { type: 'integer' },
               name: { type: 'text' },
+              address: { type: 'text' },
+              category: { type: 'text' },
+              imgUrl: { type: 'text' },
+              placeId: { type: 'integer' },
             },
           },
         },
