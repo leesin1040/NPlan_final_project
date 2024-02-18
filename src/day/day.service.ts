@@ -123,7 +123,7 @@ export class DayService {
   async deleteDay(dayId: number) {}
 
   // 경로생성
-  async updateDirections(dayId: number, directions: any, placePath: any) {
+  async updateDirections(dayId: number, directions: string, placePath: string) {
     try {
       // 한 번의 update 호출로 두 속성을 함께 업데이트합니다.
       console.log(directions);

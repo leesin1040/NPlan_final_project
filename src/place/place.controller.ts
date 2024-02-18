@@ -26,7 +26,12 @@ export class PlaceController {
     private configService: ConfigService,
   ) {}
 
-  // place 지역별 ex)대표지역 전체(인기순)
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param region
+   * @returns
+   */
+  @ApiOperation({ summary: '대표지역 전체(인기순)' })
   @Get('/region/:region')
   async getMainRegion(@Param('region') region: string) {
     const data = await this.placeService.getMainRegion(region);
@@ -43,6 +48,13 @@ export class PlaceController {
   // 음식 39
   // 쇼핑 38
   // 숙박 32
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param region
+   * @param content
+   * @returns
+   */
+  @ApiOperation({ summary: '대표지역 + 관광,음식,쇼핑,숙박(인기순)' })
   @Get('/region/:region/content/:content')
   async getContent(
     @Param('region', ParseIntPipe) region: string,
@@ -56,6 +68,13 @@ export class PlaceController {
     };
   }
 
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param placeId
+   * @param contentTypeId
+   * @returns
+   */
+  @ApiOperation({ summary: '주변 place 조회' })
   @Get('/aroundRegion/:placeId/contentTypeId/:contentTypeId')
   async getAroundRegions(
     @Param('placeId', ParseIntPipe) placeId: number,
@@ -69,16 +88,6 @@ export class PlaceController {
       data,
     };
   }
-
-  // @Get('/aroundRegion/more')
-  // async getMoreAroundRegions(@Body('mapX') mapX: number, @Body('mapY') mapY: number) {
-  //   const data = await this.placeService.getContent(mapX, mapY);
-  //   return {
-  //     statusCode: HttpStatus.OK,
-  //     message: `${mapX}지역 ${mapY} place 조회에 성공했습니다`,
-  //     data,
-  //   };
-  // }
 
   // api key 환경변수 보내기
   @Get('api-key')

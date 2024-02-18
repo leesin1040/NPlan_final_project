@@ -1,3 +1,29 @@
+// async function myTravelList() {
+//   let selectElement = document.getElementById('myTravelList');
+//   try {
+//     const response = await axios.get(`/api/travel`);
+//     const travelData = response.data.data.myTravels;
+//     const currentDate = new Date();
+//     const filteredTravelData = travelData.filter((data) => {
+//       const endDate = new Date(data.end_date);
+//       return endDate < currentDate;
+//     });
+
+//     console.log(filteredTravelData);
+//     selectElement.innerHTML = '';
+//     selectElement.innerHTML += `<option value="0">선택X</option>`;
+//     if (filteredTravelData.length > 0) {
+//       filteredTravelData.forEach((travel) => {
+//         let travelListHtml = `<option value="${travel.id}">${travel.title}</option>`;
+
+//         selectElement.innerHTML += travelListHtml;
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 document.getElementById('imgBtn').addEventListener('click', function () {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -29,36 +55,39 @@ document.getElementById('imgBtn').addEventListener('click', function () {
     }
   };
 });
-
-document.getElementById('postingButton').addEventListener('click', function () {
-  const articleTitle = document.getElementById('articleTitle').value;
-  const editorContent = document.getElementById('text-input').innerHTML;
-  if (!articleTitle || !editorContent.trim()) {
-    alert('제목과 내용을 모두 입력하세요.');
-    return;
-  }
-  const articleData = {
-    articleTitle,
-    editorContent,
-  };
-  axios
-    .post('/api/article/posting', articleData, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((response) => {
-      if (response.status === 201) {
-        alert('게시글이 성공적으로 생성되었습니다.');
-        window.location.href = '/articles';
-      }
-    })
-    .catch((error) => {
-      console.error('게시글 생성 실패:', error);
-      alert('게시글 생성에 실패했습니다. 다시 시도해주세요.');
-    });
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('postingButton').addEventListener('click', function () {
+    const articleTitle = document.getElementById('articleTitle').value;
+    const editorContent = document.getElementById('text-input').innerHTML;
+    // const travelId = document.getElementById('myTravelList').value;
+    if (!articleTitle || !editorContent.trim()) {
+      alert('제목과 내용을 모두 입력하세요.');
+      return;
+    }
+    const articleData = {
+      // travelId,
+      articleTitle,
+      editorContent,
+    };
+    axios
+      .post('/api/article/posting', articleData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          alert('게시글이 성공적으로 생성되었습니다.');
+          window.location.href = '/articles';
+        }
+      })
+      .catch((error) => {
+        console.error('게시글 생성 실패:', error);
+        console.log(error);
+        alert('게시글 생성에 실패했습니다. 다시 시도해주세요.');
+      });
+  });
 });
-
 let optionsButtons = document.querySelectorAll('.option-button');
 let advancedOptionButton = document.querySelectorAll('.adv-option-button');
 let fontName = document.getElementById('fontName');
