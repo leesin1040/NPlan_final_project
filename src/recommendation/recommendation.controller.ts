@@ -7,19 +7,6 @@ import { AuthGuard } from '@nestjs/passport';
 export class RecommendationController {
   constructor(private readonly recommendationService: RecommendationService) {}
 
-  @Post('api/recommendationTravel')
-  async createRecommendation(@Body() region: string) {
-    // region를 사용하여 여행 계획을 생성하는 로직을 구현
-    region = '1';
-    // region = '31';
-    try {
-      const data = await this.recommendationService.createRecommendation(region);
-      return new ApiResponseDTO<any>(HttpStatus.CREATED, '데이터타입 테스트', data);
-    } catch (error) {
-      return new ApiResponseDTO<any>(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
-    }
-  }
-
   // 1. 선택한 지역에 등록된 place들의 cat3값들 싹다가져와
   // 2. 내가 like누른 place , 내가등록한 place들의 카테고리 가중치 높게
   // 3. 내가 like누른 place는 무조건상위권

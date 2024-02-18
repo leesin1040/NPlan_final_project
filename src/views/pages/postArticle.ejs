@@ -8,6 +8,10 @@
 <body>
     <%-include('../partials/header.ejs') %>
 <div class="container htmlInput">
+  <!-- <div>
+    <p>다녀온 여행들</p>
+  <select name="myTravelList" id="myTravelList">
+  </select></div> -->
     <p>제목</p>
     <input type="text" name="articleTitle" id="articleTitle" class="articleTitle" placeholder="제목을 입력하세요" required>
     <div class="options">
@@ -82,5 +86,8 @@
 <!-- 수정 -->
     <script src="./script/postArticle.js"></script>
     <%-include('../partials/script.ejs') %>
+    <script>
+      myTravelList()
+    </script>
   </body>
 </html>

@@ -23,22 +23,14 @@ export class UpdatePlaceService {
     private readonly httpService: HttpService,
   ) {}
 
-  // place업데이트
-  // 원래 데이터랑 비교 -> 삭제된 place존재하는지 비교
-  // 그삭제된 placeId를 schedule에서 null로 표기 후 폐업으로 표시
-  // modifiedTime로 수정된거 존재하는지 비교 ex)20240207172652
-  // 하루마다 업데이트니 8개만 잘라서 비교
-  // 가져온데이터들 중 modifiedTime이 오늘인 데이터만 filter
-  // 원래있던 데이터들 중 업데이트
-
-  // @Cron(CronExpression.EVERY_5_SECONDS)
+  // @Cron('0 6 * * *')
   async uploadPlaces() {
     // const databaseName = this.configService.get<string>('DB_NAME');
     const queryRunner = this.dataSource.createQueryRunner();
     const key = this.configService.get<string>('UPDATE_KEY');
     const contentTypeIdList = [32, 38, 12, 39];
     try {
-      //     // 12:관광지, 32:숙박, 38:쇼핑, 39:음식점
+      // 12:관광지, 32:숙박, 38:쇼핑, 39:음식점
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
@@ -62,6 +54,10 @@ export class UpdatePlaceService {
         // response.data.response.body.items 요기에 여행지정보 배열
         // response.data.response.body의 totalCount존재 체크후 ->numOfRows
         if (checkResponse.data.response.body.totalCount !== 0) {
+          const minLongitude = 124;
+          const maxLongitude = 132;
+          const minLatitude = 33;
+          const maxLatitude = 43;
           count = checkResponse.data.response.body.totalCount;
           const response = await this.httpService.axiosRef.get(
             `http://apis.data.go.kr/B551011/KorService1/areaBasedSyncList1`,
@@ -88,8 +84,8 @@ export class UpdatePlaceService {
                 ? `${place.addr1} ${place.addr2}`
                 : place.addr1
               : null,
-            mapX: isNaN(place.mapx) ? null : place.mapx,
-            mapY: isNaN(place.mapy) ? null : place.mapy,
+            mapX: place.mapx >= minLongitude && place.mapx <= maxLongitude ? place.mapx : null,
+            mapY: place.mapy >= minLatitude && place.mapy <= maxLatitude ? place.mapy : null,
             cat1: place.cat1 || null,
             cat2: place.cat2 || null,
             cat3: place.cat3 || null,

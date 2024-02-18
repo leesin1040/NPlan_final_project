@@ -16,6 +16,4 @@ export class UpdatePlaceController {
       data,
     };
   }
-
-  // 여행지 업데이트 일단 서울만
 }

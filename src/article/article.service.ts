@@ -50,10 +50,14 @@ export class ArticleService {
   async createArticle(userId: number, articleDto: ArticleDto) {
     const { articleTitle, editorContent } = articleDto;
     const { textContent } = this.extractContent(editorContent);
+    // if (travelId === 0) {
+    //   travelId = null;
+    // }
     const createdArticle = await this.articleRepository.save({
       articleTitle,
       editorContent,
       userId: userId,
+      // travelId: travelId,
     });
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) throw new NotFoundException('사용자를 찾을 수 없습니다.');
