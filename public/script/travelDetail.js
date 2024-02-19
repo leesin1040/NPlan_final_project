@@ -169,7 +169,7 @@ async function viewDayPath(dayId) {
     viewPathModal.style.display = 'none';
   });
   viewPathModal.style.display = 'flex';
-
+  document.getElementById('dayMap').innerHTML = '';
   // day에 속한 좌표들 가져오기
   axios
     .get(`/api/travel/${travelId}/day/${dayId}`)
@@ -275,7 +275,7 @@ async function viewDayPath(dayId) {
 
 // 경로api 연결
 async function drawDirections(origin, destination, schedules, travelId, dayId, placePath) {
-  const REST_API_KEY = '553ceec33cc4d1eec0b87f1834680033';
+  const REST_API_KEY = '440b557801c854a13f36fee746cdeeb4';
   const requestParams = {
     origin: {
       x: origin.place.mapX,
@@ -347,6 +347,7 @@ async function drawDirections(origin, destination, schedules, travelId, dayId, p
       });
 
       await createPath(travelId, dayId, coords, placePath);
+      window.location.reload();
     } else {
       alert('관리자에게 문의 하십시오');
     }
