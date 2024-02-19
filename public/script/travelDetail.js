@@ -275,7 +275,7 @@ async function viewDayPath(dayId) {
 
 // 경로api 연결
 async function drawDirections(origin, destination, schedules, travelId, dayId, placePath) {
-  const REST_API_KEY = '553ceec33cc4d1eec0b87f1834680033';
+  const REST_API_KEY = '49b22c6a3d54869567bbc4a1bb36ebd6';
   const requestParams = {
     origin: {
       x: origin.place.mapX,
