@@ -80,7 +80,7 @@ export class DayService {
         where: { id: dayId },
         relations: ['schedule.place'],
       });
-      console.log(getCards.schedule.length);
+
       if (getCards.schedule.length === 0) {
         throw new NotFoundException('여행일정이 존재하지 않습니다');
       }
@@ -126,17 +126,13 @@ export class DayService {
   async updateDirections(dayId: number, directions: string, placePath: string) {
     try {
       // 한 번의 update 호출로 두 속성을 함께 업데이트합니다.
-      console.log(directions);
-      console.log(placePath);
+
       const updateResult = await this.dayRepository.update(
         { id: dayId },
         { directions: JSON.stringify(directions), placePath: JSON.stringify(placePath) },
       );
-      console.log('이거맞아?' + directions);
+
       return updateResult;
-    } catch (error) {
-      console.log(error);
-      // 에러 처리
-    }
+    } catch (error) {}
   }
 }
