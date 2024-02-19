@@ -102,8 +102,12 @@
           // 선택된 시작 날짜가 있을 경우
           if (selectedDates.length > 0) {
             const startDate = selectedDates[0];
-            // 종료 날짜의 minDate를 시작 날짜로 설정
-            endFlatpickr.set('minDate', startDate);
+            const nextDay = new Date(startDate);
+            nextDay.setDate(nextDay.getDate() + 1); // 시작 날짜의 다음 날을 계산
+
+            // 종료 날짜의 minDate를 시작 날짜의 다음 날로 설정
+            endFlatpickr.set('minDate', nextDay);
+
             const maxEndDate = new Date(startDate);
             maxEndDate.setDate(maxEndDate.getDate() + 5);
             // 종료 날짜의 maxDate를 설정

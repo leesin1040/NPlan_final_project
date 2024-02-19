@@ -127,11 +127,19 @@ export class DayController {
     }
   }
 
+  /**
+   * 경로보기 생성
+   * @param travelId
+   * @param dayId
+   * @body placePath
+   * @returns
+   */
+  @ApiOperation({ summary: '경로보기 생성' })
   @Patch('/travel/:travelId/day/:dayId/directions')
   async updateDirections(
     @Param('dayId', ParseIntPipe) dayId: number,
-    @Body('directions') directions: any,
-    @Body('placePath') placePath: any,
+    @Body('directions') directions: string,
+    @Body('placePath') placePath: string,
   ) {
     try {
       const data = await this.dayService.updateDirections(dayId, directions, placePath);

@@ -53,9 +53,8 @@ async function viewScheduleDetail(scheduleId) {
   await axios
     .get(`/api/schedule/${scheduleId}`)
     .then((response) => {
-      // console.log(response.data);
       const scheduleDetailData = response.data.data;
-      console.log('🚀 ~ .then ~ scheduleDetailData:', scheduleDetailData);
+
       // const scheduledayTitle = document.getElementById('dayTitle');
       // const scheduleName = document.getElementById('name');
       // const scheduleAddress = document.getElementById('address');
@@ -94,7 +93,7 @@ async function viewScheduleDetail(scheduleId) {
           ),
         },
       ];
-      //   // console.log(positions);
+
       //   // 마커 이미지의 이미지 주소입니다
       const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
       //   // 마커 이미지의 이미지 크기 입니다
@@ -200,26 +199,26 @@ async function viewDayPath(dayId) {
 
       const placePath = schedules.map((schedule) => schedule.place.id);
       const previousPlacePath = response.data.data.placePath;
+
       if (
         !previousPlacePath ||
         !directions ||
-        JSON.stringify(placePath) !== JSON.stringify(previousPlacePath) ||
+        JSON.stringify(placePath) !== previousPlacePath ||
         directions === null
       ) {
         coords = await drawDirections(origin, destination, schedules, travelId, dayId, placePath);
       }
 
       // 마커 이미지의 이미지 주소입니다
-      let imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
       positions.forEach((position, index) => {
         let imageSize;
         if (positions.length - 1 === index || index === 0) {
-          imageSize = new kakao.maps.Size(36, 52);
+          imageSize = new kakao.maps.Size(36, 36);
         } else {
-          imageSize = new kakao.maps.Size(24, 35);
+          imageSize = new kakao.maps.Size(36, 36);
         }
-
+        let imageSrc = `../img/marker/number-${index + 1}.png`;
         // 마커 이미지를 생성합니다
         let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -276,7 +275,7 @@ async function viewDayPath(dayId) {
 
 // 경로api 연결
 async function drawDirections(origin, destination, schedules, travelId, dayId, placePath) {
-  const REST_API_KEY = '553ceec33cc4d1eec0b87f1834680033';
+  const REST_API_KEY = '49b22c6a3d54869567bbc4a1bb36ebd6';
   const requestParams = {
     origin: {
       x: origin.place.mapX,
@@ -305,7 +304,7 @@ async function drawDirections(origin, destination, schedules, travelId, dayId, p
       },
     );
     const sections = response.data.routes[0].sections;
-    const coords = sections.map((sections) => {
+    let coords = sections.map((sections) => {
       return sections.roads
         .map((road) => {
           // road.vertexes 에서 짝수 인덱스는 x, 홀수 인덱스는 y 인 좌표 object 반환
@@ -319,11 +318,38 @@ async function drawDirections(origin, destination, schedules, travelId, dayId, p
         })
         .flat();
     });
-    // console.log(coords);
+
     await createPath(travelId, dayId, coords, placePath);
     return coords;
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 503) {
+      alert('여행지간 거리가 멀어 직선으로 표시');
+      coords = schedules.map((point, index) => {
+        if (schedules.length - 1 > index) {
+          return [
+            {
+              lat: point.place.mapY,
+              lng: point.place.mapX,
+            },
+            {
+              lat: schedules[index + 1].place.mapY,
+              lng: schedules[index + 1].place.mapX,
+            },
+          ];
+        } else {
+          return [
+            {
+              lat: point.place.mapY,
+              lng: point.place.mapX,
+            },
+          ];
+        }
+      });
+
+      await createPath(travelId, dayId, coords, placePath);
+    } else {
+      alert('관리자에게 문의 하십시오');
+    }
   }
 }
 // api연결 후 저장
@@ -333,9 +359,7 @@ async function createPath(travelId, dayId, coords, placePath) {
       directions: coords,
       placePath,
     })
-    .then((response) => {
-      console.log(response.data.data);
-    })
+    .then((response) => {})
     .catch((error) => {
       alert(error);
     });

@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Req,
@@ -24,10 +25,18 @@ export class ArticleController {
   //포스트만들기
   @UseGuards(AuthGuard('jwt'))
   @Post('/posting')
-  async createPost(@Body() articleDto: ArticleDto, @Req() req) {
-    const userId = req.user.id;
-    const data = await this.articleService.createArticle(userId, articleDto);
-    return { statusCode: HttpStatus.CREATED, message: '게시글 생성에 성공했습니다.', data };
+  async createPost(
+    @Body() articleDto: ArticleDto,
+    // @Body('travelId', ParseIntPipe) travelId: number,
+    @Req() req,
+  ) {
+    try {
+      const userId = req.user.id;
+      const data = await this.articleService.createArticle(userId, articleDto);
+      return { statusCode: HttpStatus.CREATED, message: '게시글 생성에 성공했습니다.', data };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //포스트 상세조회
