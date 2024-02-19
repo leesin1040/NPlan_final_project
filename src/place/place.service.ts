@@ -34,7 +34,7 @@ export class PlaceService {
       order: { rank: 'DESC' },
       take: 30,
     });
-    console.log(getContent);
+
     return getContent;
   }
 
@@ -43,7 +43,7 @@ export class PlaceService {
   async getAroundRegions(placeId: number, contentTypeId: number) {
     try {
       const beforePlacePoint = await this.placeRepository.findOne({ where: { id: placeId } });
-      console.log(beforePlacePoint.placePoint);
+
       const aroundSpots = await this.placeRepository
         .createQueryBuilder('place')
         .where('place.contentTypeId = :contentTypeId', { contentTypeId: contentTypeId })
