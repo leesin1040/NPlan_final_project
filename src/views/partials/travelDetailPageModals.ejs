@@ -138,12 +138,13 @@
 
 <!-- schedule 추가 모달 -->
 <div id="addScheduleModal" class="modal">
+
   <div class="modal-content addScheduleModalContent my-3 mx-4">
     <div class="addScheduleModal-header">
       <div class="row mx-2 mt-3">
-        <div class="col-8">
+        <div class="col-8 addScheduleTitle">
           <h4 id="travelTitle"><%= oneTravel.title %></h4>
-          <h2 id="dayTitle">n일차</h2>
+          <h5 id="modaldayTitle"></h5>
         </div>
         <div class="col text-end me-3">
           <button
@@ -163,6 +164,23 @@
               <div class="form-group">
                 <label for="areaCode">지역</label>
                 <select class="form-select" name="지역" id="areaCode">
+                  <!-- <option value="1">서울</option>
+                  <option value="2">인천</option>
+                  <option value="3">대전</option>
+                  <option value="4">대구</option>
+                  <option value="5">광주</option>
+                  <option value="6">부산</option>
+                  <option value="7">울산</option>
+                  <option value="8">세종</option>
+                  <option value="31">경기</option>
+                  <option value="32">강원</option>
+                  <option value="33">충북</option>
+                  <option value="34">충남</option>
+                  <option value="35">경북</option>
+                  <option value="36">경남</option>
+                  <option value="37">전북</option>
+                  <option value="38">전남</option>
+                  <option value="39">제주</option> -->
                   <% const region = oneTravel.region
                   const regionArray = region.split(', ');
                   for(let reg of regionArray) {
@@ -223,8 +241,19 @@
             </div>
             <div class="col-5">
               <div class="form-group">
+                <!-- day에 아무것도 존재하지않으면 전체(인기) default -->
                 <label for="category">카테고리</label>
                 <select class="form-select" name="카테고리" id="category">
+                  <option value="12">관광지(인기)</option>
+                  <option value="12-1">관광지(주변)</option>
+                  <option value="39">음식(인기)</option>
+                  <option value="39-1">음식(주변)</option>
+                  <option value="38">쇼핑(인기)</option>
+                  <option value="38-1">쇼핑(주변)</option>
+                  <option value="32">숙박(인기)</option>
+                  <option value="32-1">숙박(주변)</option>
+                  </select>
+                <!-- <select class="form-select" name="카테고리" id="category">
                   <% const theme = oneTravel.theme
                   if (theme === '자연'){ %>
                     <option value="A01">자연</option>
@@ -280,7 +309,7 @@
                     <option value="A05">음식</option>
                     <option value="O00">전체</option>
                   <% } %>
-                </select>
+                </select> -->
               </div>
             </div>
             <div class="col-2">
@@ -291,6 +320,12 @@
           </div>
         </form>
       </div>
+      <div class=" mx-4">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="상호명으로 검색" aria-describedby="button-addon2" id="placeInputFlied">
+          <button class="btn btn-outline-primary" type="button" id="addScheduleModal-search">검색</button>
+        </div>
+      </div>
       <div class="addScheduleModal-results">
         <div class="addScheduleModal-placeList" id="addScheduleModal-placeList">
           <!-- 장소 리스트 -->
@@ -299,9 +334,12 @@
       <div class="modal-footer">
         <button id="connectApi" class="btn btn-secondary">더 많은 장소 보기</button>
       </div>
+       <!-- addScheduleModal-mapView 구현 예정 -->
+       <!-- <div id='addScheduleModal-mapView'  style="width: 100%; height: 700px"></div> -->
     </div>
-    <!-- addScheduleModal-mapView 구현 예정 -->
+ 
   </div>
+
 </div>
 
 <!-- schedule 상세보기 모달 -->

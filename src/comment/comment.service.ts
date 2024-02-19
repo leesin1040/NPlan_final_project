@@ -24,18 +24,19 @@ export class CommentService {
       where: { articleId: articleId },
       relations: ['user'],
     });
-    // 댓글의 작성자 이름 추가
-    const commentsWithUsernames = await Promise.all(
+    const commentsWithUsernamesAndDate = await Promise.all(
       comments.map(async (comment) => {
         const user = await comment.user;
         const userName = user ? user.name : null;
+        const createdAt = comment.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }); // 한국 시간 형식으로 변환
         return {
           ...comment,
           userName,
+          createdAt,
         };
       }),
     );
-    return { comments: commentsWithUsernames };
+    return { comments: commentsWithUsernamesAndDate };
   }
 
   async update(userId: number, commentId: number, comment: string) {

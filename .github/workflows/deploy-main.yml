@@ -81,6 +81,8 @@ jobs:
                   value: ${{ secrets.REDIS_HOST }}
                   - name: REDIS_PORT
                   value: ${{ secrets.REDIS_PORT }}
+                  - name: UPDATE_KEY
+                  value: ${{ secrets.UPDATE_KEY }}
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git

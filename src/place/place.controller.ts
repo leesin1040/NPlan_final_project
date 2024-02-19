@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards,
+  Req,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlaceService } from './place.service';
 import { ConfigService } from '@nestjs/config';
@@ -16,34 +26,12 @@ export class PlaceController {
     private configService: ConfigService,
   ) {}
 
-  // // place 생성
-  // @ApiOperation({ summary: '스케줄 생성' })
-  // @UseGuards(AuthGuard('jwt'))
-  // @Post('')
-  // async createPlace(@Req() req, @Body() createPlaceDto: CreatePlaceDto) {
-  //   try {
-  //     const userId = req.user.id;
-  //     const { sigunguCode, areaCode } = addressMapping(createPlaceDto.address);
-  //     const cat1 = categoryMapping(createPlaceDto.cat1);
-  //     const data = await this.placeService.createPlace(
-  //       createPlaceDto,
-  //       userId,
-  //       sigunguCode,
-  //       areaCode,
-  //       cat1,
-  //     );
-
-  //     return {
-  //       statusCode: HttpStatus.CREATED,
-  //       message: `플레이스 생성에 성공했습니다.`,
-  //       data,
-  //     };
-  //   } catch (error) {
-  //     return new ApiResponseDTO<any>(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
-  //   }
-  // }
-
-  // place 지역별 ex)서울,경기,경남,경북
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param region
+   * @returns
+   */
+  @ApiOperation({ summary: '대표지역 전체(인기순)' })
   @Get('/region/:region')
   async getMainRegion(@Param('region') region: string) {
     const data = await this.placeService.getMainRegion(region);
@@ -55,13 +43,23 @@ export class PlaceController {
   }
 
   // place 지역 선택 후 대분류
-  // ex) 서울 -> 음식점 or 경기 -> 숙박
-  // 관광지 > A01,A02,A03
-  // 쇼핑 > A04
-  // 음식점 > A05
-  // 숙박 > B02
+  // contentTypeId
+  // 관광지 12
+  // 음식 39
+  // 쇼핑 38
+  // 숙박 32
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param region
+   * @param content
+   * @returns
+   */
+  @ApiOperation({ summary: '대표지역 + 관광,음식,쇼핑,숙박(인기순)' })
   @Get('/region/:region/content/:content')
-  async getContent(@Param('region') region: string, @Param('content') content: string) {
+  async getContent(
+    @Param('region', ParseIntPipe) region: string,
+    @Param('content', ParseIntPipe) content: number,
+  ) {
     const data = await this.placeService.getContent(region, content);
     return {
       statusCode: HttpStatus.OK,
@@ -69,23 +67,27 @@ export class PlaceController {
       data,
     };
   }
-  // # 1	서울
-  // # 2	인천
-  // # 3	대전
-  // # 4	대구
-  // # 5	광주
-  // # 6	부산
-  // # 7	울산
-  // # 8	세종
-  // # 31	경기
-  // # 32	강원
-  // # 33	충북
-  // # 34	충남
-  // # 35	경북
-  // # 36	경남
-  // # 37	전북
-  // # 38	전남
-  // # 39	제주
+
+  /**
+   * place 지역별 ex)대표지역 전체(인기순)
+   * @param placeId
+   * @param contentTypeId
+   * @returns
+   */
+  @ApiOperation({ summary: '주변 place 조회' })
+  @Get('/aroundRegion/:placeId/contentTypeId/:contentTypeId')
+  async getAroundRegions(
+    @Param('placeId', ParseIntPipe) placeId: number,
+    @Param('contentTypeId', ParseIntPipe) contentTypeId: number,
+  ) {
+    const data = await this.placeService.getAroundRegions(placeId, contentTypeId);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: `주변 place 조회에 성공했습니다`,
+      data,
+    };
+  }
 
   // api key 환경변수 보내기
   @Get('api-key')

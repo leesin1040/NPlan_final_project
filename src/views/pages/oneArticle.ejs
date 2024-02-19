@@ -52,7 +52,7 @@
               <!-- 좋아요 버튼 -->
               <div class="text-center rounded-circle border border-secondary-subtle" style="width: 100px; height: 100px" onclick="likeArticle(<%= article.id %>)">
                 <i class="fa-solid fa-heart fa-2xl mt-4 p-3" style="color: rgb(151, 151, 151)"></i>
-                <p class="mt-2"><%= article.likesCount %></p>
+                <p class="mt-2"> <%= article.likesCount %> </p>
               </div>
             <% } else { %>
               <!-- 로그인 요청 버튼 -->
@@ -62,11 +62,11 @@
               </div>
             <% } %>
           </div>
-          
-            
+
         </div>
         <hr class="my-5" />
         <div class="row">
+          <% if (user !== null) { %>
           <div class="col-2">댓글 작성</div>
           <div class="col-8">
             <input
@@ -79,6 +79,7 @@
           <div class="col">
             <input type="button" id="commentCreatBtn" class="btn btn-secondary" value="작성하기" />
           </div>
+          <% } %>
           <hr class="my-4" style="color: #ccc" />
           <!-- 코멘트 영역 -->
 <% data.comments.forEach(comment => { %>
@@ -104,10 +105,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="col text-end">
-        <button type="button" id="updateComment" class="btn btn-outline-secondary btn-sm" onclick="editComment(<%= comment.id %>)">수정</button>
-        <button type="button" class="btn btn-outline-danger btn-sm delete-comment-button" data-comment-id="<%= comment.id %>">삭제</button>
-      </div>
+      <% if (user !== null && comment.userId === user.id) { %>
+        <div class="col text-end">
+          <button type="button" id="updateComment" class="btn btn-outline-secondary btn-sm" onclick="editComment(<%= comment.id %>)">수정</button>
+          <button type="button" class="btn btn-outline-danger btn-sm delete-comment-button" data-comment-id="<%= comment.id %>">삭제</button>
+        </div>
+        <% } %>
+        
     </div>
   </div>
 <% }); %>
@@ -120,7 +124,7 @@
 
 window.onload = function(){
   const commentCreatBtn = document.getElementById('commentCreatBtn');
-commentCreatBtn.addEventListener('click', createComment);
+  commentCreatBtn.addEventListener('click', createComment);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -239,8 +243,6 @@ async function editComment(commentId) {
     alert(error.response.data.message);
   }
 }
-
-
 
 
  // 댓글 삭제 함수

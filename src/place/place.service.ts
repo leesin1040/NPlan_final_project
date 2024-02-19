@@ -2,82 +2,62 @@ import { CreatePlaceDto } from './dto/create-place.dto';
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
-import { In, IsNull, Like, Repository } from 'typeorm';
+import { DataSource, In, IsNull, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
+    private dataSource: DataSource,
   ) {}
 
+  // place 지역별 ex)대표지역 전체(인기순)
   async getMainRegion(region: string) {
-    console.log(region);
     const getMainRegion = await this.placeRepository.find({
       where: {
         areaCode: region,
       },
       order: { rank: 'DESC' },
-      take: 10,
+      take: 30,
     });
     return getMainRegion;
   }
-  async getContent(region: string, content: string) {
-    // 해당 지역 및 카테고리에 대한 음식점 가져오기
-    const places = await this.placeRepository
-      .createQueryBuilder('place')
-      .where({ areaCode: region, cat1: content })
-      .getMany();
 
-    // 최소 및 최대 rank 값 계산
-    let minRank = 0;
-    let maxRank = 0;
-    places.forEach((place) => {
-      const rank = place.rank;
-      if (rank < minRank) minRank = rank;
-      if (rank > maxRank) maxRank = rank;
+  // 대표지역 + 관광/숙박/음식/쇼핑
+  async getContent(region: string, content: number) {
+    const getContent = await this.placeRepository.find({
+      where: {
+        areaCode: region,
+        contentTypeId: content,
+      },
+      order: { rank: 'DESC' },
+      take: 30,
     });
 
-    // 각 음식점에 대한 가중치
-    const rankPlaceCatCounts: Record<string, number> = {};
-    places.forEach((place) => {
-      const cat3Value = place.cat3;
+    return getContent;
+  }
 
-      // 정규화된 rank 가중치 계산
-      const normalizedWeight = (place.rank - minRank) / (maxRank - minRank);
-      const weightedRank = place.rank * normalizedWeight;
-      rankPlaceCatCounts[cat3Value] = (rankPlaceCatCounts[cat3Value] || 0) + weightedRank;
-    });
-    console.log(rankPlaceCatCounts);
-    // 각 카테고리의 가중치를 비율로 변환
-    const totalWeight = Object.values(rankPlaceCatCounts).reduce((sum, weight) => sum + weight, 0);
-    const weightRatios: Record<string, number> = {};
-    for (const [category, weight] of Object.entries(rankPlaceCatCounts)) {
-      weightRatios[category] = weight / totalWeight;
+  // 이전등록한 place 주변 좌표들
+
+  async getAroundRegions(placeId: number, contentTypeId: number) {
+    try {
+      const beforePlacePoint = await this.placeRepository.findOne({ where: { id: placeId } });
+
+      const aroundSpots = await this.placeRepository
+        .createQueryBuilder('place')
+        .where('place.contentTypeId = :contentTypeId', { contentTypeId: contentTypeId })
+        .andWhere('ST_Distance_Sphere(place.placePoint, ST_GeomFromText(:beforePoint))<= :radius', {
+          beforePoint: beforePlacePoint.placePoint,
+          radius: 5000,
+        })
+        .limit(60)
+        .getMany();
+
+      return aroundSpots;
+    } catch (error) {
+      console.error('Error in getAroundRegions:', error);
+      throw error;
     }
-    console.log(weightRatios);
-    // 각 카테고리별로 정렬된 음식점 가져오기 (가중치에 따라 정렬)
-    const sortedPlaces: Record<string, Place[]> = {};
-    for (const [category, weightRatio] of Object.entries(weightRatios)) {
-      // 해당 카테고리의 음식점들을 가중치에 따라 정렬
-      const categoryPlaces = places.filter((place) => place.cat3 === category);
-      const sortedCategoryPlaces = categoryPlaces.sort((a, b) => b.rank - a.rank); // 내림차순 정렬
-
-      // 비율에 따라 상위 10개씩 선택
-      const numToSelect = Math.ceil(100 * weightRatio);
-      sortedPlaces[category] = sortedCategoryPlaces.slice(0, numToSelect);
-    }
-
-    // 결과 배열 생성
-    let result: Place[] = [];
-    for (const places of Object.values(sortedPlaces)) {
-      result.push(...places);
-    }
-    // 결과 배열을 rank 기준으로 내림차순으로 정렬
-    result = result.sort((a, b) => b.rank - a.rank);
-
-    // 상위 10개만 선택
-    result = result.slice(0, 30);
-    return result;
   }
 }
