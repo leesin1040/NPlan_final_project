@@ -131,10 +131,7 @@ async function viewScheduleDetail(scheduleId) {
       });
     })
 
-    .catch((error) => {
-      // alert(error.response.data.message);
-      console.error('Error:', error);
-    });
+    .catch((error) => {});
 
   // 스케줄 상세 - '삭제' 버튼을 누르면 schedule에서 삭제
   const deleteBtn = document.getElementById('viewScheduleModal-delete');
