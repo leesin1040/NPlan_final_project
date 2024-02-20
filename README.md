@@ -4,7 +4,7 @@
 
 ## P를 위한 여행 가이드 <font color="#548dd4">NPLAN</font>
 
-**서비스 :** [NPLAN](https://www.nplan.online/)
+**도메인 주소 :** [https://www.nplan.online](https://www.nplan.online/)
 
 #### 즉흥 여행자를 위한 맞춤형 여행 플래닝 플랫폼
 
@@ -15,31 +15,30 @@
 # 목차
 
 1. [프로젝트 소개](#프로젝트-소개)
-2. [프로젝트 실행 방법](#프로젝트-실행-방법)
-3. [기술적 도전 과제](#기술적-도전-과제)
+2. [참여 인원](#참여-인원)
+3. [기능 소개](#기능-소개)
 4. [서비스 아키텍처](#서비스-아키텍처)
 5. [기술 스택](#기술-스택)
 
-# 프로젝트 실행 방법
+# 참여 인원
 
-```bash
-# Clone
-$ git clone https://github.com/leesin1040/nplan_final_project.git
+<table>
+  <tbody>
+    <tr>
+    <td align="center"><a href="https://github.com/leesin1040"><img src="https://avatars.githubusercontent.com/u/74364209?v=4" width="100px;" alt=""/><br /><sub><b> 리더 : 최이진 </b></sub></a><br />ElasticSearch<br>front<br>CICD,Docker<br></td>
+	 <td align="center"><a href="https://github.com/Han9526"><img src="https://avatars.githubusercontent.com/Han9526" width="100px;" alt=""/><br /><sub><b> 부리더 : 한승준 </b></sub></a><br />place<br>KAKAO MAP API<br>KAKAO mobility<br></td>
+	<td align="center"><a href="https://github.com/jeongseon0"><img src="https://avatars.githubusercontent.com/u/86090167?v=4" width="100px;" alt=""/><br /><sub><b> 팀원 : 신정선 </b></sub></a><br />Redis<br>Tour API<br>lexoRank<br></td>
+	<td align="center"><a href="https://github.com/halbebe"><img src="https://avatars.githubusercontent.com/u/146915373?v=4" width="100px;" alt=""/><br /><sub><b> 팀원 : 이하늘 </b></sub></a><br />로그인/회원가입<br>좋아요<br>댓글<br></td>
+    </tr>
+  </tbody>
+</table>
 
-# 라이브러리 인스톨
-$ npm install
+# 환경변수
 
-# 서버 실행
-$ npm run start
-
-## http://localhost:3000 실행 확인
-```
-
-### 환경변수
-
+<p>
 <details><summary>환경변수</summary>
 <pre><code>
-SERVER_PORT=3000
+SERVER_PORT
 
 DB_HOST
 DB_PORT
@@ -78,37 +77,25 @@ UPDATE_KEY
 </code></pre>
 
 </details>
+</p>
 
-# 기술적 도전 과제
+# 기능 소개
 
-<details><summary>프로젝트 기술 도전과제</summary>
-- 배치 스케쥴링을 통한  대용량 데이터 처리
-	- 스케쥴링을 통한 정기적인 데이터 업데이트 처리
-	- 배치 스케쥴 대상 데이터 : Es bulk indexing
-- CI/CD 프로세스 적용
-	- Docker Container 를 통한 배포
-- 사용자가 선택한 여행장소의 경로표기 구현 및 효율적인 처리
-	- 이전 선택지와 근접한 여행장소 검색 기능 구현
-- Elasticsearch 를 위한 통합검색
-</details>
+<p>
+<p>- 로그인/회원가입</p>
+<p>- 여행 후기 게시판</p>
+<p>- 좋아요 및 댓글</p>
+<p>- 여행일정 생성</p>
+<p>- 여행지 검색</p>
+<p>- 사용자가 구성한 여행일정의 경로표기</p>
+<p>- 이전 선택지와 근접한 여행장소 검색 기능 구현</p>
+</p>
 
 # 서비스 아키텍처
 
 <img src="https://github.com/leesin1040/nplan_final_project/blob/travel/public/img/service.JPG?raw=true">
 
 # 기술 스택
-
-- 언어 : Typescirpt
-- Framework: Nest.JS
-- RDBMS : MariaDB
-- NoSql : Elastic Search
-- Cache : Redis
-- Infra
-  - Webserver : CloudType
-  - Static Images: Cloud Flare
-- CI/CD :  Github  action, Docker container
-- ORM: TypeOrm
-- Frontend: HTML5, Bootstrap, EJS, CSS3, Javascript
 
 <div align=center> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=&logoColor=white"> </div>
 <div align=center> <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"> <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white"> </div>
@@ -119,3 +106,16 @@ UPDATE_KEY
 # License
 
 Nest is [MIT licensed](LICENSE).
+
+```bash
+# Clone
+$ git clone https://github.com/leesin1040/nplan_final_project.git
+
+# 라이브러리 인스톨
+$ npm install
+
+# 서버 실행
+$ npm run start
+
+## http://localhost:SERVER_PORT 실행 확인
+```
